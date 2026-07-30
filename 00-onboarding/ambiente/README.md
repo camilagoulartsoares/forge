@@ -2,6 +2,8 @@
 
 ## Objetivo
 
+
+
 Documentar a preparação local e as ferramentas necessárias, sem incluir credenciais.
 
 ## Conceitos abordados
