@@ -15,7 +15,9 @@ Fluxo básico de Git.
 
 ## Como executar
 
-Adicione o processo praticado.
+Antes de solicitar revisão, percorra o [checklist de Merge Request](checklist.md).
+Inclua na descrição o problema resolvido, um resumo das mudanças e os comandos
+de validação com seus resultados. Aponte limitações e dúvidas para orientar o revisor.
 
 ## Exemplos
 
