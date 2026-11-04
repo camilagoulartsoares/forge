@@ -69,14 +69,16 @@ Legenda: `[ ]` não iniciado; `[-]` em andamento (convenção textual, pois o Gi
 
 ## Estrutura
 
-- `00-onboarding`: boas-vindas, ambiente e materiais iniciais.
-- `01-fundamentos`: PHP, MySQL, Git, testes e padrões de escrita.
-- `02-symfony`: tópicos de Symfony.
-- `03-vue`: tópicos de Vue.js.
-- `04-arquitetura`: decisões e estilos arquiteturais.
-- `05-processos`: rotinas, colaboração e qualidade.
-- `06-projetos`: desafios, estudos, POCs e projetos completos.
-- `docs`: anotações gerais, referências, boas práticas, cheatsheets e imagens.
+- [00-onboarding](00-onboarding/README.md): boas-vindas, ambiente e materiais iniciais.
+- [01-fundamentos](01-fundamentos/README.md): PHP, MySQL, Git, testes e padrões de escrita.
+- [02-symfony](02-symfony/README.md): tópicos de Symfony.
+- [03-vue](03-vue/README.md): tópicos de Vue.js.
+- [04-arquitetura](04-arquitetura/README.md): decisões e estilos arquiteturais.
+- [05-processos](05-processos/README.md): rotinas, colaboração e qualidade.
+- [06-projetos](06-projetos/README.md): desafios, estudos, POCs e projetos completos.
+- [docs](docs/README.md): anotações gerais, referências, boas práticas, cheatsheets e imagens.
+
+Para começar, consulte a [preparação do ambiente](00-onboarding/ambiente/README.md). Antes de contribuir, leia o [guia de contribuição](CONTRIBUTING.md).
 
 ## Organização de cada estudo
 
