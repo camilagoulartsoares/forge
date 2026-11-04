@@ -48,8 +48,24 @@ Crie commits com mensagens específicas para o conteúdo, seguindo Conventional 
 
 ```sh
 git add caminho/do/arquivo
+git diff --cached --check
+git diff --cached
 git commit -m "docs: explica o fluxo seguro de publicação"
 ```
+
+`git diff` mostra alterações ainda não preparadas; `git diff --cached` mostra
+o conteúdo que entrará no próximo commit. Revise também o conteúdo preparado
+para evitar incluir mudanças de outro trabalho. Se a verificação apontar um
+problema, corrija o arquivo e execute `git add` novamente antes do commit.
+
+Se um arquivo foi preparado por engano, retire-o da área de preparação:
+
+```sh
+git restore --staged caminho/do/arquivo
+```
+
+Esse comando mantém as edições no diretório de trabalho. Depois, confira
+`git status --short` e `git diff --cached` antes de continuar.
 
 ## Publicação em `main`
 
