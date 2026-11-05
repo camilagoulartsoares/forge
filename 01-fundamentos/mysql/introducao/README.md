@@ -49,6 +49,14 @@ O `LEFT JOIN` preserva Bruno mesmo sem pedido, preenchendo o produto com `NULL`.
 Troque por `INNER JOIN`: apenas Ana deve aparecer. Se um cliente tiver dois
 pedidos, ele aparecerá em duas linhas; a junção não elimina essa multiplicidade.
 
+### Agregação
+
+Execute [agregacao.sql](exemplos/agregacao.sql). O resultado deve conter
+`Sul`, quantidade `2` e total `50`. Remova `HAVING` para incluir o grupo Norte.
+`WHERE` filtra linhas antes do agrupamento; `HAVING` filtra os grupos formados.
+As colunas selecionadas aqui são agrupadas ou agregadas, sem depender de
+configurações permissivas de agrupamento do servidor.
+
 Veja a pasta `exercicios`.
 
 ## Aprendizados
