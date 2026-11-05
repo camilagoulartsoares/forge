@@ -42,6 +42,13 @@ para inverter a sequência. Sem `ORDER BY`, não dependa da ordem das linhas.
 
 ## Exercícios
 
+### Junções
+
+Execute [juncoes.sql](exemplos/juncoes.sql) em um cliente MySQL local.
+O `LEFT JOIN` preserva Bruno mesmo sem pedido, preenchendo o produto com `NULL`.
+Troque por `INNER JOIN`: apenas Ana deve aparecer. Se um cliente tiver dois
+pedidos, ele aparecerá em duas linhas; a junção não elimina essa multiplicidade.
+
 Veja a pasta `exercicios`.
 
 ## Aprendizados
