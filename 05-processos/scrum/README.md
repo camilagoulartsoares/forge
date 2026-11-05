@@ -15,7 +15,8 @@ Nenhum.
 
 ## Como executar
 
-Registre práticas e observações autorizadas.
+Use o [roteiro de eventos](cerimonias/README.md) para observar os propósitos
+e as decisões de uma simulação, registrando somente exemplos fictícios.
 
 ## Exemplos
 
