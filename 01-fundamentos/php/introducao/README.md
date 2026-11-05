@@ -31,6 +31,8 @@ Veja a [regra de total](exemplos/calcular-total.php) e o [programa executavel](e
 O exemplo trabalha com valores inteiros; não representa cálculo financeiro
 com frações. Experimente quantidade zero e confirme total zero. Um argumento
 negativo deve provocar `InvalidArgumentException` em vez de produzir um total inválido.
+Produtos acima de `PHP_INT_MAX` lançam `OverflowException` antes da multiplicação,
+evitando conversão implícita para ponto flutuante e falha no tipo de retorno.
 
 ## Exercícios
 

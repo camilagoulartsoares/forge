@@ -8,5 +8,9 @@ function calcularTotal(int $precoUnitario, int $quantidade): int
         throw new InvalidArgumentException('Valores devem ser nao negativos.');
     }
 
+    if ($quantidade !== 0 && $precoUnitario > intdiv(PHP_INT_MAX, $quantidade)) {
+        throw new OverflowException('Total excede o limite de inteiros.');
+    }
+
     return $precoUnitario * $quantidade;
 }
