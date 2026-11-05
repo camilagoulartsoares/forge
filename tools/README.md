@@ -4,6 +4,7 @@ Requer Python 3.10 ou superior e Git. Na raiz do repositório:
 
 ```sh
 python tools/check_docs.py
+python -m unittest discover -s tools -p "test_*.py"
 ```
 
 O comando lê documentos Markdown versionados e novos arquivos não ignorados.
@@ -15,3 +16,5 @@ Links externos não são acessados. Âncoras, links por referência e sintaxe
 Markdown com parênteses aninhados no destino precisam de revisão manual.
 Links fora do repositório são rejeitados para manter o material portável.
 O código de saída é zero em caso de sucesso e diferente de zero em caso de erro.
+Os testes usam diretórios temporários e cobrem falhas de links, UTF-8,
+blocos aninhados, imagens e o código de saída da interface de linha de comando.
