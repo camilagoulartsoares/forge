@@ -8,7 +8,7 @@
 - [ ] Services
 - [ ] Dependency Injection
 - [ ] Doctrine
-- [ ] Migrations
+- [ ] [Migrations](migrations/README.md)
 - [ ] Security
 - [ ] [APIs: contrato de tarefas](api/README.md)
 - [ ] Testes
