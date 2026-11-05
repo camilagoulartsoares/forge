@@ -12,6 +12,10 @@ final class Estoque
             throw new InvalidArgumentException('Quantidade deve ser positiva.');
         }
 
+        if ($quantidade > PHP_INT_MAX - $this->saldo) {
+            throw new OverflowException('Saldo excede o limite de inteiros.');
+        }
+
         $this->saldo += $quantidade;
     }
 

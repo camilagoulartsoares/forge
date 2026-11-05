@@ -25,6 +25,8 @@ Veja a [classe Estoque](exemplos/Estoque.php) e o [programa executavel](exemplos
 O saldo privado só muda pela operação validada da classe. Como exercício,
 tente adicionar zero e um número negativo: ambos devem ser rejeitados sem
 alterar o saldo. Crie duas instâncias e confira que os saldos são independentes.
+Uma adição que ultrapasse `PHP_INT_MAX` lança `OverflowException` e preserva
+o saldo anterior; esse limite acompanha a plataforma onde o PHP é executado.
 
 ## Exercícios
 

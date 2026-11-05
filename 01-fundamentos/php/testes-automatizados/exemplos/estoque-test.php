@@ -24,4 +24,12 @@ $outro->adicionar(1);
 verificarIgual(5, $estoque->saldo());
 verificarIgual(1, $outro->saldo());
 
+$limite = new Estoque();
+$limite->adicionar(PHP_INT_MAX);
+verificarIgual(PHP_INT_MAX, $limite->saldo());
+verificarExcecao(OverflowException::class, function () use ($limite): void {
+    $limite->adicionar(1);
+});
+verificarIgual(PHP_INT_MAX, $limite->saldo());
+
 echo 'OK: estoque' . PHP_EOL;
