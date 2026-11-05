@@ -33,6 +33,10 @@ Use Conventional Commits com mensagens que descrevam o conteúdo efetivamente al
 
 Não agrupe mudanças independentes em um commit artificial nem use uma mensagem que não corresponda ao diff.
 
+Ao abrir um Pull Request no GitHub, preencha o [modelo de descrição](.github/pull_request_template.md)
+com o problema, as alterações e os resultados reais de validação. O modelo
+orienta a revisão e não substitui os testes pertinentes ao estudo.
+
 ## Publicação
 
 Antes de publicar, faça novo `git fetch origin` e confirme que a branch de destino não avançou desde a atualização local. Publique somente no remoto e na branch previstos para a tarefa.
