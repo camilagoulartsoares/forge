@@ -57,6 +57,13 @@ Execute [agregacao.sql](exemplos/agregacao.sql). O resultado deve conter
 As colunas selecionadas aqui são agrupadas ou agregadas, sem depender de
 configurações permissivas de agrupamento do servidor.
 
+### Valores ausentes
+
+Execute [valores-nulos.sql](exemplos/valores-nulos.sql): somente o contato `2`
+deve aparecer, com o texto `sem email`. `IS NULL` consulta ausência de valor;
+`= NULL` não produz essa correspondência. `COALESCE` fornece um valor para
+exibição, sem alterar os dados. O contato `1` tem string vazia e não é nulo.
+
 Veja a pasta `exercicios`.
 
 ## Aprendizados
