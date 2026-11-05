@@ -1,13 +1,13 @@
-/vendor/
-/node_modules/
-/.env
+vendor/
+node_modules/
+.env
 .env.local
 .env.*.local
-/var/cache/
-/var/log/
-/public/build/
-/dist/
-/coverage/
+**/var/cache/
+**/var/log/
+**/public/build/
+dist/
+coverage/
 .phpunit.result.cache
 .phpunit.cache/
 npm-debug.log*
@@ -20,3 +20,5 @@ pnpm-debug.log*
 Thumbs.db
 *.swp
 *.swo
+__pycache__/
+*.pyc
