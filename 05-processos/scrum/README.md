@@ -24,7 +24,8 @@ Adicione exemplos genéricos.
 
 ## Exercícios
 
-Registre exercícios planejados.
+Pratique a [estimativa relativa](pontos-de-historia/README.md), registrando
+premissas e incertezas antes de comparar os itens fictícios.
 
 ## Aprendizados
 
