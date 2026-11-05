@@ -15,9 +15,16 @@ Fundamentos de PHP.
 
 ## Como executar
 
-Não há PHPUnit instalado nem suíte configurada nesta pasta. Para planejar
-os primeiros testes, escolha uma regra isolada e descreva entradas, resultados
-e erros esperados antes de selecionar a ferramenta.
+Não há PHPUnit instalado. Os testes didáticos usam verificações explícitas
+que lançam exceção em caso de falha, sem depender da configuração de `assert`.
+Na raiz do repositório, execute:
+
+```sh
+php 01-fundamentos/php/testes-automatizados/exemplos/total-test.php
+```
+
+O sucesso imprime `OK: total` e retorna código zero; uma falha interrompe a execução.
+O [teste de total](exemplos/total-test.php) cobre cálculo, zeros, negativos e tipos.
 
 ## Exemplos
 
