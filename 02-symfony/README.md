@@ -10,7 +10,7 @@
 - [ ] Doctrine
 - [ ] Migrations
 - [ ] Security
-- [ ] APIs
+- [ ] [APIs: contrato de tarefas](api/README.md)
 - [ ] Testes
 
 ## Roteiro de um primeiro fluxo
