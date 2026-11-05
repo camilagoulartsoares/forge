@@ -15,34 +15,18 @@ PHP instalado localmente.
 
 ## Como executar
 
-Salve o exemplo abaixo em um arquivo local `introducao.php` e execute,
-no diretório onde o salvou:
+Na raiz do repositorio, execute o exemplo versionado:
 
 ```sh
-php -l introducao.php
-php introducao.php
+php -l 01-fundamentos/php/introducao/exemplos/calcular-total.php
+php 01-fundamentos/php/introducao/exemplos/executar.php
 ```
 
 O primeiro comando verifica a sintaxe. O segundo deve imprimir `Total: 60`.
 
 ## Exemplos
 
-```php
-<?php
-
-declare(strict_types=1);
-
-function calcularTotal(int $precoUnitario, int $quantidade): int
-{
-    if ($precoUnitario < 0 || $quantidade < 0) {
-        throw new InvalidArgumentException('Valores devem ser nao negativos.');
-    }
-
-    return $precoUnitario * $quantidade;
-}
-
-echo 'Total: ' . calcularTotal(20, 3) . PHP_EOL;
-```
+Veja a [regra de total](exemplos/calcular-total.php) e o [programa executavel](exemplos/executar.php).
 
 O exemplo trabalha com valores inteiros; não representa cálculo financeiro
 com frações. Experimente quantidade zero e confirme total zero. Um argumento
