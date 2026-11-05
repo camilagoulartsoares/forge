@@ -40,7 +40,8 @@ ou banco real. Registre quais dependências precisaram mudar e por quê.
 
 ## Exercícios
 
-Veja a pasta `exercicios`.
+Implemente o [registro de pedido](exercicios/registrar-pedido.md) com porta
+de persistência e adaptador em memória, usando os critérios de aceitação propostos.
 
 ## Aprendizados
 
