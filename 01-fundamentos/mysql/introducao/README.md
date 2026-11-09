@@ -15,7 +15,18 @@ MySQL disponível localmente.
 
 ## Como executar
 
-Adicione instruções ao incluir scripts.
+Para executar os exemplos `.sql`, abra o arquivo no cliente conectado ao seu
+MySQL local de estudos. Os scripts contêm apenas consultas com dados fictícios.
+
+Há também uma verificação rápida, sem servidor, executada na raiz:
+
+```sh
+python -m unittest discover -s tools -p "test_sql_examples.py"
+```
+
+Esses testes usam SQLite em memória para conferir os resultados das consultas
+portáveis e suas variações. Não substituem execução em MySQL nem validam
+configuração, plano de execução ou particularidades desse servidor.
 
 ## Exemplos
 
