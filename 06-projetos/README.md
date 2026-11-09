@@ -22,3 +22,6 @@ Antes de implementar, registre no README do projeto:
 Exemplo de critério: ao cadastrar uma tarefa com título vazio, o sistema deve
 recusar a entrada e manter a lista anterior. Uma POC também deve registrar
 se a hipótese foi confirmada, rejeitada ou ficou inconclusiva, com a evidência.
+
+Para integrar os exemplos da trilha, pratique o [desafio de lista de tarefas](desafios/lista-de-tarefas.md),
+com critérios para consulta, erro, pesquisa, ordenação e navegação.
