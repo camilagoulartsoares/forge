@@ -22,12 +22,17 @@ Na raiz do repositório, execute:
 ```sh
 php 01-fundamentos/php/testes-automatizados/exemplos/total-test.php
 php 01-fundamentos/php/testes-automatizados/exemplos/estoque-test.php
+php 01-fundamentos/php/testes-automatizados/exemplos/verificacoes-test.php
 ```
 
 O sucesso imprime `OK: total` e retorna código zero; uma falha interrompe a execução.
 O [teste de total](exemplos/total-test.php) cobre cálculo, zeros, negativos e tipos.
 O [teste de estoque](exemplos/estoque-test.php) imprime `OK: estoque` e verifica
 os cenários da matriz abaixo, incluindo preservação de estado após uma falha.
+O [teste dos verificadores](exemplos/verificacoes-test.php) confere que os
+helpers rejeitam valores de tipos diferentes, ausência de exceção e exceção
+da classe errada. Ele usa verificações independentes para evitar falso positivo
+caso um helper deixe de detectar falhas.
 
 ## Exemplos
 
