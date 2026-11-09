@@ -48,6 +48,12 @@ class CheckDocsTests(unittest.TestCase):
     def test_image_link_is_checked(self):
         self.assertIn("missing link", self.check("![diagram](missing.png)")[0])
 
+    def test_malformed_url_reports_error_and_continues(self):
+        errors = self.check("[invalid](https://[invalid)\n[missing](absent.md)")
+        self.assertEqual(2, len(errors))
+        self.assertIn(":1: invalid link", errors[0])
+        self.assertIn(":2: missing link", errors[1])
+
     def test_cli_exit_code_and_git_ignored_files(self):
         subprocess.run(["git", "init", "--quiet", str(self.root)], check=True)
         (self.root / ".gitignore").write_text("ignored.md\n", encoding="utf-8")

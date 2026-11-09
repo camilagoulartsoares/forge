@@ -33,7 +33,11 @@ def check_file(path: Path, root: Path) -> list[str]:
         line = re.sub(r"(`+).*?\1", "", line)
         for match in LINK.finditer(line):
             target = match[1].strip("<>")
-            parsed = urlsplit(target)
+            try:
+                parsed = urlsplit(target)
+            except ValueError as error:
+                errors.append(f"{path}:{number}: invalid link: {target}: {error}")
+                continue
             if parsed.scheme or parsed.netloc or not parsed.path:
                 continue
             resolved = (path.parent / unquote(parsed.path)).resolve()
