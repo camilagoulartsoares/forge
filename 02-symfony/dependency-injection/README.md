@@ -27,4 +27,9 @@ Autowiring ajuda a conectar dependências, mas não escolhe regras de negócio
 nem substitui a definição de contratos e valores de configuração.
 
 Esta pasta contém o roteiro, sem aplicação Symfony instalada.
+O [exemplo executável](saudacao.php) implementa a saudação em PHP puro:
+manhã de 06h a antes de 12h, tarde até antes de 18h e noite nos demais horários.
+O fuso é uma dependência explícita. Na raiz, execute
+`php 02-symfony/dependency-injection/saudacao-test.php` para verificar transições
+com relógio fixo, sem alterar o sistema nem esperar o tempo passar.
 Referência: [Symfony: Service Container](https://symfony.com/doc/current/service_container.html).
