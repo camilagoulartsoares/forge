@@ -4,7 +4,7 @@
 
 - [ ] Fundamentos
 - [ ] Controllers
-- [ ] Routes
+- [ ] [Routes](routes/README.md)
 - [ ] Services
 - [ ] [Dependency Injection](dependency-injection/README.md)
 - [ ] Doctrine
