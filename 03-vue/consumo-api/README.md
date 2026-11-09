@@ -3,6 +3,8 @@
 [buscar-tarefas.mjs](buscar-tarefas.mjs) consulta uma lista e verifica status
 HTTP e estrutura do JSON. Requer `fetch` no navegador ou Node.js 18 ou superior.
 O contrato exige `id` inteiro positivo seguro, `titulo` não vazio e `concluida` booleano.
+Os identificadores precisam ser únicos na lista, evitando chaves ambíguas no
+render de componentes e atualizações aplicadas à tarefa errada.
 
 ```sh
 node --test 03-vue/consumo-api/buscar-tarefas.test.mjs

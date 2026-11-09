@@ -31,3 +31,13 @@ test('rejeita formato inesperado e itens invalidos', async () => {
     })), TypeError);
   }
 });
+
+test('rejeita identificadores repetidos para evitar chaves ambiguas na interface', async () => {
+  const tarefas = [
+    { id: 1, titulo: 'Primeira', concluida: false },
+    { id: 1, titulo: 'Outra', concluida: true },
+  ];
+  await assert.rejects(buscarTarefas('/tarefas', async () => ({
+    ok: true, json: async () => tarefas,
+  })), /duplicados/);
+});

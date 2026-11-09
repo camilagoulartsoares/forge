@@ -12,5 +12,9 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch) {
     throw new TypeError('Resposta de tarefas invalida.');
   }
 
+  if (new Set(tarefas.map((tarefa) => tarefa.id)).size !== tarefas.length) {
+    throw new TypeError('Resposta contem identificadores de tarefas duplicados.');
+  }
+
   return tarefas;
 }
