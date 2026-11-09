@@ -1,0 +1,30 @@
+# Exercício: serviço de conclusão de tarefa
+
+Defina uma operação `concluirTarefa(id)` que pode ser chamada novamente sem
+alternar a tarefa de volta para pendente. Esse contrato expressa o estado
+desejado, evitando uma operação de alternância quando houver repetição.
+
+## Regras propostas
+
+| Situação | Resultado esperado |
+| --- | --- |
+| Tarefa pendente | Passa a concluída e é salva |
+| Tarefa já concluída | Retorna o estado atual sem nova gravação |
+| Identificador não encontrado | Falha de recurso ausente |
+| Persistência indisponível | Falha propagada, sem informar sucesso |
+
+Receba o repositório pelo construtor. O serviço coordena a consulta e a
+mudança; não lê Request nem escolhe status HTTP. O adaptador de entrada
+traduz as falhas conhecidas para seu contrato de resposta.
+
+## Como verificar
+
+Use um repositório fake que conte gravações. Execute a operação duas vezes
+sobre a mesma tarefa e confirme uma única gravação no cenário sequencial.
+Verifique que uma falha de infraestrutura não é confundida com ausência.
+
+Essa simulação não prova idempotência sob concorrência ou falha parcial de
+uma operação distribuída. Se acrescentar notificações ou outros efeitos,
+defina como evitar sua duplicação e teste os pontos de interrupção.
+
+Este é um roteiro de aplicação; não há serviço Symfony instalado nesta pasta.
