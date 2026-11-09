@@ -6,7 +6,7 @@
 - [ ] [Componentes](componentes/README.md)
 - [ ] Props e eventos
 - [ ] [Composables](composables/README.md)
-- [ ] Pinia
+- [ ] [Pinia](pinia/README.md)
 - [ ] [Vue Router: filtro na query](vue-router/README.md)
 - [ ] Formulários
 - [ ] Consumo de APIs
