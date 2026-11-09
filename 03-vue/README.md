@@ -3,7 +3,7 @@
 ## Checklist inicial
 
 - [ ] Fundamentos
-- [ ] Componentes
+- [ ] [Componentes](componentes/README.md)
 - [ ] Props e eventos
 - [ ] Composables
 - [ ] Pinia
