@@ -5,7 +5,7 @@
 - [ ] Fundamentos
 - [ ] [Componentes](componentes/README.md)
 - [ ] Props e eventos
-- [ ] Composables
+- [ ] [Composables](composables/README.md)
 - [ ] Pinia
 - [ ] [Vue Router: filtro na query](vue-router/README.md)
 - [ ] Formulários
