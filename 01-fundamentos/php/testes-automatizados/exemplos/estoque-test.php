@@ -32,4 +32,26 @@ verificarExcecao(OverflowException::class, function () use ($limite): void {
 });
 verificarIgual(PHP_INT_MAX, $limite->saldo());
 
+$retirada = new Estoque();
+verificarExcecao(UnderflowException::class, function () use ($retirada): void {
+    $retirada->retirar(1);
+});
+$retirada->adicionar(5);
+$retirada->retirar(2);
+verificarIgual(3, $retirada->saldo());
+foreach ([0, -1] as $quantidade) {
+    verificarExcecao(InvalidArgumentException::class, function () use ($retirada, $quantidade): void {
+        $retirada->retirar($quantidade);
+    });
+    verificarIgual(3, $retirada->saldo());
+}
+verificarExcecao(UnderflowException::class, function () use ($retirada): void {
+    $retirada->retirar(4);
+});
+verificarIgual(3, $retirada->saldo());
+$retirada->retirar(3);
+verificarIgual(0, $retirada->saldo());
+$limite->retirar(PHP_INT_MAX);
+verificarIgual(0, $limite->saldo());
+
 echo 'OK: estoque' . PHP_EOL;

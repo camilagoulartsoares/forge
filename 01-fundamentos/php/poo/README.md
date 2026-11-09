@@ -28,6 +28,11 @@ alterar o saldo. Crie duas instâncias e confira que os saldos são independente
 Uma adição que ultrapasse `PHP_INT_MAX` lança `OverflowException` e preserva
 o saldo anterior; esse limite acompanha a plataforma onde o PHP é executado.
 
+A operação `retirar` exige quantidade positiva e saldo suficiente. Quantidade
+inválida lança `InvalidArgumentException`; insuficiência lança `UnderflowException`.
+Ambas preservam o estado. Retirar exatamente o saldo é válido e deixa zero.
+Os testes cobrem retirada parcial, total, de estoque vazio e acima do disponível.
+
 ## Exercícios
 
 Veja a pasta `exercicios`.

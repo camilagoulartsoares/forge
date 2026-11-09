@@ -19,6 +19,19 @@ final class Estoque
         $this->saldo += $quantidade;
     }
 
+    public function retirar(int $quantidade): void
+    {
+        if ($quantidade <= 0) {
+            throw new InvalidArgumentException('Quantidade deve ser positiva.');
+        }
+
+        if ($quantidade > $this->saldo) {
+            throw new UnderflowException('Saldo insuficiente.');
+        }
+
+        $this->saldo -= $quantidade;
+    }
+
     public function saldo(): int
     {
         return $this->saldo;
