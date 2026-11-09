@@ -1,5 +1,17 @@
 # Verificação da documentação
 
+## Todas as verificações
+
+Com Python 3.10+, Git, PHP 7.4+ e Node.js 18+, execute `python tools/check.py`
+na raiz. O comando roda o verificador Markdown, os testes Python/SQL, a sintaxe
+de todos os arquivos PHP, as suítes PHP e os testes JavaScript. Não instala
+dependências nem exige banco ou acesso à rede. Interrompe na primeira falha
+e retorna um código diferente de zero; runtime ausente não conta como sucesso.
+Os caminhos são resolvidos a partir do script, permitindo executá-lo por
+caminho absoluto a partir de outro diretório.
+
+## Somente documentação
+
 Requer Python 3.10 ou superior e Git. Na raiz do repositório:
 
 ```sh
