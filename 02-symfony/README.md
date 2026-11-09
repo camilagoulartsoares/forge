@@ -9,7 +9,7 @@
 - [ ] [Dependency Injection](dependency-injection/README.md)
 - [ ] Doctrine
 - [ ] [Migrations](migrations/README.md)
-- [ ] Security
+- [ ] [Security: autorização por recurso](security/README.md)
 - [ ] [APIs: contrato de tarefas](api/README.md)
 - [ ] Testes
 
