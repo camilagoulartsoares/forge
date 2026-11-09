@@ -39,18 +39,35 @@ def check_file(path: Path, root: Path) -> list[str]:
     except (OSError, UnicodeError) as error:
         return [f"{path}: cannot read UTF-8: {error}"]
     fence = None
+    in_comment = False
     for number, line in enumerate(content.splitlines(), 1):
-        match = FENCE.match(line)
-        if match:
-            marker, suffix = match.groups()
-            if fence is None:
-                fence = marker
-            elif marker[0] == fence[0] and len(marker) >= len(fence) and not suffix.strip():
+        if fence is not None:
+            match = FENCE.match(line)
+            if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
                 fence = None
             continue
-        if fence is not None:
-            continue
         line = without_inline_code(line)
+        visible = []
+        while line:
+            if in_comment:
+                end = line.find("-->")
+                if end == -1:
+                    break
+                line = line[end + 3:]
+                in_comment = False
+            else:
+                start = line.find("<!--")
+                if start == -1:
+                    visible.append(line)
+                    break
+                visible.append(line[:start])
+                line = line[start + 4:]
+                in_comment = True
+        line = "".join(visible)
+        match = FENCE.match(line)
+        if match:
+            fence = match[1]
+            continue
         for match in LINK.finditer(line):
             target = match[1].strip("<>")
             try:

@@ -45,6 +45,17 @@ class CheckDocsTests(unittest.TestCase):
     def test_links_after_inline_code_are_still_checked(self):
         self.assertIn("missing link", self.check("`code` [real link](absent.md)")[0])
 
+    def test_html_comments_are_ignored_without_shifting_lines(self):
+        errors = self.check("<!--\n[hidden](absent.md)\n-->\n[visible](missing.md)")
+        self.assertEqual(1, len(errors))
+        self.assertIn(":4: missing link", errors[0])
+
+    def test_unclosed_html_comment_hides_remaining_content(self):
+        self.assertEqual([], self.check("# Title\n<!-- [draft](absent.md)\n```php"))
+
+    def test_comment_markers_inside_code_are_literal(self):
+        self.assertEqual([], self.check("```html\n<!-- literal\n```\nText `<!--` end"))
+
     def test_invalid_utf8(self):
         self.document.write_bytes(b"\xff")
         self.assertIn("cannot read UTF-8", check_file(self.document, self.root)[0])
