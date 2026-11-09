@@ -42,6 +42,10 @@ ou banco real. Registre quais dependências precisaram mudar e por quê.
 
 Implemente o [registro de pedido](exercicios/registrar-pedido.md) com porta
 de persistência e adaptador em memória, usando os critérios de aceitação propostos.
+Após a prática, compare com a [solução em PHP puro](exemplos/pedidos.php).
+Execute `php 04-arquitetura/arquitetura-hexagonal/exemplos/pedidos-test.php`
+na raiz. Os testes cobrem validação antes da gravação, duplicidade e propagação
+de falha do adaptador. O armazenamento é volátil e não oferece concorrência de banco.
 
 ## Aprendizados
 
