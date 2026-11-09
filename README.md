@@ -80,6 +80,24 @@ Legenda: `[ ]` não iniciado; `[-]` em andamento (convenção textual, pois o Gi
 
 Para começar, consulte a [preparação do ambiente](00-onboarding/ambiente/README.md). Antes de contribuir, leia o [guia de contribuição](CONTRIBUTING.md).
 
+## Executar os exemplos e as verificações
+
+Os exemplos versionados são independentes e não exigem instalar Symfony ou Vue.
+Na raiz, com Python 3.10+, Git, PHP 7.4+ e Node.js 18+, execute:
+
+```sh
+python tools/check.py
+```
+
+O comando reúne documentação, testes e sintaxe. Consulte os
+[detalhes das verificações](tools/README.md) para execução isolada e limitações.
+Os testes SQL usam SQLite em memória; a execução em MySQL continua sendo uma
+verificação separada no ambiente de estudos.
+
+Para explorar o código, comece pelo [cálculo em PHP](01-fundamentos/php/introducao/README.md),
+pelo [estoque com testes](01-fundamentos/php/poo/README.md) ou pelas
+[transformações de tarefas em JavaScript](03-vue/fundamentos/README.md).
+
 ## Organização de cada estudo
 
 ```text
