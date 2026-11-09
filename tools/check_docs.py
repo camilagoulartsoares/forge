@@ -91,12 +91,17 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
     args = parser.parse_args()
-    result = subprocess.run(
-        ["git", "-C", str(args.root), "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "*.md"],
-        capture_output=True,
-        check=True,
-    )
-    paths = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")) - {""})
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(args.root), "ls-files", "-z", "--cached", "--others", "--exclude-standard", "--", "*.md"],
+            capture_output=True,
+            check=True,
+        )
+        paths = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")) - {""})
+    except (OSError, subprocess.CalledProcessError, UnicodeError) as error:
+        detail = error.stderr.decode("utf-8", errors="replace").strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
+        print(f"Cannot enumerate documents: {detail}", file=sys.stderr)
+        return 2
     errors = [error for name in paths for error in check_file(args.root / name, args.root)]
     if errors:
         print("\n".join(errors), file=sys.stderr)

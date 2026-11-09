@@ -3,8 +3,10 @@ import sys
 import tempfile
 from pathlib import Path
 import unittest
+from unittest.mock import patch
+import io
 
-from check_docs import check_file
+from check_docs import check_file, main
 
 
 class CheckDocsTests(unittest.TestCase):
@@ -81,6 +83,19 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual(0, subprocess.run(command, capture_output=True).returncode)
         self.check("[bad](missing.md)")
         self.assertEqual(1, subprocess.run(command, capture_output=True).returncode)
+
+    def test_cli_non_repository_returns_diagnostic_without_traceback(self):
+        command = [sys.executable, str(Path(__file__).with_name("check_docs.py")), "--root", str(self.root)]
+        result = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(2, result.returncode)
+        self.assertIn("Cannot enumerate documents", result.stderr)
+        self.assertNotIn("Traceback", result.stderr)
+
+    def test_missing_git_returns_operational_error(self):
+        with patch("sys.argv", ["check_docs.py"]), patch("sys.stderr", new_callable=io.StringIO) as errors:
+            with patch("check_docs.subprocess.run", side_effect=FileNotFoundError("git unavailable")):
+                self.assertEqual(2, main())
+        self.assertIn("git unavailable", errors.getvalue())
 
 
 if __name__ == "__main__":

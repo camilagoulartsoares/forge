@@ -16,5 +16,7 @@ Links externos não são acessados. Âncoras, links por referência e sintaxe
 Markdown com parênteses aninhados no destino precisam de revisão manual.
 Links fora do repositório são rejeitados para manter o material portável.
 O código de saída é zero em caso de sucesso e diferente de zero em caso de erro.
+Falhas de conteúdo retornam `1`; problemas operacionais, como Git ausente ou
+`--root` fora de um repositório, retornam `2` com diagnóstico no stderr.
 Os testes usam diretórios temporários e cobrem falhas de links, UTF-8,
 blocos aninhados, imagens e o código de saída da interface de linha de comando.
