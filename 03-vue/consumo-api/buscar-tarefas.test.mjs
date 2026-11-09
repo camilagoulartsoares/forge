@@ -62,3 +62,24 @@ test('encaminha cancelamento e preserva a identidade da falha', async () => {
     signal.throwIfAborted();
   }, { signal: controller.signal }), (erro) => erro === motivo);
 });
+
+test('nao inicia requisicao com sinal previamente cancelado', async () => {
+  const controller = new AbortController();
+  controller.abort(new Error('cancelado antes'));
+  let chamadas = 0;
+  await assert.rejects(buscarTarefas('/tarefas', async () => {
+    chamadas += 1;
+  }, { signal: controller.signal }), (erro) => erro === controller.signal.reason);
+  assert.equal(chamadas, 0);
+});
+
+test('descarta resultado cancelado durante leitura do JSON', async () => {
+  const controller = new AbortController();
+  await assert.rejects(buscarTarefas('/tarefas', async () => ({
+    ok: true,
+    json: async () => {
+      controller.abort(new Error('consulta substituida'));
+      return [];
+    },
+  }), { signal: controller.signal }), (erro) => erro === controller.signal.reason);
+});

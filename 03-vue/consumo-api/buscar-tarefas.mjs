@@ -7,12 +7,15 @@ export class ErroHttp extends Error {
 }
 
 export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal } = {}) {
+  signal?.throwIfAborted();
   const resposta = await requisitar(url, { headers: { Accept: 'application/json' }, signal });
+  signal?.throwIfAborted();
   if (!resposta.ok) {
     throw new ErroHttp(resposta.status);
   }
 
   const tarefas = await resposta.json();
+  signal?.throwIfAborted();
   if (!Array.isArray(tarefas) || !tarefas.every((tarefa) => tarefa !== null
     && Number.isSafeInteger(tarefa.id) && tarefa.id > 0
     && typeof tarefa.titulo === 'string' && tarefa.titulo.trim().length > 0

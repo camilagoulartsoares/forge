@@ -24,3 +24,5 @@ passe `{ signal: controller.signal }` como terceiro argumento, usando um
 `AbortController`. Ao usar o fetch padrão, o segundo argumento pode ser `undefined`.
 O cancelamento é propagado ao chamador; ele pode distinguir o motivo e evitar
 exibir uma mensagem de falha de rede para uma ação cancelada pelo usuário.
+O sinal é conferido antes da requisição e após cada espera, descartando também
+resultados tardios de implementações injetadas que não respeitem o cancelamento.
