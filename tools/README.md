@@ -10,6 +10,10 @@ e retorna um código diferente de zero; runtime ausente não conta como sucesso.
 Os caminhos são resolvidos a partir do script, permitindo executá-lo por
 caminho absoluto a partir de outro diretório.
 
+Para trabalhar em uma área isolada, use `--only docs`, `--only python`,
+`--only php` ou `--only js`. Somente os runtimes da área selecionada são exigidos.
+Uma execução parcial não substitui o comando completo antes de publicar código.
+
 ## Somente documentação
 
 Requer Python 3.10 ou superior e Git. Na raiz do repositório:
