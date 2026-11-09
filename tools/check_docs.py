@@ -77,7 +77,14 @@ def check_file(path: Path, root: Path) -> list[str]:
                 continue
             if parsed.scheme or parsed.netloc or not parsed.path:
                 continue
-            resolved = (path.parent / unquote(parsed.path)).resolve()
+            try:
+                decoded = unquote(parsed.path)
+                if "\0" in decoded:
+                    raise ValueError("NUL character in path")
+                resolved = (path.parent / decoded).resolve()
+            except (ValueError, OSError) as error:
+                errors.append(f"{path}:{number}: invalid local path: {target}: {error}")
+                continue
             if not resolved.is_relative_to(root.resolve()):
                 errors.append(f"{path}:{number}: link outside repository: {target}")
             elif not resolved.exists():

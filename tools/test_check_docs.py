@@ -97,6 +97,12 @@ class CheckDocsTests(unittest.TestCase):
                 self.assertEqual(2, main())
         self.assertIn("git unavailable", errors.getvalue())
 
+    def test_invalid_local_path_does_not_hide_later_errors(self):
+        errors = self.check("[bad](file%00.md)\n[missing](absent.md)")
+        self.assertEqual(2, len(errors))
+        self.assertIn(":1: invalid local path", errors[0])
+        self.assertIn(":2: missing link", errors[1])
+
 
 if __name__ == "__main__":
     unittest.main()
