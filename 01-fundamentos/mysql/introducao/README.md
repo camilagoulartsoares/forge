@@ -76,6 +76,10 @@ deve aparecer, com o texto `sem email`. `IS NULL` consulta ausência de valor;
 exibição, sem alterar os dados. O contato `1` tem string vazia e não é nulo.
 
 Veja a pasta `exercicios`.
+Para consultar ausência de relação, execute [sem-pedidos.sql](exemplos/sem-pedidos.sql).
+`NOT EXISTS` deve retornar apenas Bruno mesmo com uma referência nula nos
+pedidos. A subconsulta é correlacionada ao identificador do cliente; não
+confunda esse teste de existência com a comparação de valores usando `NOT IN`.
 
 ## Aprendizados
 

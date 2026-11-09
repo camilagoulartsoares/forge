@@ -35,6 +35,9 @@ class SqlExamplesTests(unittest.TestCase):
     def test_equality_with_null_is_not_is_null(self):
         self.assertEqual([], self.query("valores-nulos.sql", "IS NULL", "= NULL"))
 
+    def test_not_exists_finds_customer_without_orders_despite_null_reference(self):
+        self.assertEqual([(2, "Bruno")], self.query("sem-pedidos.sql"))
+
 
 if __name__ == "__main__":
     unittest.main()
