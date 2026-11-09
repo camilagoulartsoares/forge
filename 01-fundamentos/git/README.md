@@ -23,3 +23,5 @@ em andamento; não inicie outra integração enquanto houver conflito pendente.
 
 Pratique a resolução em uma cópia descartável. Consulte também o
 [fluxo seguro de trabalho](fluxo-de-trabalho/README.md).
+Para entender o motivo de uma mudança, pratique a
+[investigação do histórico por arquivo](fluxo-de-trabalho/exemplos/investigar-historico.md).
