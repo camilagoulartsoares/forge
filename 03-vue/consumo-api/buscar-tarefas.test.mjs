@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buscarTarefas } from './buscar-tarefas.mjs';
+import { buscarTarefas, ErroHttp } from './buscar-tarefas.mjs';
 
 test('encaminha URL e Accept e aceita lista valida ou vazia', async () => {
   for (const tarefas of [[], [{ id: 1, titulo: 'Estudar', concluida: false }]]) {
@@ -15,6 +15,17 @@ test('encaminha URL e Accept e aceita lista valida ou vazia', async () => {
 
 test('rejeita HTTP sem tentar interpretar corpo de erro', async () => {
   await assert.rejects(buscarTarefas('/tarefas', async () => ({ ok: false, status: 503 })), /503/);
+});
+
+test('expoe status HTTP sem exigir interpretar texto de erro', async () => {
+  for (const status of [401, 403, 404, 429, 503]) {
+    await assert.rejects(buscarTarefas('/tarefas', async () => ({ ok: false, status })), (erro) => {
+      assert.ok(erro instanceof ErroHttp);
+      assert.equal(erro.name, 'ErroHttp');
+      assert.equal(erro.status, status);
+      return true;
+    });
+  }
 });
 
 test('propaga falha de rede e JSON malformado', async () => {
