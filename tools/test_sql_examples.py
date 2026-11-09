@@ -38,6 +38,12 @@ class SqlExamplesTests(unittest.TestCase):
     def test_not_exists_finds_customer_without_orders_despite_null_reference(self):
         self.assertEqual([(2, "Bruno")], self.query("sem-pedidos.sql"))
 
+    def test_union_removes_duplicates(self):
+        self.assertEqual([("Ana",), ("Bruno",)], self.query("uniao.sql"))
+
+    def test_union_all_preserves_duplicates(self):
+        self.assertEqual([("Ana",), ("Ana",), ("Bruno",)], self.query("uniao.sql", "UNION", "UNION ALL"))
+
 
 if __name__ == "__main__":
     unittest.main()

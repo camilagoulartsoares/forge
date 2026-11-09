@@ -76,6 +76,10 @@ deve aparecer, com o texto `sem email`. `IS NULL` consulta ausência de valor;
 exibição, sem alterar os dados. O contato `1` tem string vazia e não é nulo.
 
 Veja a pasta `exercicios`.
+Em [uniao.sql](exemplos/uniao.sql), compare `UNION` com `UNION ALL`: o primeiro
+retorna Ana uma vez, enquanto o segundo preserva as duas ocorrências. A remoção
+considera a linha projetada completa; não deduplica entidades por uma chave
+de negócio. A ordenação final é explícita em ambos os casos.
 Para consultar ausência de relação, execute [sem-pedidos.sql](exemplos/sem-pedidos.sql).
 `NOT EXISTS` deve retornar apenas Bruno mesmo com uma referência nula nos
 pedidos. A subconsulta é correlacionada ao identificador do cliente; não
