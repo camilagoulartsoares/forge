@@ -22,6 +22,14 @@ Para o critério de data, o contrato exige `criadaEm` previamente validada e
 normalizada no formato UTC `YYYY-MM-DDTHH:mm:ss.sssZ`, permitindo comparação textual.
 Não passe datas locais, inválidas ou com fusos diferentes sem normalização.
 
+## Pesquisa textual
+
+[pesquisar-tarefas.mjs](pesquisar-tarefas.mjs) procura todos os termos no título,
+ignorando acentos e maiúsculas e preservando os dados originais. Pontuação é
+literal, sem interpretar expressões regulares. Uma consulta vazia retorna uma
+cópia da lista. O contrato pressupõe tarefas com títulos textuais válidos.
+Execute `node --test 03-vue/fundamentos/pesquisar-tarefas.test.mjs` na raiz.
+
 ```sh
 node --test 03-vue/fundamentos/ordenar-tarefas.test.mjs
 ```
