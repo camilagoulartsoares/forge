@@ -3,7 +3,7 @@
 ## Checklist inicial
 
 - [ ] Fundamentos
-- [ ] Controllers
+- [ ] [Controllers](controllers/README.md)
 - [ ] [Routes](routes/README.md)
 - [ ] Services
 - [ ] [Dependency Injection](dependency-injection/README.md)
