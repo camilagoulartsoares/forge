@@ -7,7 +7,7 @@
 - [ ] [Routes](routes/README.md)
 - [ ] Services
 - [ ] [Dependency Injection](dependency-injection/README.md)
-- [ ] Doctrine
+- [ ] [Doctrine](doctrine/README.md)
 - [ ] [Migrations](migrations/README.md)
 - [ ] [Security: autorização por recurso](security/README.md)
 - [ ] [APIs: contrato de tarefas](api/README.md)
