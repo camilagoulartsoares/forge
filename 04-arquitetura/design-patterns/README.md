@@ -25,3 +25,6 @@ Se houver um único critério pequeno, uma função direta pode bastar. Compare
 o custo de criar classes com o de passar uma função de comparação. Adote a
 separação quando políticas independentes precisarem mudar ou ser testadas
 separadamente, evitando adicionar estruturas sem uma necessidade demonstrada.
+
+Compare sua solução com o [exemplo JavaScript de ordenação](../../03-vue/fundamentos/README.md),
+que usa funções para os critérios e um desempate explícito por identificador.
