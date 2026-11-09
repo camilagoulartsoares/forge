@@ -7,7 +7,7 @@
 - [ ] Props e eventos
 - [ ] Composables
 - [ ] Pinia
-- [ ] Vue Router
+- [ ] [Vue Router: filtro na query](vue-router/README.md)
 - [ ] Formulários
 - [ ] Consumo de APIs
 - [ ] Testes
