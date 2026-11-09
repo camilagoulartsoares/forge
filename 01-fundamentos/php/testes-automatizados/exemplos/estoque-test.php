@@ -54,4 +54,33 @@ verificarIgual(0, $retirada->saldo());
 $limite->retirar(PHP_INT_MAX);
 verificarIgual(0, $limite->saldo());
 
+$origem = new Estoque();
+$destino = new Estoque();
+$origem->adicionar(5);
+$origem->transferirPara($destino, 2);
+verificarIgual(3, $origem->saldo());
+verificarIgual(2, $destino->saldo());
+foreach ([0, -1] as $quantidade) {
+    verificarExcecao(InvalidArgumentException::class, function () use ($origem, $destino, $quantidade): void {
+        $origem->transferirPara($destino, $quantidade);
+    });
+}
+verificarExcecao(InvalidArgumentException::class, function () use ($origem): void {
+    $origem->transferirPara($origem, 1);
+});
+verificarExcecao(UnderflowException::class, function () use ($origem, $destino): void {
+    $origem->transferirPara($destino, 4);
+});
+$cheio = new Estoque();
+$cheio->adicionar(PHP_INT_MAX);
+verificarExcecao(OverflowException::class, function () use ($origem, $cheio): void {
+    $origem->transferirPara($cheio, 1);
+});
+verificarIgual(3, $origem->saldo());
+verificarIgual(2, $destino->saldo());
+verificarIgual(PHP_INT_MAX, $cheio->saldo());
+$origem->transferirPara($destino, 3);
+verificarIgual(0, $origem->saldo());
+verificarIgual(5, $destino->saldo());
+
 echo 'OK: estoque' . PHP_EOL;

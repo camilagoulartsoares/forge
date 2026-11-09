@@ -32,6 +32,9 @@ A operação `retirar` exige quantidade positiva e saldo suficiente. Quantidade
 inválida lança `InvalidArgumentException`; insuficiência lança `UnderflowException`.
 Ambas preservam o estado. Retirar exatamente o saldo é válido e deixa zero.
 Os testes cobrem retirada parcial, total, de estoque vazio e acima do disponível.
+`transferirPara` movimenta unidades entre duas instâncias distintas. Valida
+saldo e capacidade antes de mudar qualquer uma delas; falhas preservam ambas.
+Essa garantia vale para os objetos em memória e não substitui transações de banco.
 
 ## Exercícios
 
