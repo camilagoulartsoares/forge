@@ -41,3 +41,13 @@ test('rejeita identificadores repetidos para evitar chaves ambiguas na interface
     ok: true, json: async () => tarefas,
   })), /duplicados/);
 });
+
+test('encaminha cancelamento e preserva a identidade da falha', async () => {
+  const controller = new AbortController();
+  controller.abort();
+  const motivo = controller.signal.reason;
+  await assert.rejects(buscarTarefas('/tarefas', async (_url, { signal }) => {
+    assert.equal(signal, controller.signal);
+    signal.throwIfAborted();
+  }, { signal: controller.signal }), (erro) => erro === motivo);
+});

@@ -14,3 +14,9 @@ Execute da raiz. Os testes injetam a função de requisição e não acessam a r
 Cobrem sucesso, vazio, HTTP 503, rede indisponível, JSON inválido e formato inesperado.
 O chamador deve capturar a falha, encerrar o estado de carregamento em `finally`
 e permitir nova tentativa. Uma falha não deve ser apresentada como lista vazia.
+
+Para cancelar uma requisição ao desmontar um componente ou mudar a consulta,
+passe `{ signal: controller.signal }` como terceiro argumento, usando um
+`AbortController`. Ao usar o fetch padrão, o segundo argumento pode ser `undefined`.
+O cancelamento é propagado ao chamador; ele pode distinguir o motivo e evitar
+exibir uma mensagem de falha de rede para uma ação cancelada pelo usuário.

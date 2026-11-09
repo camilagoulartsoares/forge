@@ -1,5 +1,5 @@
-export async function buscarTarefas(url, requisitar = globalThis.fetch) {
-  const resposta = await requisitar(url, { headers: { Accept: 'application/json' } });
+export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal } = {}) {
+  const resposta = await requisitar(url, { headers: { Accept: 'application/json' }, signal });
   if (!resposta.ok) {
     throw new Error(`Falha HTTP: ${resposta.status}`);
   }
