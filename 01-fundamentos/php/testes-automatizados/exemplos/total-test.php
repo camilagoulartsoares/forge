@@ -25,4 +25,12 @@ verificarExcecao(TypeError::class, function (): void {
     calcularTotal('20', 3);
 });
 
+foreach ([2, 3, 7, 10, PHP_INT_MAX] as $quantidade) {
+    $ultimoPrecoValido = intdiv(PHP_INT_MAX, $quantidade);
+    verificarIgual($ultimoPrecoValido * $quantidade, calcularTotal($ultimoPrecoValido, $quantidade));
+    verificarExcecao(OverflowException::class, function () use ($ultimoPrecoValido, $quantidade): void {
+        calcularTotal($ultimoPrecoValido + 1, $quantidade);
+    });
+}
+
 echo 'OK: total' . PHP_EOL;
