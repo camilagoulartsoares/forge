@@ -44,6 +44,12 @@ class SqlExamplesTests(unittest.TestCase):
     def test_union_all_preserves_duplicates(self):
         self.assertEqual([("Ana",), ("Ana",), ("Bruno",)], self.query("uniao.sql", "UNION", "UNION ALL"))
 
+    def test_count_star_and_count_column_handle_null_differently(self):
+        self.assertEqual([(3, 2, 2)], self.query("contagem-nulos.sql"))
+
+    def test_average_uses_known_values_including_zero(self):
+        self.assertEqual([(3, 2, 1.0)], self.query("contagem-nulos.sql", "SUM(quantidade)", "AVG(quantidade)"))
+
 
 if __name__ == "__main__":
     unittest.main()

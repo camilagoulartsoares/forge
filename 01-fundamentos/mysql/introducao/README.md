@@ -76,6 +76,10 @@ deve aparecer, com o texto `sem email`. `IS NULL` consulta ausência de valor;
 exibição, sem alterar os dados. O contato `1` tem string vazia e não é nulo.
 
 Veja a pasta `exercicios`.
+Execute [contagem-nulos.sql](exemplos/contagem-nulos.sql): `COUNT(*)` retorna
+três linhas e `COUNT(quantidade)` retorna dois valores conhecidos. Zero não é
+ausência de valor. Ao trocar `SUM` por `AVG`, a média esperada é `1`, pois o
+denominador considera os dois valores conhecidos, incluindo o zero.
 Em [uniao.sql](exemplos/uniao.sql), compare `UNION` com `UNION ALL`: o primeiro
 retorna Ana uma vez, enquanto o segundo preserva as duas ocorrências. A remoção
 considera a linha projetada completa; não deduplica entidades por uma chave
