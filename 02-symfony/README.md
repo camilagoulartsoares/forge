@@ -6,7 +6,7 @@
 - [ ] Controllers
 - [ ] Routes
 - [ ] Services
-- [ ] Dependency Injection
+- [ ] [Dependency Injection](dependency-injection/README.md)
 - [ ] Doctrine
 - [ ] [Migrations](migrations/README.md)
 - [ ] Security
