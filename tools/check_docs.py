@@ -12,6 +12,26 @@ LINK = re.compile(r'!?\[[^\]\n]*\]\((<[^>\n]+>|[^\s)]+)(?:\s+"[^"]*")?\)')
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 
 
+def without_inline_code(line: str) -> str:
+    """Only matching backtick runs delimit code; unmatched runs remain literal."""
+    runs = list(re.finditer(r"`+", line))
+    cursor = 0
+    pieces = []
+    index = 0
+    while index < len(runs):
+        opening = runs[index]
+        closing = next((j for j in range(index + 1, len(runs))
+                        if len(runs[j][0]) == len(opening[0])), None)
+        if closing is None:
+            index += 1
+            continue
+        pieces.append(line[cursor:opening.start()])
+        cursor = runs[closing].end()
+        index = closing + 1
+    pieces.append(line[cursor:])
+    return "".join(pieces)
+
+
 def check_file(path: Path, root: Path) -> list[str]:
     errors = []
     try:
@@ -30,7 +50,7 @@ def check_file(path: Path, root: Path) -> list[str]:
             continue
         if fence is not None:
             continue
-        line = re.sub(r"(`+).*?\1", "", line)
+        line = without_inline_code(line)
         for match in LINK.finditer(line):
             target = match[1].strip("<>")
             try:

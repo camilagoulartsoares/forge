@@ -38,6 +38,13 @@ class CheckDocsTests(unittest.TestCase):
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 
+    def test_inline_code_requires_matching_delimiter_lengths(self):
+        self.assertEqual([], self.check("Text ``code ` [not a link](absent.md)`` end"))
+        self.assertIn("missing link", self.check("Text ``unmatched `[link](absent.md)")[0])
+
+    def test_links_after_inline_code_are_still_checked(self):
+        self.assertIn("missing link", self.check("`code` [real link](absent.md)")[0])
+
     def test_invalid_utf8(self):
         self.document.write_bytes(b"\xff")
         self.assertIn("cannot read UTF-8", check_file(self.document, self.root)[0])
