@@ -83,3 +83,17 @@ test('descarta resultado cancelado durante leitura do JSON', async () => {
     },
   }), { signal: controller.signal }), (erro) => erro === controller.signal.reason);
 });
+
+test('integra com Response real e consome JSON uma unica vez sem rede', async () => {
+  const tarefas = [{ id: 1, titulo: 'Estudar', concluida: false }];
+  const resposta = new Response(JSON.stringify(tarefas), { headers: { 'Content-Type': 'application/json' } });
+  assert.deepEqual(await buscarTarefas('/tarefas', async () => resposta), tarefas);
+  assert.equal(resposta.bodyUsed, true);
+});
+
+test('Response de erro preserva corpo e JSON malformado falha na leitura real', async () => {
+  const indisponivel = new Response('<html>erro</html>', { status: 503 });
+  await assert.rejects(buscarTarefas('/tarefas', async () => indisponivel), ErroHttp);
+  assert.equal(indisponivel.bodyUsed, false);
+  await assert.rejects(buscarTarefas('/tarefas', async () => new Response('{')), SyntaxError);
+});
