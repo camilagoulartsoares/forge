@@ -24,6 +24,15 @@ class SqlExamplesTests(unittest.TestCase):
     def test_inner_join_removes_unmatched_customer(self):
         self.assertEqual([(1, "Ana", "Livro")], self.query("juncoes.sql", "LEFT JOIN", "INNER JOIN"))
 
+    def test_left_join_preserves_multiple_orders_without_deduplication(self):
+        result = self.query("juncoes.sql", "SELECT 1 AS cliente_id, 'Livro' AS produto",
+                            "SELECT 1 AS cliente_id, 'Livro' AS produto UNION ALL SELECT 1, 'Caneta'")
+        self.assertCountEqual([(1, "Ana", "Livro"), (1, "Ana", "Caneta"), (2, "Bruno", None)], result)
+
+    def test_right_table_filter_in_where_removes_unmatched_rows(self):
+        result = self.query("juncoes.sql", "ORDER BY clientes.id", "WHERE pedidos.produto = 'Livro' ORDER BY clientes.id")
+        self.assertEqual([(1, "Ana", "Livro")], result)
+
     def test_having_filters_groups(self):
         self.assertEqual([("Sul", 2, 50)], self.query("agregacao.sql"))
 
