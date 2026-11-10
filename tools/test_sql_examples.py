@@ -1,6 +1,7 @@
 """Regression checks for the portable SELECT examples, not a MySQL integration suite."""
 
 from pathlib import Path
+from contextlib import closing
 import sqlite3
 import unittest
 
@@ -14,7 +15,7 @@ class SqlExamplesTests(unittest.TestCase):
         if before is not None:
             self.assertIn(before, sql)
             sql = sql.replace(before, after)
-        with sqlite3.connect(":memory:") as connection:
+        with closing(sqlite3.connect(":memory:")) as connection:
             return connection.execute(sql).fetchall()
 
     def test_left_join_preserves_unmatched_customer(self):
