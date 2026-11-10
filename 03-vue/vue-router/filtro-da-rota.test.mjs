@@ -1,6 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { lerFiltroDaRota, atualizarFiltroDaRota } from './filtro-da-rota.mjs';
+import { estadosDeTarefa } from '../fundamentos/estados.mjs';
+import { filtrarTarefas } from '../fundamentos/filtrar-tarefas.mjs';
+
+test('todos os estados publicados sao aceitos tanto pela rota quanto pelo filtro', () => {
+  for (const estado of estadosDeTarefa) {
+    assert.equal(lerFiltroDaRota({ estado }), estado);
+    assert.deepEqual(filtrarTarefas([], estado), []);
+  }
+  assert.equal(Object.isFrozen(estadosDeTarefa), true);
+});
 
 test('le somente estados singulares reconhecidos', () => {
   for (const estado of ['todas', 'pendentes', 'concluidas']) {

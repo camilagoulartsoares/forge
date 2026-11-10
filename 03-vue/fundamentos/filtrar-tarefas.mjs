@@ -1,5 +1,7 @@
+import { estadoValido } from './estados.mjs';
+
 export function filtrarTarefas(tarefas, estado = 'todas') {
-  if (!['todas', 'pendentes', 'concluidas'].includes(estado)) {
+  if (!estadoValido(estado)) {
     throw new RangeError('Estado de filtro desconhecido.');
   }
 

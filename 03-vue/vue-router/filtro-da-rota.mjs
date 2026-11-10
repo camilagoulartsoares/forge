@@ -1,12 +1,12 @@
-const estados = ['todas', 'pendentes', 'concluidas'];
+import { estadoValido } from '../fundamentos/estados.mjs';
 
 export function lerFiltroDaRota(query) {
   const estado = query?.estado;
-  return typeof estado === 'string' && estados.includes(estado) ? estado : 'todas';
+  return estadoValido(estado) ? estado : 'todas';
 }
 
 export function atualizarFiltroDaRota(query, estado) {
-  if (!estados.includes(estado)) {
+  if (!estadoValido(estado)) {
     throw new RangeError('Filtro de rota desconhecido.');
   }
   const resultado = { ...query };
