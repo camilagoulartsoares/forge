@@ -6,7 +6,7 @@ const criterios = {
 };
 
 export function ordenarTarefas(tarefas, criterio = 'titulo') {
-  if (!Object.hasOwn(criterios, criterio)) {
+  if (typeof criterio !== 'string' || !Object.hasOwn(criterios, criterio)) {
     throw new RangeError('Criterio de ordenacao desconhecido.');
   }
 

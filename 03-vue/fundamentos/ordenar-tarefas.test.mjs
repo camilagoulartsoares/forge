@@ -29,3 +29,9 @@ test('rejeita criterios desconhecidos inclusive nomes herdados', () => {
   assert.throws(() => ordenarTarefas(tarefas, 'outro'), RangeError);
   assert.throws(() => ordenarTarefas(tarefas, 'toString'), RangeError);
 });
+
+test('nao aceita criterios convertidos implicitamente para string', () => {
+  for (const criterio of [['titulo'], { toString: () => 'data' }, null, 1]) {
+    assert.throws(() => ordenarTarefas(tarefas, criterio), RangeError);
+  }
+});
