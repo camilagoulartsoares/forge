@@ -14,4 +14,12 @@ verificarIgual(false, validarTitulo("\u{2003}")['valido']);
 verificarIgual(true, validarTitulo(str_repeat("\u{1F600}", 60))['valido']);
 verificarIgual(false, validarTitulo(str_repeat("\u{1F600}", 61))['valido']);
 verificarIgual(true, validarTitulo("\u{0085}")['valido']);
+$casos = json_decode(file_get_contents(__DIR__ . '/../../01-fundamentos/php/testes-automatizados/exemplos/casos-titulo.json'), true, 512, JSON_THROW_ON_ERROR);
+foreach ($casos as $caso) {
+    $resultado = validarTitulo($caso['entrada']);
+    verificarIgual($caso['valido'], $resultado['valido']);
+    if ($caso['valido']) {
+        verificarIgual($caso['titulo'], $resultado['titulo']);
+    }
+}
 echo 'OK: titulo PHP' . PHP_EOL;

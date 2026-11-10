@@ -1,6 +1,16 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validarTitulo } from './validar-titulo.mjs';
+import { readFileSync } from 'node:fs';
+
+test('cumpre os mesmos exemplos de contrato executados pelo PHP', () => {
+  const casos = JSON.parse(readFileSync(new URL('../../01-fundamentos/php/testes-automatizados/exemplos/casos-titulo.json', import.meta.url), 'utf8'));
+  for (const caso of casos) {
+    const resultado = validarTitulo(caso.entrada);
+    assert.equal(resultado.valido, caso.valido);
+    if (caso.valido) assert.equal(resultado.titulo, caso.titulo);
+  }
+});
 
 test('recusa valores ausentes e titulos em branco', () => {
   for (const valor of [null, undefined, 42, {}, '', '   ', '\n\t']) {
