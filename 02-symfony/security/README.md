@@ -28,4 +28,10 @@ ausência de alteração após a recusa. Defina respostas consistentes que não
 revelem recursos de terceiros. Comece negando operações sem permissão explícita.
 Este roteiro não implementa autenticação nem configura um sistema em produção.
 
+A [política PHP](autorizacao.php) permite testar identidade e propriedade sem
+framework: `php 02-symfony/security/autorizacao-test.php`. A listagem rejeita
+registros sem proprietário inteiro válido e reindexa a saída. O chamador deve
+obter a identidade da autenticação no servidor; o helper não autentica ninguém
+nem protege automaticamente endpoints que não o utilizam.
+
 Referência: [OWASP: Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html).
