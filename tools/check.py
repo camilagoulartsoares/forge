@@ -58,7 +58,11 @@ def main(argv=None) -> int:
     except subprocess.TimeoutExpired as error:
         print(f"Check timed out after {error.timeout} seconds: {error.cmd}", file=sys.stderr)
         return 124
-    except (OSError, UnicodeError, subprocess.CalledProcessError) as error:
+    except subprocess.CalledProcessError as error:
+        detail = (error.stderr or b"").decode("utf-8", errors="replace").strip()
+        print(f"Cannot enumerate repository files: {detail or error}", file=sys.stderr)
+        return 2
+    except (OSError, UnicodeError) as error:
         print(f"Cannot run checks: {error}", file=sys.stderr)
         return 2
     print(f"OK: {selected or 'all repository'} checks passed")

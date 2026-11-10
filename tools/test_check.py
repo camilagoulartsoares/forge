@@ -91,6 +91,13 @@ class CheckRunnerTests(unittest.TestCase):
             with self.assertRaises(SystemExit):
                 self.invoke(lambda *a, **k: None, argv=["--timeout", value])
 
+    def test_git_diagnostic_includes_stderr_not_just_exit_status(self):
+        error = subprocess.CalledProcessError(128, ["git"], stderr=b"fatal: cannot read index")
+        with patch("check.subprocess.run", side_effect=error), contextlib.redirect_stderr(io.StringIO()) as output:
+            self.assertEqual(2, check.main([]))
+        self.assertIn("cannot read index", output.getvalue())
+        self.assertNotIn("Traceback", output.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
