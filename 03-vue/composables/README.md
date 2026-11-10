@@ -26,3 +26,9 @@ consulta antiga não pode encerrar o carregamento de uma nova. Teste a ordem
 de resolução com promessas controladas, sem temporizadores ou esperas fixas.
 
 Referência: [Vue Composables](https://vuejs.org/guide/reusability/composables.html).
+
+O [coordenador de consultas](consulta-tarefas.mjs) implementa o controle de
+concorrência em JavaScript puro, sem instalar Vue. Execute
+`node --test 03-vue/composables/consulta-tarefas.test.mjs`. Falhas ficam em
+`estado.erro`; cancelamentos não substituem os dados. Para integrá-lo a Vue,
+sincronize os snapshots ao estado reativo e chame `descartar` ao desmontar.
