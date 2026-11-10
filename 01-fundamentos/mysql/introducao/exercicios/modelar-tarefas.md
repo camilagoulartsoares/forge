@@ -26,3 +26,10 @@ Defina se nomes que diferem apenas por acento ou maiúscula são equivalentes
 antes de escolher collation e unicidade. Faça os testes em banco local
 descartável, incluindo operações inválidas; um diagrama não comprova que
 as restrições foram criadas ou são aplicadas pelo servidor.
+
+O [DDL de referência](tarefas-etiquetas.sql) usa exclusão restritiva e par único.
+Execute `python -m unittest discover -s tools -p "test_task_schema.py"` para
+conferir integridade em SQLite em memória, com foreign keys habilitadas.
+Isso não valida MySQL: suporte a CHECK, collation e limites VARCHAR dependem
+do servidor. O título ainda precisa da validação de aplicação; SQLite não
+impõe o comprimento declarado em VARCHAR.
