@@ -69,6 +69,10 @@ def check_file(path: Path, root: Path) -> list[str]:
             fence = match[1]
             continue
         for match in LINK.finditer(line):
+            bracket = match.start() + int(match[0].startswith("!"))
+            prefix = line[:bracket]
+            if (len(prefix) - len(prefix.rstrip("\\"))) % 2:
+                continue
             target = match[1].strip("<>")
             try:
                 parsed = urlsplit(target)

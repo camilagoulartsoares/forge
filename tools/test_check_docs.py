@@ -103,6 +103,11 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn(":1: invalid local path", errors[0])
         self.assertIn(":2: missing link", errors[1])
 
+    def test_escaped_opening_bracket_is_literal_but_double_escape_is_not(self):
+        self.assertEqual([], self.check(r"\[literal](missing.md) !\[literal](missing.png)"))
+        self.assertIn("missing link", self.check(r"\\[real](missing.md)")[0])
+        self.assertIn("missing link", self.check(r"\![real](missing.md)")[0])
+
 
 if __name__ == "__main__":
     unittest.main()
