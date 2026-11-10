@@ -65,4 +65,17 @@ verificarExcecao(DomainException::class, function () use ($direto): void {
 verificarIgual($primeiro, $direto->buscar('direto'));
 $outraMemoria = new PedidosEmMemoria();
 verificarIgual(false, $outraMemoria->existe('direto'));
+$copia = $pedido->itens();
+$copia[0]['quantidade'] = 999;
+$copia[] = ['codigo' => 'Injetado', 'quantidade' => 1];
+verificarIgual([['codigo' => 'Livro', 'quantidade' => 2]], $pedido->itens());
+foreach ([true, 1.5, null] as $quantidadeInvalida) {
+    verificarExcecao(InvalidArgumentException::class, function () use ($caso, $quantidadeInvalida): void {
+        $caso->executar('lote', [
+            ['codigo' => 'Valido', 'quantidade' => 1],
+            ['codigo' => 'Invalido', 'quantidade' => $quantidadeInvalida],
+        ]);
+    });
+}
+verificarIgual(1, $spy->gravacoes);
 echo 'OK: registro de pedidos' . PHP_EOL;
