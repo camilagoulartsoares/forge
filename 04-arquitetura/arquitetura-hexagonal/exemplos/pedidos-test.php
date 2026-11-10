@@ -53,4 +53,16 @@ verificarExcecao(RuntimeException::class, function () use ($caso, $itens): void 
     $caso->executar('B', $itens);
 });
 verificarIgual(1, $spy->gravacoes);
+// Check the adapter independently of the use case's duplicate check.
+$direto = new PedidosEmMemoria();
+verificarIgual(false, $direto->existe('ausente'));
+verificarIgual(null, $direto->buscar('ausente'));
+$primeiro = new Pedido('direto', [['codigo' => 'A', 'quantidade' => 1]]);
+$direto->salvar($primeiro);
+verificarExcecao(DomainException::class, function () use ($direto): void {
+    $direto->salvar(new Pedido('direto', [['codigo' => 'B', 'quantidade' => 9]]));
+});
+verificarIgual($primeiro, $direto->buscar('direto'));
+$outraMemoria = new PedidosEmMemoria();
+verificarIgual(false, $outraMemoria->existe('direto'));
 echo 'OK: registro de pedidos' . PHP_EOL;
