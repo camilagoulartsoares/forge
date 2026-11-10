@@ -108,6 +108,11 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn("missing link", self.check(r"\\[real](missing.md)")[0])
         self.assertIn("missing link", self.check(r"\![real](missing.md)")[0])
 
+    def test_local_link_decodes_html_character_references(self):
+        (self.root / "a&b.md").touch()
+        self.assertEqual([], self.check("[notes](a&amp;b.md) [notes](a&#38;b.md)"))
+        self.assertIn("missing link", self.check("[notes](missing&amp;file.md)")[0])
+
 
 if __name__ == "__main__":
     unittest.main()

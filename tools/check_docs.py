@@ -1,6 +1,7 @@
 """Check UTF-8, fenced blocks and inline local Markdown links without dependencies."""
 
 import argparse
+from html import unescape
 from pathlib import Path
 import re
 import subprocess
@@ -73,7 +74,7 @@ def check_file(path: Path, root: Path) -> list[str]:
             prefix = line[:bracket]
             if (len(prefix) - len(prefix.rstrip("\\"))) % 2:
                 continue
-            target = match[1].strip("<>")
+            target = unescape(match[1].strip("<>"))
             try:
                 parsed = urlsplit(target)
             except ValueError as error:
