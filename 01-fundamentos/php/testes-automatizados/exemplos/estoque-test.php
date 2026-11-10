@@ -83,4 +83,29 @@ $origem->transferirPara($destino, 3);
 verificarIgual(0, $origem->saldo());
 verificarIgual(5, $destino->saldo());
 
+// A deterministic sequence checks conservation beyond isolated examples.
+$a = new Estoque();
+$b = new Estoque();
+$a->adicionar(100);
+$b->adicionar(50);
+$saldoA = 100;
+$saldoB = 50;
+foreach ([1, 7, 13, 0, 200, 5, -3, 10] as $quantidade) {
+    if ($quantidade <= 0 || $quantidade > $saldoA) {
+        $erro = $quantidade <= 0 ? InvalidArgumentException::class : UnderflowException::class;
+        verificarExcecao($erro, function () use ($a, $b, $quantidade): void {
+            $a->transferirPara($b, $quantidade);
+        });
+    } else {
+        $a->transferirPara($b, $quantidade);
+        $saldoA -= $quantidade;
+        $saldoB += $quantidade;
+    }
+    verificarIgual($saldoA, $a->saldo());
+    verificarIgual($saldoB, $b->saldo());
+    verificarIgual(150, $a->saldo() + $b->saldo());
+}
+$b->transferirPara($a, $b->saldo());
+verificarIgual(150, $a->saldo());
+verificarIgual(0, $b->saldo());
 echo 'OK: estoque' . PHP_EOL;
