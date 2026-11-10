@@ -30,6 +30,11 @@ literal, sem interpretar expressões regulares. Uma consulta vazia retorna uma
 cópia da lista. O contrato pressupõe tarefas com títulos textuais válidos.
 Execute `node --test 03-vue/fundamentos/pesquisar-tarefas.test.mjs` na raiz.
 
+`concluirTarefa` em [concluir-tarefa.mjs](concluir-tarefa.mjs) atualiza pelo id,
+mantendo a origem intacta e referências dos itens não alterados. Repetir uma
+conclusão não alterna o estado nem cria outra lista. Execute
+`node --test 03-vue/fundamentos/concluir-tarefa.test.mjs` para conferir o contrato.
+
 ```sh
 node --test 03-vue/fundamentos/ordenar-tarefas.test.mjs
 ```
