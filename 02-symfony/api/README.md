@@ -33,3 +33,8 @@ Para erros de entrada, padronize um corpo como
 `{"erro":"entrada_invalida","campos":{"titulo":"Titulo obrigatorio."}}`.
 Teste status, cabeçalhos e corpo; não use `200` com uma mensagem de erro.
 Essa política de erros é uma escolha do exercício, não uma regra universal de API.
+
+O [validador PHP](validar-titulo.php) implementa o contrato de título sem
+extensões mbstring ou iconv. Execute `php 02-symfony/api/titulo-test.php` na raiz.
+Ele valida UTF-8, reproduz os espaços removidos por `String.trim` e conta
+caracteres fora do plano básico como duas unidades UTF-16.
