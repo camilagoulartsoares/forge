@@ -26,3 +26,7 @@ test('consulta vazia preserva ordem e retorna novo array', () => {
   assert.notEqual(resultado, tarefas);
   assert.throws(() => pesquisarTarefas(tarefas, null), TypeError);
 });
+
+test('termos repetidos nao exigem ocorrencias repetidas no titulo', () => {
+  assert.deepEqual(pesquisarTarefas(tarefas, 'api API api').map((t) => t.id), [1, 3]);
+});

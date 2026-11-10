@@ -4,6 +4,10 @@ export function pesquisarTarefas(tarefas, consulta) {
   if (typeof consulta !== 'string') {
     throw new TypeError('Consulta deve ser textual.');
   }
-  const termos = normalizar(consulta).trim().split(/\s+/).filter(Boolean);
-  return tarefas.filter((tarefa) => termos.every((termo) => normalizar(tarefa.titulo).includes(termo)));
+  const termos = [...new Set(normalizar(consulta).trim().split(/\s+/).filter(Boolean))];
+  if (termos.length === 0) return [...tarefas];
+  return tarefas.filter((tarefa) => {
+    const titulo = normalizar(tarefa.titulo);
+    return termos.every((termo) => titulo.includes(termo));
+  });
 }
