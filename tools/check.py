@@ -41,6 +41,8 @@ def main(argv=None) -> int:
                 print(f"Required executable not found: {executable}", file=sys.stderr)
                 return 2
         commands = []
+        if selected is None:
+            commands.extend([["git", "diff", "--check"], ["git", "diff", "--cached", "--check"]])
         if selected in (None, "docs"):
             commands.append([sys.executable, "tools/check_docs.py"])
         if selected in (None, "python"):

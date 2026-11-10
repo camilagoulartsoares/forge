@@ -24,7 +24,7 @@ class CheckRunnerTests(unittest.TestCase):
                 return subprocess.CompletedProcess(command, 0, stdout=b"sample.php\0")
             return subprocess.CompletedProcess(command, 7)
 
-        self.assertEqual(7, self.invoke(run))
+        self.assertEqual(7, self.invoke(run, argv=["--only", "docs"]))
         self.assertEqual(2, len(calls))
 
     def test_missing_runtime_is_not_success(self):
@@ -97,6 +97,19 @@ class CheckRunnerTests(unittest.TestCase):
             self.assertEqual(2, check.main([]))
         self.assertIn("cannot read index", output.getvalue())
         self.assertNotIn("Traceback", output.getvalue())
+
+    def test_staged_diff_failure_stops_before_runtime_checks(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            if command == ["git", "diff", "--cached", "--check"]:
+                return subprocess.CompletedProcess(command, 2)
+            return subprocess.CompletedProcess(command, 0, stdout=b"sample.php\0")
+
+        self.assertEqual(2, self.invoke(run))
+        self.assertEqual(["git", "diff", "--cached", "--check"], calls[-1])
+        self.assertTrue(all(command[0] == "git" for command in calls))
 
 
 if __name__ == "__main__":
