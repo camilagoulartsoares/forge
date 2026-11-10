@@ -63,6 +63,16 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertEqual(2, len(calls))
         self.assertEqual("tools/check_docs.py", calls[1][1])
 
+    def test_javascript_without_test_file_still_gets_syntax_checked(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout=b"source.mjs\0")
+
+        self.assertEqual(0, self.invoke(run, argv=["--only", "js"]))
+        self.assertIn(["node", "--check", "source.mjs"], calls)
+
 
 if __name__ == "__main__":
     unittest.main()

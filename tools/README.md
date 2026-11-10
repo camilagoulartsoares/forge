@@ -13,6 +13,8 @@ caminho absoluto a partir de outro diretório.
 Para trabalhar em uma área isolada, use `--only docs`, `--only python`,
 `--only php` ou `--only js`. Somente os runtimes da área selecionada são exigidos.
 Uma execução parcial não substitui o comando completo antes de publicar código.
+Todos os módulos `.mjs` também passam por `node --check`, mesmo quando ainda
+não são importados por uma suíte de testes.
 
 ## Somente documentação
 

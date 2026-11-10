@@ -21,8 +21,9 @@ def main(argv=None) -> int:
         )
         files = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")))
         php_files = [name for name in files if name.endswith(".php")] if selected in (None, "php") else []
-        js_tests = [name for name in files if name.endswith(".test.mjs")] if selected in (None, "js") else []
-        for executable, needed in [("php", php_files), ("node", js_tests)]:
+        js_files = [name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
+        js_tests = [name for name in js_files if name.endswith(".test.mjs")]
+        for executable, needed in [("php", php_files), ("node", js_files)]:
             if needed and shutil.which(executable) is None:
                 print(f"Required executable not found: {executable}", file=sys.stderr)
                 return 2
@@ -33,6 +34,7 @@ def main(argv=None) -> int:
             commands.append([sys.executable, "-m", "unittest", "discover", "-s", "tools", "-p", "test_*.py"])
         commands.extend(["php", "-l", name] for name in php_files)
         commands.extend(["php", name] for name in php_files if name.endswith("-test.php"))
+        commands.extend(["node", "--check", name] for name in js_files)
         if js_tests:
             commands.append(["node", "--test", *js_tests])
         for command in commands:
