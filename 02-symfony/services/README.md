@@ -28,3 +28,7 @@ uma operação distribuída. Se acrescentar notificações ou outros efeitos,
 defina como evitar sua duplicação e teste os pontos de interrupção.
 
 Este é um roteiro de aplicação; não há serviço Symfony instalado nesta pasta.
+Compare com a [implementação em PHP puro](concluir-tarefa.php) e execute
+`php 02-symfony/services/concluir-tarefa-test.php`. A entidade imutável evita
+alterar o objeto consultado quando a gravação falha; o exemplo não implementa
+controle de concorrência nem persistência real.
