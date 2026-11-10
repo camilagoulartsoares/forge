@@ -15,6 +15,9 @@ Para trabalhar em uma área isolada, use `--only docs`, `--only python`,
 Uma execução parcial não substitui o comando completo antes de publicar código.
 Todos os módulos `.mjs` também passam por `node --check`, mesmo quando ainda
 não são importados por uma suíte de testes.
+Use `--timeout 30` para limitar cada comando a 30 segundos. Um timeout retorna
+`124` e interrompe a sequência; valores não positivos, infinitos ou NaN são recusados.
+Sem a opção, o tempo de execução não recebe limite adicional.
 
 ## Somente documentação
 

@@ -73,6 +73,24 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertEqual(0, self.invoke(run, argv=["--only", "js"]))
         self.assertIn(["node", "--check", "source.mjs"], calls)
 
+    def test_timeout_stops_execution_and_returns_distinct_failure(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            self.assertEqual(0.1, kwargs["timeout"])
+            if command[0] == "git":
+                return subprocess.CompletedProcess(command, 0, stdout=b"")
+            raise subprocess.TimeoutExpired(command, 0.1)
+
+        self.assertEqual(124, self.invoke(run, argv=["--only", "docs", "--timeout", "0.1"]))
+        self.assertEqual(2, len(calls))
+
+    def test_timeout_must_be_positive_and_finite(self):
+        for value in ["0", "-1", "nan", "inf", "wrong"]:
+            with self.assertRaises(SystemExit):
+                self.invoke(lambda *a, **k: None, argv=["--timeout", value])
+
 
 if __name__ == "__main__":
     unittest.main()
