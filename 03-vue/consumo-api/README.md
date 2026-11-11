@@ -3,6 +3,9 @@
 [buscar-tarefas.mjs](buscar-tarefas.mjs) consulta uma lista e verifica status
 HTTP e estrutura do JSON. Requer `fetch` no navegador ou Node.js 18 ou superior.
 O contrato exige `id` inteiro positivo seguro, `titulo` não vazio e `concluida` booleano.
+O título recebido também deve cumprir o contrato do formulário: Unicode válido
+e até 120 unidades UTF-16 após remoção dos espaços das bordas. A resposta é
+validada sem modificar os títulos originais.
 Os identificadores precisam ser únicos na lista, evitando chaves ambíguas no
 render de componentes e atualizações aplicadas à tarefa errada.
 
