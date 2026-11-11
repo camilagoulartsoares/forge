@@ -6,19 +6,28 @@ namespace Forge\Aplicacao;
 
 use InvalidArgumentException;
 use OutOfBoundsException;
+use DomainException;
+use function Forge\Autorizacao\podeAlterarTarefa;
+
+require_once __DIR__ . '/../security/autorizacao.php';
 
 final class Tarefa
 {
     private int $id;
     private bool $concluida;
+    private ?int $proprietario;
 
-    public function __construct(int $id, bool $concluida = false)
+    public function __construct(int $id, bool $concluida = false, ?int $proprietario = null)
     {
         if ($id <= 0) {
             throw new InvalidArgumentException('Identificador deve ser positivo.');
         }
         $this->id = $id;
         $this->concluida = $concluida;
+        if ($proprietario !== null && $proprietario <= 0) {
+            throw new InvalidArgumentException('Proprietario deve ser positivo.');
+        }
+        $this->proprietario = $proprietario;
     }
 
     public function id(): int
@@ -33,7 +42,12 @@ final class Tarefa
 
     public function concluir(): self
     {
-        return $this->concluida ? $this : new self($this->id, true);
+        return $this->concluida ? $this : new self($this->id, true, $this->proprietario);
+    }
+
+    public function proprietario(): ?int
+    {
+        return $this->proprietario;
     }
 }
 
@@ -54,6 +68,24 @@ final class ConcluirTarefa
 
     public function executar(int $id): Tarefa
     {
+        return $this->concluir($this->obter($id));
+    }
+
+    public function executarAutorizada(int $id, ?int $usuarioAutenticado): Tarefa
+    {
+        if ($usuarioAutenticado === null || $usuarioAutenticado <= 0) {
+            throw new DomainException('Operacao nao autorizada.');
+        }
+        $tarefa = $this->obter($id);
+        if ($tarefa->proprietario() === null || !podeAlterarTarefa($usuarioAutenticado, $tarefa->proprietario())) {
+            throw new DomainException('Operacao nao autorizada.');
+        }
+
+        return $this->concluir($tarefa);
+    }
+
+    private function obter(int $id): Tarefa
+    {
         if ($id <= 0) {
             throw new InvalidArgumentException('Identificador deve ser positivo.');
         }
@@ -61,6 +93,12 @@ final class ConcluirTarefa
         if ($tarefa === null) {
             throw new OutOfBoundsException('Tarefa nao encontrada.');
         }
+
+        return $tarefa;
+    }
+
+    private function concluir(Tarefa $tarefa): Tarefa
+    {
         if ($tarefa->concluida()) {
             return $tarefa;
         }

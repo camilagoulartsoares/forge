@@ -42,4 +42,19 @@ $repo->falhar = true;
 verificarExcecao(RuntimeException::class, function () use ($servico): void { $servico->executar(3); });
 verificarIgual(false, $repo->tarefas[3]->concluida());
 verificarIgual(1, $repo->gravacoes);
+$repo->falhar = false;
+$repo->tarefas[7] = new Tarefa(7, false, 10);
+$repo->tarefas[8] = new Tarefa(8, true, 20);
+$repo->tarefas[9] = new Tarefa(9);
+foreach ([[7, null], [7, 20], [8, 10], [9, 10]] as [$id, $usuario]) {
+    verificarExcecao(DomainException::class, function () use ($servico, $id, $usuario): void {
+        $servico->executarAutorizada($id, $usuario);
+    });
+}
+verificarIgual(false, $repo->tarefas[7]->concluida());
+verificarIgual(1, $repo->gravacoes);
+verificarIgual(true, $servico->executarAutorizada(7, 10)->concluida());
+verificarIgual(10, $repo->tarefas[7]->proprietario());
+$servico->executarAutorizada(7, 10);
+verificarIgual(2, $repo->gravacoes);
 echo 'OK: conclusao idempotente' . PHP_EOL;

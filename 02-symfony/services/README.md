@@ -32,3 +32,7 @@ Compare com a [implementação em PHP puro](concluir-tarefa.php) e execute
 `php 02-symfony/services/concluir-tarefa-test.php`. A entidade imutável evita
 alterar o objeto consultado quando a gravação falha; o exemplo não implementa
 controle de concorrência nem persistência real.
+Para aplicar a política de propriedade, use `executarAutorizada` com a identidade
+obtida no servidor. Tarefas sem proprietário ou de outro usuário são recusadas
+antes de alterar o estado, inclusive quando já concluídas. O método `executar`
+continua como exemplo isolado de caso de uso sem autorização.
