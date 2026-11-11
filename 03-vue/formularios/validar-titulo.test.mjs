@@ -40,3 +40,10 @@ test('normaliza espacos Unicode nas bordas antes de medir', () => {
   assert.equal(validarTitulo('\u00a0\u2003').valido, false);
   assert.equal(validarTitulo(' ' + 'a'.repeat(120) + ' ').valido, true);
 });
+
+test('rejeita surrogates isolados que nao podem ser enviados como UTF-8 valido', () => {
+  for (const titulo of ['\uD800', '\uDC00', 'A\uD800B', '\uDC00\uD800']) {
+    assert.equal(validarTitulo(titulo).valido, false);
+  }
+  assert.equal(validarTitulo('\uD83D\uDE00').valido, true);
+});

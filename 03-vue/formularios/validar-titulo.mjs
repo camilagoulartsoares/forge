@@ -11,5 +11,12 @@ export function validarTitulo(valor) {
     return { valido: false, erro: 'Titulo deve ter ate 120 unidades UTF-16.' };
   }
 
+  for (const caractere of titulo) {
+    const codigo = caractere.codePointAt(0);
+    if (codigo >= 0xD800 && codigo <= 0xDFFF) {
+      return { valido: false, erro: 'Titulo deve conter Unicode valido.' };
+    }
+  }
+
   return { valido: true, titulo };
 }
