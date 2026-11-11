@@ -47,3 +47,11 @@ test('instancias sao isoladas e uma nova tentativa limpa o erro', async () => {
   assert.equal(Object.isFrozen(consulta.estado.dados[0]), true);
   assert.deepEqual(outra.estado.dados, []);
 });
+
+test('fonte injetada invalida nao publica dados no estado', async () => {
+  const consulta = criarConsultaTarefas(async () => [null]);
+  await consulta.recarregar('A');
+  assert.deepEqual(consulta.estado.dados, []);
+  assert.match(consulta.estado.erro.message, /Resposta de tarefas invalida/);
+  assert.equal(consulta.estado.carregando, false);
+});

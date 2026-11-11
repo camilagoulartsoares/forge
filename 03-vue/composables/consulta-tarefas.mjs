@@ -1,4 +1,5 @@
 import { buscarTarefas } from '../consumo-api/buscar-tarefas.mjs';
+import { validarTarefas } from '../consumo-api/validar-tarefas.mjs';
 
 export function criarConsultaTarefas(buscar = buscarTarefas) {
   let estado = Object.freeze({ dados: Object.freeze([]), erro: null, carregando: false });
@@ -23,6 +24,7 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     try {
       const dados = await buscar(url, undefined, { signal: controller.signal });
       if (atual === versao && !controller.signal.aborted) {
+        validarTarefas(dados);
         estado = Object.freeze({ ...estado, dados: Object.freeze(dados.map((t) => Object.freeze({ ...t }))) });
       }
     } catch (erro) {

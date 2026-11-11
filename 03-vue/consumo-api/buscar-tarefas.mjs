@@ -1,3 +1,5 @@
+import { validarTarefas } from './validar-tarefas.mjs';
+
 export class ErroHttp extends Error {
   constructor(status) {
     super(`Falha HTTP: ${status}`);
@@ -16,16 +18,5 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
 
   const tarefas = await resposta.json();
   signal?.throwIfAborted();
-  if (!Array.isArray(tarefas) || !tarefas.every((tarefa) => tarefa !== null
-    && Number.isSafeInteger(tarefa.id) && tarefa.id > 0
-    && typeof tarefa.titulo === 'string' && tarefa.titulo.trim().length > 0
-    && typeof tarefa.concluida === 'boolean')) {
-    throw new TypeError('Resposta de tarefas invalida.');
-  }
-
-  if (new Set(tarefas.map((tarefa) => tarefa.id)).size !== tarefas.length) {
-    throw new TypeError('Resposta contem identificadores de tarefas duplicados.');
-  }
-
-  return tarefas;
+  return validarTarefas(tarefas);
 }
