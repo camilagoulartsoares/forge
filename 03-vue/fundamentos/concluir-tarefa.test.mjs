@@ -20,3 +20,9 @@ test('recusa identificador ausente duplicado ou invalido sem escolher item arbit
     assert.throws(() => concluirTarefa([], id), TypeError);
   }
 });
+
+test('identificador repetido distante nao e confundido com atualizacao unica', () => {
+  const lista = [{ id: 1, concluida: false }, { id: 2, concluida: false }, { id: 1, concluida: true }];
+  assert.throws(() => concluirTarefa(lista, 1), /duplicado/);
+  assert.equal(lista[0].concluida, false);
+});
