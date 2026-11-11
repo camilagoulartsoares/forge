@@ -7,6 +7,7 @@ namespace Forge\Aplicacao;
 use InvalidArgumentException;
 use OutOfBoundsException;
 use DomainException;
+use UnexpectedValueException;
 use function Forge\Autorizacao\podeAlterarTarefa;
 
 require_once __DIR__ . '/../security/autorizacao.php';
@@ -92,6 +93,9 @@ final class ConcluirTarefa
         $tarefa = $this->repositorio->buscar($id);
         if ($tarefa === null) {
             throw new OutOfBoundsException('Tarefa nao encontrada.');
+        }
+        if ($tarefa->id() !== $id) {
+            throw new UnexpectedValueException('Repositorio retornou outra tarefa.');
         }
 
         return $tarefa;

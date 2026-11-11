@@ -57,4 +57,25 @@ verificarIgual(true, $servico->executarAutorizada(7, 10)->concluida());
 verificarIgual(10, $repo->tarefas[7]->proprietario());
 $servico->executarAutorizada(7, 10);
 verificarIgual(2, $repo->gravacoes);
+$incorreto = new class implements RepositorioTarefas {
+    public int $gravacoes = 0;
+
+    public function buscar(int $id): ?Tarefa
+    {
+        return new Tarefa(999, false, 10);
+    }
+
+    public function salvar(Tarefa $tarefa): void
+    {
+        $this->gravacoes++;
+    }
+};
+$inconsistente = new ConcluirTarefa($incorreto);
+verificarExcecao(UnexpectedValueException::class, function () use ($inconsistente): void {
+    $inconsistente->executar(1);
+});
+verificarExcecao(UnexpectedValueException::class, function () use ($inconsistente): void {
+    $inconsistente->executarAutorizada(1, 10);
+});
+verificarIgual(0, $incorreto->gravacoes);
 echo 'OK: conclusao idempotente' . PHP_EOL;

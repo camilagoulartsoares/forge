@@ -36,3 +36,6 @@ Para aplicar a política de propriedade, use `executarAutorizada` com a identida
 obtida no servidor. Tarefas sem proprietário ou de outro usuário são recusadas
 antes de alterar o estado, inclusive quando já concluídas. O método `executar`
 continua como exemplo isolado de caso de uso sem autorização.
+Ambos conferem o identificador retornado pelo repositório. Uma implementação
+que devolva outra tarefa provoca `UnexpectedValueException` antes de gravar,
+evitando modificar o recurso errado por uma falha de contrato do adaptador.
