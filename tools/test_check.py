@@ -95,6 +95,16 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertIn(["/chosen/php", "-l", "./sample.php"], calls)
         self.assertIn(["/chosen/node", "--check", "./source.mjs"], calls)
 
+    def test_python_script_without_test_import_is_still_compiled(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout=b"standalone.py\0")
+
+        self.assertEqual(0, self.invoke(run, argv=["--only", "python"]))
+        self.assertIn([check.sys.executable, "-m", "py_compile", "./standalone.py"], calls)
+
     def test_timeout_stops_execution_and_returns_distinct_failure(self):
         calls = []
 

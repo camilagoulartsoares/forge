@@ -36,6 +36,7 @@ def main(argv=None) -> int:
         php_files = ["./" + name for name in files if name.endswith(".php")] if selected in (None, "php") else []
         js_files = ["./" + name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
         js_tests = [name for name in js_files if name.endswith(".test.mjs")]
+        python_files = ["./" + name for name in files if name.endswith(".py")] if selected in (None, "python") else []
         executables = {}
         for executable, needed in [("php", php_files), ("node", js_files)]:
             if needed:
@@ -50,6 +51,8 @@ def main(argv=None) -> int:
         if selected in (None, "docs"):
             commands.append([sys.executable, "tools/check_docs.py"])
         if selected in (None, "python"):
+            if python_files:
+                commands.append([sys.executable, "-m", "py_compile", *python_files])
             commands.append([sys.executable, "-m", "unittest", "discover", "-s", "tools", "-p", "test_*.py"])
         commands.extend(["php", "-l", name] for name in php_files)
         commands.extend(["php", name] for name in php_files if name.endswith("-test.php"))

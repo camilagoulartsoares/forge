@@ -21,6 +21,8 @@ Sem a opção, o tempo de execução não recebe limite adicional.
 A execução completa também confere `git diff --check` e a área de preparação
 com `git diff --cached --check`, antes de rodar as suítes. Assim, erros de
 whitespace nas mudanças locais não passam despercebidos por testes funcionais.
+Os scripts Python também passam por `py_compile`, inclusive quando não são
+importados pelos testes. O cache de bytecode permanece ignorado pelo Git.
 
 ## Somente documentação
 
