@@ -52,6 +52,13 @@ class TaskSchemaTests(unittest.TestCase):
                 self.db.execute("INSERT INTO etiquetas VALUES (?, ?)", (2, name))
         self.assertEqual(1, self.db.execute("SELECT COUNT(*) FROM etiquetas").fetchone()[0])
 
+    def test_listing_keeps_unlabelled_tasks_and_multiple_associations(self):
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JavaScript')")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (1, 2)])
+        sql = SCHEMA.with_name("listar-tarefas-etiquetas.sql").read_text(encoding="utf-8")
+        self.assertEqual([(1, "Estudar", "PHP"), (1, "Estudar", "JavaScript"), (2, "Testar", None)],
+                         self.db.execute(sql).fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()

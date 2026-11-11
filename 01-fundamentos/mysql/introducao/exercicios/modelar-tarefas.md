@@ -33,3 +33,6 @@ conferir integridade em SQLite em memória, com foreign keys habilitadas.
 Isso não valida MySQL: suporte a CHECK, collation e limites VARCHAR dependem
 do servidor. O título ainda precisa da validação de aplicação; SQLite não
 impõe o comprimento declarado em VARCHAR.
+Após popular o esquema, execute a [listagem com etiquetas](listar-tarefas-etiquetas.sql).
+Ela mantém tarefas sem etiquetas e retorna uma linha por associação, com
+ordenação explícita por identificadores. O teste usa o esquema real em memória.
