@@ -9,7 +9,8 @@ CREATE TABLE tarefas (
 
 CREATE TABLE etiquetas (
     id BIGINT NOT NULL PRIMARY KEY,
-    nome VARCHAR(120) NOT NULL UNIQUE
+    nome VARCHAR(120) NOT NULL UNIQUE,
+    CHECK (length(trim(nome)) > 0)
 );
 
 CREATE TABLE tarefa_etiqueta (

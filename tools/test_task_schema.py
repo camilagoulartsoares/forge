@@ -46,6 +46,12 @@ class TaskSchemaTests(unittest.TestCase):
         self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", (3, title))
         self.assertEqual(title, self.db.execute("SELECT titulo FROM tarefas WHERE id = ?", (3,)).fetchone()[0])
 
+    def test_label_name_cannot_be_blank(self):
+        for name in ["", "   ", None]:
+            with self.assertRaises(sqlite3.IntegrityError):
+                self.db.execute("INSERT INTO etiquetas VALUES (?, ?)", (2, name))
+        self.assertEqual(1, self.db.execute("SELECT COUNT(*) FROM etiquetas").fetchone()[0])
+
 
 if __name__ == "__main__":
     unittest.main()
