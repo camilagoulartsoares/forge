@@ -20,12 +20,14 @@ function validarTitulo($valor): array
         return ['valido' => false, 'erro' => 'Titulo obrigatorio.'];
     }
 
-    $unidades = 0;
-    foreach (preg_split('//u', $titulo, -1, PREG_SPLIT_NO_EMPTY) as $caractere) {
-        $unidades += strlen($caractere) === 4 ? 2 : 1;
-        if ($unidades > 120) {
-            return ['valido' => false, 'erro' => 'Titulo deve ter ate 120 unidades UTF-16.'];
-        }
+    // Every code point uses at most three UTF-8 bytes per UTF-16 unit.
+    if (strlen($titulo) > 360) {
+        return ['valido' => false, 'erro' => 'Titulo deve ter ate 120 unidades UTF-16.'];
+    }
+    $unidades = preg_match_all('/./us', $titulo)
+        + preg_match_all('/[\x{10000}-\x{10FFFF}]/u', $titulo);
+    if ($unidades > 120) {
+        return ['valido' => false, 'erro' => 'Titulo deve ter ate 120 unidades UTF-16.'];
     }
 
     return ['valido' => true, 'titulo' => $titulo];
