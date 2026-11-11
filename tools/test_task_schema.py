@@ -59,6 +59,23 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertEqual([(1, "Estudar", "PHP"), (1, "Estudar", "JavaScript"), (2, "Testar", None)],
                          self.db.execute(sql).fetchall())
 
+    def test_transaction_failure_rolls_back_the_entire_operation(self):
+        self.db.commit()
+        with self.assertRaises(sqlite3.IntegrityError):
+            with self.db:
+                self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (3, 'Nova')")
+                self.db.execute("INSERT INTO tarefa_etiqueta VALUES (3, 999)")
+        self.assertIsNone(self.db.execute("SELECT id FROM tarefas WHERE id = 3").fetchone())
+        self.assertEqual(2, self.db.execute("SELECT COUNT(*) FROM tarefas").fetchone()[0])
+
+    def test_successful_transaction_persists_task_and_relation_together(self):
+        self.db.commit()
+        with self.db:
+            self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (3, 'Nova')")
+            self.db.execute("INSERT INTO tarefa_etiqueta VALUES (3, 1)")
+        self.assertFalse(self.db.in_transaction)
+        self.assertEqual([(3, 1)], self.db.execute("SELECT * FROM tarefa_etiqueta").fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()
