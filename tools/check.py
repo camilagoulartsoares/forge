@@ -33,8 +33,8 @@ def main(argv=None) -> int:
             cwd=ROOT, capture_output=True, check=True, timeout=args.timeout,
         )
         files = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")))
-        php_files = [name for name in files if name.endswith(".php")] if selected in (None, "php") else []
-        js_files = [name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
+        php_files = ["./" + name for name in files if name.endswith(".php")] if selected in (None, "php") else []
+        js_files = ["./" + name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
         js_tests = [name for name in js_files if name.endswith(".test.mjs")]
         for executable, needed in [("php", php_files), ("node", js_files)]:
             if needed and shutil.which(executable) is None:

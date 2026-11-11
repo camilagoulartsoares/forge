@@ -48,9 +48,9 @@ class CheckRunnerTests(unittest.TestCase):
             return subprocess.CompletedProcess(command, 0, stdout=b"sample-test.php\0sample.test.mjs\0")
 
         self.assertEqual(0, self.invoke(run))
-        self.assertIn(["php", "-l", "sample-test.php"], calls)
-        self.assertIn(["php", "sample-test.php"], calls)
-        self.assertIn(["node", "--test", "sample.test.mjs"], calls)
+        self.assertIn(["php", "-l", "./sample-test.php"], calls)
+        self.assertIn(["php", "./sample-test.php"], calls)
+        self.assertIn(["node", "--test", "./sample.test.mjs"], calls)
 
     def test_docs_only_does_not_require_php_or_node(self):
         calls = []
@@ -71,7 +71,18 @@ class CheckRunnerTests(unittest.TestCase):
             return subprocess.CompletedProcess(command, 0, stdout=b"source.mjs\0")
 
         self.assertEqual(0, self.invoke(run, argv=["--only", "js"]))
-        self.assertIn(["node", "--check", "source.mjs"], calls)
+        self.assertIn(["node", "--check", "./source.mjs"], calls)
+
+    def test_file_names_starting_with_dash_are_passed_as_paths(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout=b"-sample-test.php\0--sample.test.mjs\0")
+
+        self.assertEqual(0, self.invoke(run))
+        self.assertIn(["php", "./-sample-test.php"], calls)
+        self.assertIn(["node", "--test", "./--sample.test.mjs"], calls)
 
     def test_timeout_stops_execution_and_returns_distinct_failure(self):
         calls = []
