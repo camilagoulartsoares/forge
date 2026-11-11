@@ -23,6 +23,8 @@ com `git diff --cached --check`, antes de rodar as suítes. Assim, erros de
 whitespace nas mudanças locais não passam despercebidos por testes funcionais.
 Os scripts Python também passam por `py_compile`, inclusive quando não são
 importados pelos testes. O cache de bytecode permanece ignorado pelo Git.
+O grupo Python valida as fixtures JSON em UTF-8, recusando chaves duplicadas
+e números não padronizados como NaN, que podem causar diferenças entre runtimes.
 
 ## Somente documentação
 
