@@ -36,10 +36,14 @@ def main(argv=None) -> int:
         php_files = ["./" + name for name in files if name.endswith(".php")] if selected in (None, "php") else []
         js_files = ["./" + name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
         js_tests = [name for name in js_files if name.endswith(".test.mjs")]
+        executables = {}
         for executable, needed in [("php", php_files), ("node", js_files)]:
-            if needed and shutil.which(executable) is None:
-                print(f"Required executable not found: {executable}", file=sys.stderr)
-                return 2
+            if needed:
+                resolved = shutil.which(executable)
+                if resolved is None:
+                    print(f"Required executable not found: {executable}", file=sys.stderr)
+                    return 2
+                executables[executable] = resolved
         commands = []
         if selected is None:
             commands.extend([["git", "diff", "--check"], ["git", "diff", "--cached", "--check"]])
@@ -53,6 +57,8 @@ def main(argv=None) -> int:
         if js_tests:
             commands.append(["node", "--test", *js_tests])
         for command in commands:
+            if command[0] in executables:
+                command = [executables[command[0]], *command[1:]]
             print("RUN: " + " ".join(command), flush=True)
             result = subprocess.run(command, cwd=ROOT, timeout=args.timeout)
             if result.returncode:

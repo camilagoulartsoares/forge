@@ -84,6 +84,17 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertIn(["php", "./-sample-test.php"], calls)
         self.assertIn(["node", "--test", "./--sample.test.mjs"], calls)
 
+    def test_uses_the_runtime_path_that_was_actually_discovered(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout=b"sample.php\0source.mjs\0")
+
+        self.assertEqual(0, self.invoke(run, which=lambda name: "/chosen/" + name))
+        self.assertIn(["/chosen/php", "-l", "./sample.php"], calls)
+        self.assertIn(["/chosen/node", "--check", "./source.mjs"], calls)
+
     def test_timeout_stops_execution_and_returns_distinct_failure(self):
         calls = []
 
