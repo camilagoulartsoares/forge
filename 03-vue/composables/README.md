@@ -32,3 +32,6 @@ concorrência em JavaScript puro, sem instalar Vue. Execute
 `node --test 03-vue/composables/consulta-tarefas.test.mjs`. Falhas ficam em
 `estado.erro`; cancelamentos não substituem os dados. Para integrá-lo a Vue,
 sincronize os snapshots ao estado reativo e chame `descartar` ao desmontar.
+Use `assinar(callback)` para receber o estado inicial e suas mudanças sem
+polling. O retorno remove a assinatura; `descartar` libera todos os assinantes.
+Falhas de um callback são diagnosticadas no console e não afetam a consulta.

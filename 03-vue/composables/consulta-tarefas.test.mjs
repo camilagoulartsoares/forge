@@ -55,3 +55,36 @@ test('fonte injetada invalida nao publica dados no estado', async () => {
   assert.match(consulta.estado.erro.message, /Resposta de tarefas invalida/);
   assert.equal(consulta.estado.carregando, false);
 });
+
+test('notifica snapshots e permite remover assinantes sem polling', async () => {
+  const consulta = criarConsultaTarefas(async () => [{ id: 1, titulo: 'A', concluida: false }]);
+  const snapshots = [];
+  const remover = consulta.assinar((estado) => snapshots.push([estado.carregando, estado.dados.length]));
+  await consulta.recarregar('A');
+  assert.deepEqual(snapshots, [[false, 0], [true, 0], [true, 1], [false, 1]]);
+  remover();
+  consulta.cancelar();
+  assert.equal(snapshots.length, 4);
+  assert.throws(() => consulta.assinar(null), TypeError);
+  consulta.descartar();
+  assert.throws(() => consulta.assinar(() => {}), /descartada/);
+});
+
+test('falha de um assinante nao interrompe consulta nem outros assinantes', async () => {
+  const original = console.error;
+  const erros = [];
+  console.error = (...args) => erros.push(args);
+  try {
+    const consulta = criarConsultaTarefas(async () => []);
+    consulta.assinar(() => { throw new Error('interface falhou'); });
+    let atualizacoes = 0;
+    consulta.assinar(() => { atualizacoes += 1; });
+    await consulta.recarregar('A');
+    assert.equal(consulta.estado.erro, null);
+    assert.equal(consulta.estado.carregando, false);
+    assert.ok(atualizacoes > 1);
+    assert.ok(erros.length > 0);
+  } finally {
+    console.error = original;
+  }
+});

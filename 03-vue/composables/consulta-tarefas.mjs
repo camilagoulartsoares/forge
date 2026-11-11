@@ -6,12 +6,28 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
   let versao = 0;
   let controlador;
   let descartada = false;
+  const assinantes = new Set();
+
+  function notificar(ouvinte) {
+    try {
+      ouvinte(estado);
+    } catch (erro) {
+      console.error('Erro em assinante de consulta:', erro);
+    }
+  }
+
+  function publicar(proximo) {
+    estado = Object.freeze(proximo);
+    for (const ouvinte of [...assinantes]) {
+      if (assinantes.has(ouvinte)) notificar(ouvinte);
+    }
+  }
 
   function cancelar() {
     versao += 1;
     controlador?.abort();
     controlador = undefined;
-    estado = Object.freeze({ ...estado, carregando: false });
+    publicar({ ...estado, carregando: false });
   }
 
   async function recarregar(url) {
@@ -20,19 +36,19 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     controlador?.abort();
     const controller = new AbortController();
     controlador = controller;
-    estado = Object.freeze({ ...estado, erro: null, carregando: true });
+    publicar({ ...estado, erro: null, carregando: true });
     try {
       const dados = await buscar(url, undefined, { signal: controller.signal });
       if (atual === versao && !controller.signal.aborted) {
         validarTarefas(dados);
-        estado = Object.freeze({ ...estado, dados: Object.freeze(dados.map((t) => Object.freeze({ ...t }))) });
+        publicar({ ...estado, dados: Object.freeze(dados.map((t) => Object.freeze({ ...t }))) });
       }
     } catch (erro) {
       if (atual === versao && !controller.signal.aborted) {
-        estado = Object.freeze({ ...estado, erro });
+        publicar({ ...estado, erro });
       }
     } finally {
-      if (atual === versao) estado = Object.freeze({ ...estado, carregando: false });
+      if (atual === versao) publicar({ ...estado, carregando: false });
     }
   }
 
@@ -40,6 +56,18 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     get estado() { return estado; },
     recarregar,
     cancelar,
-    descartar() { cancelar(); descartada = true; },
+    assinar(ouvinte) {
+      if (descartada) throw new Error('Consulta ja descartada.');
+      if (typeof ouvinte !== 'function') throw new TypeError('Assinante deve ser uma funcao.');
+      assinantes.add(ouvinte);
+      notificar(ouvinte);
+      return () => assinantes.delete(ouvinte);
+    },
+    descartar() {
+      if (descartada) return;
+      descartada = true;
+      cancelar();
+      assinantes.clear();
+    },
   };
 }
