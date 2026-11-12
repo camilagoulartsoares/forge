@@ -3,6 +3,8 @@ import io
 import tempfile
 from pathlib import Path
 import unittest
+import subprocess
+import sys
 
 from check_json import main, validate
 
@@ -41,6 +43,17 @@ class CheckJsonTests(unittest.TestCase):
             self.assertEqual(1, main([str(self.write('{'))]))
         self.assertIn(str(self.file), output.getvalue())
         self.assertNotIn("Traceback", output.getvalue())
+
+    def test_cli_continues_after_excessive_nesting_without_traceback(self):
+        self.write('[' * 2000 + '0' + ']' * 2000)
+        other = self.file.with_name('other.json')
+        other.write_text('{', encoding='utf-8')
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name('check_json.py')),
+                                 str(self.file), str(other)], capture_output=True, text=True)
+        self.assertEqual(1, result.returncode)
+        self.assertIn(str(self.file), result.stderr)
+        self.assertIn(str(other), result.stderr)
+        self.assertNotIn('Traceback', result.stderr)
 
 
 if __name__ == "__main__":

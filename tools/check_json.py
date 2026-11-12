@@ -32,7 +32,7 @@ def main(argv=None):
     for name in args.paths:
         try:
             validate(name)
-        except (OSError, ValueError) as error:
+        except (OSError, ValueError, RecursionError) as error:
             errors.append(f"{name}: {error}")
     if errors:
         print("\n".join(errors), file=sys.stderr)
