@@ -99,3 +99,12 @@ test('assinante pode cancelar ou descartar antes de iniciar a requisicao', async
     assert.equal(consulta.estado.carregando, false);
   }
 });
+
+test('notificacao reentrante nao repete o novo estado para assinantes seguintes', async () => {
+  const consulta = criarConsultaTarefas(async () => []);
+  consulta.assinar((estado) => { if (estado.carregando) consulta.cancelar(); });
+  const estados = [];
+  consulta.assinar((estado) => estados.push(estado.carregando));
+  await consulta.recarregar('A');
+  assert.deepEqual(estados, [false, false]);
+});

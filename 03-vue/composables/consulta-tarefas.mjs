@@ -8,9 +8,9 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
   let descartada = false;
   const assinantes = new Set();
 
-  function notificar(ouvinte) {
+  function notificar(ouvinte, snapshot = estado) {
     try {
-      ouvinte(estado);
+      ouvinte(snapshot);
     } catch (erro) {
       console.error('Erro em assinante de consulta:', erro);
     }
@@ -18,8 +18,10 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
 
   function publicar(proximo) {
     estado = Object.freeze(proximo);
+    const snapshot = estado;
     for (const ouvinte of [...assinantes]) {
-      if (assinantes.has(ouvinte)) notificar(ouvinte);
+      if (estado !== snapshot) break;
+      if (assinantes.has(ouvinte)) notificar(ouvinte, snapshot);
     }
   }
 
