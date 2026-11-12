@@ -3,6 +3,7 @@
 import argparse
 from html import unescape
 from pathlib import Path
+import os
 import re
 import subprocess
 import sys
@@ -11,6 +12,21 @@ from urllib.parse import unquote, urlsplit
 
 LINK = re.compile(r'!?\[[^\]\n]*\]\((<[^>\n]+>|[^\s)]+)(?:\s+"[^"]*")?\)')
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+
+
+def path_case_matches(candidate: Path, root: Path) -> bool:
+    # abspath normalizes dots but preserves the spelling erased by Windows resolve().
+    candidate = Path(os.path.abspath(candidate))
+    current = Path(os.path.abspath(root))
+    try:
+        parts = candidate.relative_to(current).parts
+    except ValueError:
+        return False
+    for part in parts:
+        if part not in {entry.name for entry in current.iterdir()}:
+            return False
+        current = current / part
+    return True
 
 
 def without_inline_code(line: str) -> str:
@@ -94,6 +110,12 @@ def check_file(path: Path, root: Path) -> list[str]:
                 errors.append(f"{path}:{number}: link outside repository: {target}")
             elif not resolved.exists():
                 errors.append(f"{path}:{number}: missing link: {target}")
+            else:
+                try:
+                    if not path_case_matches(path.parent / decoded, root):
+                        errors.append(f"{path}:{number}: incorrect path case: {target}")
+                except OSError as error:
+                    errors.append(f"{path}:{number}: cannot inspect local path: {target}: {error}")
     if fence is not None:
         errors.append(f"{path}: unclosed code fence")
     return errors

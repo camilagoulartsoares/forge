@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 import io
 
-from check_docs import check_file, main
+from check_docs import check_file, main, path_case_matches
 
 
 class CheckDocsTests(unittest.TestCase):
@@ -112,6 +112,16 @@ class CheckDocsTests(unittest.TestCase):
         (self.root / "a&b.md").touch()
         self.assertEqual([], self.check("[notes](a&amp;b.md) [notes](a&#38;b.md)"))
         self.assertIn("missing link", self.check("[notes](missing&amp;file.md)")[0])
+
+    def test_local_paths_require_exact_case_on_every_platform(self):
+        folder = self.root / 'Guides'
+        folder.mkdir()
+        (folder / 'Notes.md').touch()
+        self.assertTrue(path_case_matches(folder / 'Notes.md', self.root))
+        self.assertFalse(path_case_matches(folder / 'notes.md', self.root))
+        self.assertFalse(path_case_matches(self.root / 'guides/Notes.md', self.root))
+        self.assertEqual([], self.check('[notes](Guides/Notes.md)'))
+        self.assertTrue(self.check('[notes](Guides/notes.md)'))
 
 
 if __name__ == "__main__":
