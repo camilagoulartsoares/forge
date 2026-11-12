@@ -123,6 +123,13 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual([], self.check('[notes](Guides/Notes.md)'))
         self.assertTrue(self.check('[notes](Guides/notes.md)'))
 
+    def test_links_with_single_quoted_titles_are_checked(self):
+        (self.root / 'known.md').touch()
+        errors = self.check("[known](known.md 'Description')\n[missing](absent.md 'Description')\n![image](absent.png \"Image\")")
+        self.assertEqual(2, len(errors))
+        self.assertIn(':2: missing link', errors[0])
+        self.assertIn(':3: missing link', errors[1])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -10,7 +10,7 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 
-LINK = re.compile(r'!?\[[^\]\n]*\]\((<[^>\n]+>|[^\s)]+)(?:\s+"[^"]*")?\)')
+LINK = re.compile(r"""!?\[[^\]\n]*\]\((<[^>\n]+>|[^\s)]+)(?:\s+(?:"[^"\n]*"|'[^'\n]*'))?\)""")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 
 
