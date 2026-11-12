@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 import io
 
-from check_docs import check_file, main, path_case_matches
+from check_docs import check_file, main, path_case_matches, without_inline_code
 
 
 class CheckDocsTests(unittest.TestCase):
@@ -129,6 +129,11 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual(2, len(errors))
         self.assertIn(':2: missing link', errors[0])
         self.assertIn(':3: missing link', errors[1])
+
+    def test_many_unmatched_backtick_runs_remain_literal(self):
+        text = 'x'.join('`' * length for length in range(1, 1200))
+        self.assertEqual(text, without_inline_code(text))
+        self.assertEqual('after', without_inline_code('``a`b``after'))
 
 
 if __name__ == "__main__":

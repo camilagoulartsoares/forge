@@ -32,13 +32,18 @@ def path_case_matches(candidate: Path, root: Path) -> bool:
 def without_inline_code(line: str) -> str:
     """Only matching backtick runs delimit code; unmatched runs remain literal."""
     runs = list(re.finditer(r"`+", line))
+    following = [None] * len(runs)
+    last_by_length = {}
+    for index in range(len(runs) - 1, -1, -1):
+        length = runs[index].end() - runs[index].start()
+        following[index] = last_by_length.get(length)
+        last_by_length[length] = index
     cursor = 0
     pieces = []
     index = 0
     while index < len(runs):
         opening = runs[index]
-        closing = next((j for j in range(index + 1, len(runs))
-                        if len(runs[j][0]) == len(opening[0])), None)
+        closing = following[index]
         if closing is None:
             index += 1
             continue
