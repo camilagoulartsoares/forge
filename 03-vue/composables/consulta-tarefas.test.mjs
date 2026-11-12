@@ -88,3 +88,14 @@ test('falha de um assinante nao interrompe consulta nem outros assinantes', asyn
     console.error = original;
   }
 });
+
+test('assinante pode cancelar ou descartar antes de iniciar a requisicao', async () => {
+  for (const acao of ['cancelar', 'descartar']) {
+    let chamadas = 0;
+    const consulta = criarConsultaTarefas(async () => { chamadas += 1; return []; });
+    consulta.assinar((estado) => { if (estado.carregando) consulta[acao](); });
+    await consulta.recarregar('A');
+    assert.equal(chamadas, 0);
+    assert.equal(consulta.estado.carregando, false);
+  }
+});

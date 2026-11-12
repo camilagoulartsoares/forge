@@ -37,6 +37,7 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     const controller = new AbortController();
     controlador = controller;
     publicar({ ...estado, erro: null, carregando: true });
+    if (atual !== versao || controller.signal.aborted) return;
     try {
       const dados = await buscar(url, undefined, { signal: controller.signal });
       if (atual === versao && !controller.signal.aborted) {
