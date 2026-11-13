@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Forge\Aplicacao;
 
+use function Forge\Identidade\identificadorValido;
+
+require_once __DIR__ . '/../api/identificador.php';
+
 use InvalidArgumentException;
 use OutOfBoundsException;
 use DomainException;
@@ -20,8 +24,8 @@ final class Tarefa
 
     public function __construct(int $id, bool $concluida = false, ?int $proprietario = null)
     {
-        if ($id <= 0) {
-            throw new InvalidArgumentException('Identificador deve ser positivo.');
+        if (!identificadorValido($id)) {
+            throw new InvalidArgumentException('Identificador deve ser um inteiro positivo seguro.');
         }
         $this->id = $id;
         $this->concluida = $concluida;
@@ -87,8 +91,8 @@ final class ConcluirTarefa
 
     private function obter(int $id): Tarefa
     {
-        if ($id <= 0) {
-            throw new InvalidArgumentException('Identificador deve ser positivo.');
+        if (!identificadorValido($id)) {
+            throw new InvalidArgumentException('Identificador deve ser um inteiro positivo seguro.');
         }
         $tarefa = $this->repositorio->buscar($id);
         if ($tarefa === null) {
