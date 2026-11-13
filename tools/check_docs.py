@@ -14,7 +14,7 @@ LINK = re.compile(r"""!?\[[^\]\n]*\]\((<[^>\n]+>|[^\s)]+)(?:\s+(?:"[^"\n]*"|'[^'
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
 
 
-def path_case_matches(candidate: Path, root: Path) -> bool:
+def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) -> bool:
     # abspath normalizes dots but preserves the spelling erased by Windows resolve().
     candidate = Path(os.path.abspath(candidate))
     current = Path(os.path.abspath(root))
@@ -22,8 +22,11 @@ def path_case_matches(candidate: Path, root: Path) -> bool:
         parts = candidate.relative_to(current).parts
     except ValueError:
         return False
+    cache = {} if cache is None else cache
     for part in parts:
-        if part not in {entry.name for entry in current.iterdir()}:
+        if current not in cache:
+            cache[current] = {entry.name for entry in current.iterdir()}
+        if part not in cache[current]:
             return False
         current = current / part
     return True
@@ -54,8 +57,9 @@ def without_inline_code(line: str) -> str:
     return "".join(pieces)
 
 
-def check_file(path: Path, root: Path) -> list[str]:
+def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[str]:
     errors = []
+    case_cache = {} if case_cache is None else case_cache
     try:
         content = path.read_text(encoding="utf-8")
     except (OSError, UnicodeError) as error:
@@ -117,7 +121,7 @@ def check_file(path: Path, root: Path) -> list[str]:
                 errors.append(f"{path}:{number}: missing link: {target}")
             else:
                 try:
-                    if not path_case_matches(path.parent / decoded, root):
+                    if not path_case_matches(path.parent / decoded, root, case_cache):
                         errors.append(f"{path}:{number}: incorrect path case: {target}")
                 except OSError as error:
                     errors.append(f"{path}:{number}: cannot inspect local path: {target}: {error}")
@@ -141,7 +145,8 @@ def main() -> int:
         detail = error.stderr.decode("utf-8", errors="replace").strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
         print(f"Cannot enumerate documents: {detail}", file=sys.stderr)
         return 2
-    errors = [error for name in paths for error in check_file(args.root / name, args.root)]
+    case_cache = {}
+    errors = [error for name in paths for error in check_file(args.root / name, args.root, case_cache)]
     if errors:
         print("\n".join(errors), file=sys.stderr)
         return 1

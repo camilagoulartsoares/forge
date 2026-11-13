@@ -20,6 +20,22 @@ class CheckDocsTests(unittest.TestCase):
         self.document.write_text(text, encoding="utf-8")
         return check_file(self.document, self.root)
 
+    def test_repeated_links_share_directory_scan_but_new_checks_refresh_cache(self):
+        (self.root / "target.md").touch()
+        original = Path.iterdir
+        scanned = []
+
+        def inspect(path):
+            scanned.append(path)
+            return original(path)
+
+        with patch.object(Path, "iterdir", inspect):
+            self.assertEqual([], self.check("[one](target.md) [two](target.md)"))
+        self.assertEqual([self.root], scanned)
+        (self.root / "new.md").touch()
+        self.assertEqual([], self.check("[new](new.md)"))
+        self.assertFalse(path_case_matches(self.root / "TARGET.md", self.root))
+
     def test_missing_local_link_has_line_number(self):
         self.assertIn(":2: missing link", self.check("# Study\n[missing](absent.md)")[0])
 
