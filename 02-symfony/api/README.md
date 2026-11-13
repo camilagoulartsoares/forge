@@ -39,7 +39,7 @@ extensões mbstring ou iconv. Execute `php 02-symfony/api/titulo-test.php` na ra
 Ele valida UTF-8, reproduz os espaços removidos por `String.trim` e conta
 caracteres fora do plano básico como duas unidades UTF-16.
 
-O [mapeador de erros](resposta-erro.php) produz status, cabe?alhos e corpo
+O [mapeador de erros](resposta-erro.php) produz status, cabeçalhos e corpo
 para um adaptador HTTP. Falhas inesperadas recebem um corpo fixo sem mensagens
-internas; erros tipados de acesso e aus?ncia usam 403 e 404. Execute
+internas; erros tipados de acesso e ausência usam 403 e 404. Execute
 `php 02-symfony/api/resposta-erro-test.php`.

@@ -27,8 +27,8 @@ transformar uma operação malsucedida em resposta de sucesso.
 
 Este roteiro não instala Symfony. Referência: [Symfony Controllers](https://symfony.com/doc/current/controller.html).
 
-## Adaptador execut?vel
+## Adaptador executável
 
 [lerCriacaoTarefa](ler-criacao-tarefa.php) decodifica o objeto JSON, valida o
-Content-Type e o t?tulo, e devolve somente os campos permitidos. N?o instala
+Content-Type e o título, e devolve somente os campos permitidos. Não instala
 servidor nem persiste dados. Execute `php 02-symfony/controllers/criacao-test.php`.

@@ -39,3 +39,7 @@ continua como exemplo isolado de caso de uso sem autorização.
 Ambos conferem o identificador retornado pelo repositório. Uma implementação
 que devolva outra tarefa provoca `UnexpectedValueException` antes de gravar,
 evitando modificar o recurso errado por uma falha de contrato do adaptador.
+
+O [adaptador em memoria](repositorio-memoria.php) implementa a mesma porta
+usada pelo servico. Aceita tarefas imutaveis como carga inicial e rejeita IDs
+duplicados. Execute `php 02-symfony/services/repositorio-memoria-test.php`.
