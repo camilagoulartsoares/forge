@@ -64,3 +64,11 @@ O exemplo agora separa [entidade](exemplos/Pedido.php),
 [caso de uso](exemplos/RegistrarPedido.php) e
 [adaptador](exemplos/PedidosEmMemoria.php). A fachada `pedidos.php` continua
 compativel com os exemplos anteriores; outros adaptadores dependem apenas da porta.
+
+O segundo adaptador, [PedidosEmJson](exemplos/PedidosEmJson.php), pode ser
+injetado em `RegistrarPedido` sem mudar o dominio. Recebe um caminho em um
+diretorio local existente. Usa lock separado e substituicao por arquivo temporario
+no mesmo diretorio; rejeita dados corrompidos em vez de sobrescreve-los.
+Todos os escritores devem usar esse adaptador. Nao oferece transacoes entre
+varios arquivos nem garantias para sistemas de arquivos de rede. Execute
+`php 04-arquitetura/arquitetura-hexagonal/exemplos/pedidos-json-test.php`.
