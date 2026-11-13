@@ -84,6 +84,14 @@ class TaskSchemaTests(unittest.TestCase):
             self.db.execute(f"INSERT INTO {table}(id, {column}) VALUES (?, ?)", (9007199254740991, "Limite"))
             self.assertIsNotNone(self.db.execute(f"SELECT id FROM {table} WHERE id = ?", (9007199254740991,)).fetchone())
 
+    def test_filter_by_label_uses_bound_parameter_and_keeps_task_cardinality(self):
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (2, 1)])
+        sql = SCHEMA.with_name("tarefas-por-etiqueta.sql").read_text(encoding="utf-8")
+        self.assertEqual([(1, "Estudar", 0), (2, "Testar", 0)],
+                         self.db.execute(sql, {"etiqueta_id": 1}).fetchall())
+        for identifier in [999, "1 OR 1=1"]:
+            self.assertEqual([], self.db.execute(sql, {"etiqueta_id": identifier}).fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()
