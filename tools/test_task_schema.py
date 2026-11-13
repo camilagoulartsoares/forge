@@ -100,6 +100,14 @@ class TaskSchemaTests(unittest.TestCase):
         self.db.execute("DELETE FROM tarefa_etiqueta")
         self.assertEqual([(1, "PHP", 0), (2, "JavaScript", 0)], self.db.execute(sql).fetchall())
 
+    def test_reverse_relation_lookup_uses_covering_index(self):
+        plan = self.db.execute(
+            "EXPLAIN QUERY PLAN SELECT tarefa_id FROM tarefa_etiqueta WHERE etiqueta_id = ?", (1,)
+        ).fetchall()
+        self.assertTrue(any("COVERING INDEX idx_tarefa_etiqueta_etiqueta" in row[3] for row in plan), plan)
+        self.assertEqual(["etiqueta_id", "tarefa_id"], [
+            row[2] for row in self.db.execute("PRAGMA index_info(idx_tarefa_etiqueta_etiqueta)")])
+
 
 if __name__ == "__main__":
     unittest.main()

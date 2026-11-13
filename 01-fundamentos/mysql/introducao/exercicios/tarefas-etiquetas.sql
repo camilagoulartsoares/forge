@@ -21,4 +21,4 @@ CREATE TABLE tarefa_etiqueta (
     FOREIGN KEY (etiqueta_id) REFERENCES etiquetas(id) ON DELETE RESTRICT
 );
 
-CREATE INDEX idx_tarefa_etiqueta_etiqueta ON tarefa_etiqueta(etiqueta_id);
+CREATE INDEX idx_tarefa_etiqueta_etiqueta ON tarefa_etiqueta(etiqueta_id, tarefa_id);

@@ -39,3 +39,9 @@ ordenação explícita por identificadores. O teste usa o esquema real em memór
 O esquema restringe os identificadores a inteiros positivos seguros para
 JavaScript (`1` a `9007199254740991`), alinhando a persistência ao contrato
 da API e evitando perda de precisão na representação de identificadores.
+
+Para o caminho inverso, use [tarefas por etiqueta](tarefas-por-etiqueta.sql)
+com `:etiqueta_id` vinculado pelo driver. O indice `(etiqueta_id, tarefa_id)`
+cobre a leitura da associacao nessa direcao. A [contagem por etiqueta](contar-tarefas-por-etiqueta.sql)
+usa `COUNT(te.tarefa_id)` para representar corretamente etiquetas com zero tarefas.
+O plano e verificado em SQLite; confira tambem `EXPLAIN` no MySQL de destino.
