@@ -52,3 +52,9 @@ Falhas de conteúdo retornam `1`; problemas operacionais, como Git ausente ou
 `--root` fora de um repositório, retornam `2` com diagnóstico no stderr.
 Os testes usam diretórios temporários e cobrem falhas de links, UTF-8,
 blocos aninhados, imagens e o código de saída da interface de linha de comando.
+
+Os testes `test_pedidos_concorrencia.py` iniciam dois processos PHP com uma
+barreira antes da gravacao: verificam ausencia de perda entre IDs distintos e
+rejeicao de duplicidade mesmo quando ambas as consultas iniciais indicam ausencia.
+Usam somente arquivos temporarios locais; sem PHP CLI, esses dois casos sao
+marcados como ignorados. A verificacao completa continua exigindo PHP.
