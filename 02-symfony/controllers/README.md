@@ -26,3 +26,9 @@ Uma falha inesperada deve seguir o tratamento de erro da aplicação sem
 transformar uma operação malsucedida em resposta de sucesso.
 
 Este roteiro não instala Symfony. Referência: [Symfony Controllers](https://symfony.com/doc/current/controller.html).
+
+## Adaptador execut?vel
+
+[lerCriacaoTarefa](ler-criacao-tarefa.php) decodifica o objeto JSON, valida o
+Content-Type e o t?tulo, e devolve somente os campos permitidos. N?o instala
+servidor nem persiste dados. Execute `php 02-symfony/controllers/criacao-test.php`.
