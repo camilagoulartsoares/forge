@@ -143,6 +143,18 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertEqual(["git", "diff", "--cached", "--check"], calls[-1])
         self.assertTrue(all(command[0] == "git" for command in calls))
 
+    def test_keyboard_interrupt_stops_without_reporting_success(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            if command[0] == "git":
+                return subprocess.CompletedProcess(command, 0, stdout=b"")
+            raise KeyboardInterrupt
+
+        self.assertEqual(130, self.invoke(run, argv=["--only", "docs"]))
+        self.assertEqual(2, len(calls))
+
 
 if __name__ == "__main__":
     unittest.main()

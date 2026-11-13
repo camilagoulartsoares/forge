@@ -69,6 +69,9 @@ def main(argv=None) -> int:
             result = subprocess.run(command, cwd=ROOT, timeout=args.timeout)
             if result.returncode:
                 return result.returncode if result.returncode > 0 else 1
+    except KeyboardInterrupt:
+        print("Checks interrupted.", file=sys.stderr)
+        return 130
     except subprocess.TimeoutExpired as error:
         print(f"Check timed out after {error.timeout} seconds: {error.cmd}", file=sys.stderr)
         return 124

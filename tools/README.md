@@ -18,6 +18,8 @@ não são importados por uma suíte de testes.
 Use `--timeout 30` para limitar cada comando a 30 segundos. Um timeout retorna
 `124` e interrompe a sequência; valores não positivos, infinitos ou NaN são recusados.
 Sem a opção, o tempo de execução não recebe limite adicional.
+Uma interrupção por teclado encerra o executor com código `130`, sem indicar
+sucesso ou continuar para os comandos seguintes.
 A execução completa também confere `git diff --check` e a área de preparação
 com `git diff --cached --check`, antes de rodar as suítes. Assim, erros de
 whitespace nas mudanças locais não passam despercebidos por testes funcionais.
