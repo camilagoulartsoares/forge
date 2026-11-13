@@ -1,6 +1,6 @@
 -- Execute somente em banco local descartavel, sem tabelas com estes nomes.
 CREATE TABLE tarefas (
-    id BIGINT NOT NULL PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY CHECK (id BETWEEN 1 AND 9007199254740991),
     titulo VARCHAR(120) NOT NULL,
     concluida INTEGER NOT NULL DEFAULT 0,
     CHECK (length(trim(titulo)) > 0),
@@ -8,7 +8,7 @@ CREATE TABLE tarefas (
 );
 
 CREATE TABLE etiquetas (
-    id BIGINT NOT NULL PRIMARY KEY,
+    id BIGINT NOT NULL PRIMARY KEY CHECK (id BETWEEN 1 AND 9007199254740991),
     nome VARCHAR(120) NOT NULL UNIQUE,
     CHECK (length(trim(nome)) > 0)
 );

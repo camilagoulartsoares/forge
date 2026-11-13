@@ -36,3 +36,6 @@ impõe o comprimento declarado em VARCHAR.
 Após popular o esquema, execute a [listagem com etiquetas](listar-tarefas-etiquetas.sql).
 Ela mantém tarefas sem etiquetas e retorna uma linha por associação, com
 ordenação explícita por identificadores. O teste usa o esquema real em memória.
+O esquema restringe os identificadores a inteiros positivos seguros para
+JavaScript (`1` a `9007199254740991`), alinhando a persistência ao contrato
+da API e evitando perda de precisão na representação de identificadores.

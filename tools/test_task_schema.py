@@ -76,6 +76,14 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertFalse(self.db.in_transaction)
         self.assertEqual([(3, 1)], self.db.execute("SELECT * FROM tarefa_etiqueta").fetchall())
 
+    def test_identifiers_match_positive_safe_integer_api_contract(self):
+        for table, column in [("tarefas", "titulo"), ("etiquetas", "nome")]:
+            for identifier in [0, -1, 9007199254740992]:
+                with self.assertRaises(sqlite3.IntegrityError):
+                    self.db.execute(f"INSERT INTO {table}(id, {column}) VALUES (?, ?)", (identifier, "Teste"))
+            self.db.execute(f"INSERT INTO {table}(id, {column}) VALUES (?, ?)", (9007199254740991, "Limite"))
+            self.assertIsNotNone(self.db.execute(f"SELECT id FROM {table} WHERE id = ?", (9007199254740991,)).fetchone())
+
 
 if __name__ == "__main__":
     unittest.main()
