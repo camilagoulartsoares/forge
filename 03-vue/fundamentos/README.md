@@ -38,3 +38,17 @@ conclusão não alterna o estado nem cria outra lista. Execute
 ```sh
 node --test 03-vue/fundamentos/ordenar-tarefas.test.mjs
 ```
+
+## Composicao da lista
+
+[selecionarTarefas](selecionar-tarefas.mjs) combina `estado`, `termo` e `criterio`
+e devolve `{ itens, total, encontradas }`. A entrada segue o contrato da API;
+para ordenar por `data`, inclua `criadaEm` em UTC ISO com milissegundos.
+[paginarTarefas](paginar-tarefas.mjs) recebe as mesmas opcoes mais `pagina`
+(base 1) e `tamanho` (1 a 100). Pesquisa e filtros precedem a paginacao;
+paginas fora do resultado devolvem uma lista vazia.
+
+[adicionarTarefa](adicionar-tarefa.mjs) recebe lista, ID e titulo, normaliza o
+titulo e cria um item pendente. [importarTarefas](importar-tarefas.mjs) recebe
+lista e texto JSON e rejeita todo o lote se houver um item invalido ou ID repetido.
+Essas funcoes retornam novas listas e nao persistem dados nem geram IDs de servidor.
