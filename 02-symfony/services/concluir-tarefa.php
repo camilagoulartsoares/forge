@@ -16,6 +16,9 @@ use function Forge\Autorizacao\podeAlterarTarefa;
 
 require_once __DIR__ . '/../security/autorizacao.php';
 
+final class AcessoNegado extends DomainException {}
+final class TarefaNaoEncontrada extends OutOfBoundsException {}
+
 final class Tarefa
 {
     private int $id;
@@ -79,11 +82,11 @@ final class ConcluirTarefa
     public function executarAutorizada(int $id, ?int $usuarioAutenticado): Tarefa
     {
         if ($usuarioAutenticado === null || $usuarioAutenticado <= 0) {
-            throw new DomainException('Operacao nao autorizada.');
+            throw new AcessoNegado('Operacao nao autorizada.');
         }
         $tarefa = $this->obter($id);
         if ($tarefa->proprietario() === null || !podeAlterarTarefa($usuarioAutenticado, $tarefa->proprietario())) {
-            throw new DomainException('Operacao nao autorizada.');
+            throw new AcessoNegado('Operacao nao autorizada.');
         }
 
         return $this->concluir($tarefa);
@@ -96,7 +99,7 @@ final class ConcluirTarefa
         }
         $tarefa = $this->repositorio->buscar($id);
         if ($tarefa === null) {
-            throw new OutOfBoundsException('Tarefa nao encontrada.');
+            throw new TarefaNaoEncontrada('Tarefa nao encontrada.');
         }
         if ($tarefa->id() !== $id) {
             throw new UnexpectedValueException('Repositorio retornou outra tarefa.');
