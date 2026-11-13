@@ -5,6 +5,7 @@ from pathlib import Path
 import unittest
 import subprocess
 import sys
+import os
 
 from check_json import main, validate
 
@@ -53,6 +54,15 @@ class CheckJsonTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertIn(str(self.file), result.stderr)
         self.assertIn(str(other), result.stderr)
+        self.assertNotIn('Traceback', result.stderr)
+
+    def test_duplicate_unicode_key_has_safe_ascii_diagnostic(self):
+        self.write(r'{"\ud83d\ude00":1,"\ud83d\ude00":2}')
+        result = subprocess.run([sys.executable, str(Path(__file__).with_name('check_json.py')), str(self.file)],
+                                capture_output=True, text=True,
+                                env={**os.environ, 'PYTHONIOENCODING': 'ascii'})
+        self.assertEqual(1, result.returncode)
+        self.assertIn('duplicate key', result.stderr)
         self.assertNotIn('Traceback', result.stderr)
 
 

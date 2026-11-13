@@ -10,7 +10,7 @@ def unique_keys(pairs):
     result = {}
     for key, value in pairs:
         if key in result:
-            raise ValueError(f"duplicate key: {key}")
+            raise ValueError(f"duplicate key: {ascii(key)}")
         result[key] = value
     return result
 
