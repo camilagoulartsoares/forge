@@ -26,3 +26,8 @@ método no teste HTTP; conferir apenas a URL não verifica a restrição do verb
 Gere links pelo nome da rota, evitando repetir caminhos literais na interface.
 
 Referência: [Symfony Routing](https://symfony.com/doc/current/routing.html).
+
+O [parser de identificadores](ler-identificador.php) converte o segmento decimal
+somente depois de validar formato e limite. Rejeita zeros iniciais, sinais,
+notacao cientifica e valores acima do inteiro seguro JSON ou de `PHP_INT_MAX`.
+Execute `php 02-symfony/routes/identificador-test.php`.
