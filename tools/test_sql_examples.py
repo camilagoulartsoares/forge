@@ -60,6 +60,15 @@ class SqlExamplesTests(unittest.TestCase):
     def test_average_uses_known_values_including_zero(self):
         self.assertEqual([(3, 2, 1.0)], self.query("contagem-nulos.sql", "SUM(quantidade)", "AVG(quantidade)"))
 
+    def test_empty_aggregate_still_returns_one_row_with_null_sum(self):
+        self.assertEqual([(0, 0, None)], self.query(
+            "contagem-nulos.sql", ") AS amostras;", ") AS amostras WHERE 1 = 0;"))
+
+    def test_all_null_aggregate_counts_rows_but_has_no_known_values(self):
+        self.assertEqual([(3, 0, None)], self.query(
+            "contagem-nulos.sql", "SELECT 0\n    UNION ALL\n    SELECT 2",
+            "SELECT NULL\n    UNION ALL\n    SELECT NULL"))
+
 
 if __name__ == "__main__":
     unittest.main()
