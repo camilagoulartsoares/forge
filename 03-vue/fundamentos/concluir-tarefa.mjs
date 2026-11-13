@@ -1,5 +1,7 @@
+import { identificadorValido } from './identificador.mjs';
+
 export function concluirTarefa(tarefas, id) {
-  if (!Number.isSafeInteger(id) || id <= 0) throw new TypeError('Identificador invalido.');
+  if (!identificadorValido(id)) throw new TypeError('Identificador invalido.');
   let indice = -1;
   for (let i = 0; i < tarefas.length; i += 1) {
     if (tarefas[i].id !== id) continue;
