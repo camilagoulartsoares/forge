@@ -108,3 +108,38 @@ test('notificacao reentrante nao repete o novo estado para assinantes seguintes'
   await consulta.recarregar('A');
   assert.deepEqual(estados, [false, false]);
 });
+
+test('nova consulta iniciada no abort mantem seu controlador', async () => {
+  const pendentes = new Map();
+  let reentrada;
+  const consulta = criarConsultaTarefas((url, _request, { signal }) => new Promise((resolve) => {
+    pendentes.set(url, { signal, resolve });
+    if (url === 'primeira') signal.addEventListener('abort', () => {
+      reentrada = consulta.recarregar('reentrada');
+    }, { once: true });
+  }));
+  const primeira = consulta.recarregar('primeira');
+  const segunda = consulta.recarregar('segunda');
+  consulta.cancelar();
+  assert.equal(pendentes.get('reentrada').signal.aborted, true);
+  for (const { resolve } of pendentes.values()) resolve([]);
+  await Promise.all([primeira, segunda, reentrada]);
+});
+
+test('cancelamento nao encerra carregamento iniciado pelo callback de abort', async () => {
+  const pendentes = new Map();
+  let reentrada;
+  const consulta = criarConsultaTarefas((url, _request, { signal }) => new Promise((resolve) => {
+    pendentes.set(url, { signal, resolve });
+    if (url === 'primeira') signal.addEventListener('abort', () => {
+      reentrada = consulta.recarregar('reentrada');
+    }, { once: true });
+  }));
+  const primeira = consulta.recarregar('primeira');
+  consulta.cancelar();
+  assert.equal(consulta.estado.carregando, true);
+  pendentes.get('primeira').resolve([]);
+  pendentes.get('reentrada').resolve([]);
+  await Promise.all([primeira, reentrada]);
+  assert.equal(consulta.estado.carregando, false);
+});

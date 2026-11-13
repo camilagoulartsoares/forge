@@ -26,18 +26,21 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
   }
 
   function cancelar() {
-    versao += 1;
-    controlador?.abort();
+    const atual = ++versao;
+    const anterior = controlador;
     controlador = undefined;
-    publicar({ ...estado, carregando: false });
+    anterior?.abort();
+    if (atual === versao) publicar({ ...estado, carregando: false });
   }
 
   async function recarregar(url) {
     if (descartada) throw new Error('Consulta ja descartada.');
     const atual = ++versao;
-    controlador?.abort();
+    const anterior = controlador;
     const controller = new AbortController();
     controlador = controller;
+    anterior?.abort();
+    if (atual !== versao || controller.signal.aborted) return;
     publicar({ ...estado, erro: null, carregando: true });
     if (atual !== versao || controller.signal.aborted) return;
     try {
