@@ -35,3 +35,12 @@ test('nao aceita criterios convertidos implicitamente para string', () => {
     assert.throws(() => ordenarTarefas(tarefas, criterio), RangeError);
   }
 });
+
+test('rejeita datas ausentes, impossiveis ou sem normalizacao mesmo em lista unitaria', () => {
+  for (const criadaEm of [undefined, null, 123, '2026-02-30T00:00:00.000Z',
+    '2026-01-01', '2026-01-01T00:00:00Z', '2026-01-01T01:00:00.000+01:00']) {
+    assert.throws(() => ordenarTarefas([{ id: 1, criadaEm }], 'data'), TypeError);
+  }
+  assert.equal(ordenarTarefas([{ id: 1, criadaEm: '2024-02-29T00:00:00.000Z' }], 'data').length, 1);
+  assert.equal(ordenarTarefas([{ id: 1, titulo: 'Sem data' }]).length, 1);
+});
