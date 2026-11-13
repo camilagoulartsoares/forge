@@ -29,3 +29,8 @@ O cancelamento é propagado ao chamador; ele pode distinguir o motivo e evitar
 exibir uma mensagem de falha de rede para uma ação cancelada pelo usuário.
 O sinal é conferido antes da requisição e após cada espera, descartando também
 resultados tardios de implementações injetadas que não respeitem o cancelamento.
+
+A opcao `{ timeoutMs: 5000, signal }` limita a consulta completa, incluindo a
+leitura do JSON. O tempo limite rejeita com `TimeoutError`; cancelamento externo
+preserva seu motivo. Timer e ouvinte externo sao removidos ao encerrar.
+Uma funcao de requisicao injetada deve respeitar o `signal`, como `fetch`.
