@@ -54,7 +54,10 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
         publicar({ ...estado, erro });
       }
     } finally {
-      if (atual === versao) publicar({ ...estado, carregando: false });
+      if (atual === versao) {
+        controlador = undefined;
+        publicar({ ...estado, carregando: false });
+      }
     }
   }
 

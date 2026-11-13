@@ -143,3 +143,16 @@ test('cancelamento nao encerra carregamento iniciado pelo callback de abort', as
   await Promise.all([primeira, reentrada]);
   assert.equal(consulta.estado.carregando, false);
 });
+
+test('cancelar ou recarregar nao aborta requisicoes ja encerradas', async () => {
+  const sinais = [];
+  const consulta = criarConsultaTarefas(async (_url, _requisitar, { signal }) => {
+    sinais.push(signal);
+    return [];
+  });
+  await consulta.recarregar('/primeira');
+  await consulta.recarregar('/segunda');
+  consulta.cancelar();
+  consulta.descartar();
+  assert.deepEqual(sinais.map(sinal => sinal.aborted), [false, false]);
+});
