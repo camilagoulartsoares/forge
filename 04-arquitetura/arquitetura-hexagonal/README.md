@@ -58,3 +58,9 @@ Registre dúvidas a revisar.
 ## Referências
 
 Adicione referências utilizadas.
+
+O exemplo agora separa [entidade](exemplos/Pedido.php),
+[porta](exemplos/ArmazenamentoPedidos.php),
+[caso de uso](exemplos/RegistrarPedido.php) e
+[adaptador](exemplos/PedidosEmMemoria.php). A fachada `pedidos.php` continua
+compativel com os exemplos anteriores; outros adaptadores dependem apenas da porta.
