@@ -43,3 +43,8 @@ evitando modificar o recurso errado por uma falha de contrato do adaptador.
 O [adaptador em memoria](repositorio-memoria.php) implementa a mesma porta
 usada pelo servico. Aceita tarefas imutaveis como carga inicial e rejeita IDs
 duplicados. Execute `php 02-symfony/services/repositorio-memoria-test.php`.
+
+Para executar a composicao sem framework, rode
+`php 02-symfony/services/executar.php 1`. O exemplo conclui a tarefa ficticia do
+usuario 7 e imprime JSON. ID ausente/invalido retorna codigo 2; tarefa ausente,
+codigo 1. O usuario fixo serve somente a demonstracao local, sem autenticacao real.
