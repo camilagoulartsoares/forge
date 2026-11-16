@@ -33,3 +33,15 @@ test('limites invalidos e sinal previamente cancelado nao iniciam requisicao', a
   await assert.rejects(buscarTarefas('/', requisitar, { timeoutMs: 5, signal: AbortSignal.abort() }), { name: 'AbortError' });
   assert.equal(chamadas, 0);
 });
+
+test('encerra no prazo mesmo quando a fonte ignora abort e trata rejeicao tardia', async () => {
+  let rejeitar;
+  const fonte = () => new Promise((_resolver, falhar) => { rejeitar = falhar; });
+  await assert.rejects(buscarTarefas('/', fonte, { timeoutMs: 5 }), { name: 'TimeoutError' });
+  rejeitar(new Error('Falha depois do timeout'));
+  await Promise.resolve();
+  const controller = new AbortController();
+  const cancelada = buscarTarefas('/', () => new Promise(() => {}), { timeoutMs: 10000, signal: controller.signal });
+  controller.abort();
+  await assert.rejects(cancelada, { name: 'AbortError' });
+});

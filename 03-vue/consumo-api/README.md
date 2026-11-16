@@ -33,4 +33,5 @@ resultados tardios de implementações injetadas que não respeitem o cancelamen
 A opcao `{ timeoutMs: 5000, signal }` limita a consulta completa, incluindo a
 leitura do JSON. O tempo limite rejeita com `TimeoutError`; cancelamento externo
 preserva seu motivo. Timer e ouvinte externo sao removidos ao encerrar.
-Uma funcao de requisicao injetada deve respeitar o `signal`, como `fetch`.
+A consulta encerra no prazo mesmo se uma fonte injetada ignorar o sinal.
+Nesse caso, o trabalho interno da fonte pode continuar; `fetch` respeita o abort.

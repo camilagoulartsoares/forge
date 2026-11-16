@@ -15,13 +15,20 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
       throw new RangeError('Tempo limite deve ser um inteiro positivo em milissegundos.');
     }
     const controlador = new AbortController();
-    const cancelar = () => controlador.abort(signal.reason);
+    let interromper;
+    const interrupcao = new Promise((_resolver, rejeitar) => {
+      interromper = motivo => {
+        rejeitar(motivo);
+        controlador.abort(motivo);
+      };
+    });
+    const cancelar = () => interromper(signal.reason);
     signal?.addEventListener('abort', cancelar, { once: true });
     const timer = setTimeout(() => {
-      controlador.abort(new DOMException('Tempo limite da consulta excedido.', 'TimeoutError'));
+      interromper(new DOMException('Tempo limite da consulta excedido.', 'TimeoutError'));
     }, timeoutMs);
     try {
-      return await buscarTarefas(url, requisitar, { signal: controlador.signal });
+      return await Promise.race([interrupcao, buscarTarefas(url, requisitar, { signal: controlador.signal })]);
     } finally {
       clearTimeout(timer);
       signal?.removeEventListener('abort', cancelar);
