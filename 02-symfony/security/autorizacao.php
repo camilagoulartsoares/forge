@@ -4,10 +4,14 @@ declare(strict_types=1);
 
 namespace Forge\Autorizacao;
 
+use function Forge\Identidade\identificadorValido;
+
+require_once __DIR__ . '/../api/identificador.php';
+
 function podeAlterarTarefa(?int $usuarioAutenticado, int $proprietario): bool
 {
-    return $usuarioAutenticado !== null && $usuarioAutenticado > 0
-        && $proprietario > 0 && $usuarioAutenticado === $proprietario;
+    return identificadorValido($usuarioAutenticado) && identificadorValido($proprietario)
+        && $usuarioAutenticado === $proprietario;
 }
 
 function filtrarTarefasAutorizadas(?int $usuarioAutenticado, array $tarefas): array

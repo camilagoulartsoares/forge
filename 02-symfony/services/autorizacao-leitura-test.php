@@ -16,7 +16,7 @@ $repositorio = new class implements Forge\Aplicacao\RepositorioTarefas {
     public function salvar(Forge\Aplicacao\Tarefa $tarefa): void { $this->escritas++; }
 };
 $servico = new Forge\Aplicacao\ConcluirTarefa($repositorio);
-foreach ([null, 0, -1] as $usuario) {
+foreach ([null, 0, -1, 9007199254740992] as $usuario) {
     // Mesmo um ID de tarefa invalido nao deve expor detalhes antes da autorizacao.
     foreach ([0, 1, 999] as $id) {
         verificarExcecao(Forge\Aplicacao\AcessoNegado::class, function () use ($servico, $id, $usuario) {

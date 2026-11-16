@@ -32,8 +32,8 @@ final class Tarefa
         }
         $this->id = $id;
         $this->concluida = $concluida;
-        if ($proprietario !== null && $proprietario <= 0) {
-            throw new InvalidArgumentException('Proprietario deve ser positivo.');
+        if ($proprietario !== null && !identificadorValido($proprietario)) {
+            throw new InvalidArgumentException('Proprietario deve ser um inteiro positivo seguro.');
         }
         $this->proprietario = $proprietario;
     }
@@ -81,7 +81,7 @@ final class ConcluirTarefa
 
     public function executarAutorizada(int $id, ?int $usuarioAutenticado): Tarefa
     {
-        if ($usuarioAutenticado === null || $usuarioAutenticado <= 0) {
+        if (!identificadorValido($usuarioAutenticado)) {
             throw new AcessoNegado('Operacao nao autorizada.');
         }
         $tarefa = $this->obter($id);
