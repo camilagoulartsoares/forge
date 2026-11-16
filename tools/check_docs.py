@@ -72,6 +72,10 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
             if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
                 fence = None
             continue
+        opening = FENCE.match(line) if not in_comment else None
+        if opening and (opening[1][0] != "`" or "`" not in opening[2]):
+            fence = opening[1]
+            continue
         line = without_inline_code(line)
         visible = []
         while line:
@@ -90,10 +94,6 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
                 line = line[start + 4:]
                 in_comment = True
         line = "".join(visible)
-        match = FENCE.match(line)
-        if match:
-            fence = match[1]
-            continue
         for match in LINK.finditer(line):
             bracket = match.start() + int(match[0].startswith("!"))
             prefix = line[:bracket]

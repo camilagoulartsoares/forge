@@ -53,6 +53,13 @@ class CheckDocsTests(unittest.TestCase):
     def test_nested_fences_and_inline_code_are_ignored(self):
         self.assertEqual([], self.check("````markdown\n```php\n[bad](absent.md)\n```\n````\n`[bad](absent.md)`"))
 
+    def test_backtick_in_info_prevents_opening_a_backtick_fence(self):
+        errors = self.check("```php`invalid`\n[visible](absent.md)")
+        self.assertEqual(1, len(errors))
+        self.assertIn(":2: missing link", errors[0])
+        self.assertEqual([], self.check("~~~php`allowed`\n[hidden](absent.md)\n~~~"))
+        self.assertEqual([], self.check("```html <!-- literal info\n[hidden](absent.md)\n```"))
+
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 
