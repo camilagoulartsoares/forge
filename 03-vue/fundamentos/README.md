@@ -52,3 +52,7 @@ paginas fora do resultado devolvem uma lista vazia.
 titulo e cria um item pendente. [importarTarefas](importar-tarefas.mjs) recebe
 lista e texto JSON e rejeita todo o lote se houver um item invalido ou ID repetido.
 Essas funcoes retornam novas listas e nao persistem dados nem geram IDs de servidor.
+
+[renomearTarefa](renomear-tarefa.mjs) recebe lista, ID e novo titulo. Reutiliza a
+validacao do formulario, preserva o estado de conclusao e retorna a propria lista
+quando o titulo normalizado nao mudou. IDs inexistentes provocam `RangeError`.
