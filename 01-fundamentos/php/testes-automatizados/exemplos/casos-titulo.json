@@ -65,5 +65,371 @@
   {
     "entrada": "a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a\u0301a",
     "valido": false
+  },
+  {
+    "entrada": "\t\t\t",
+    "valido": false
+  },
+  {
+    "entrada": "\txxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\t",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\tB",
+    "valido": true,
+    "titulo": "A\tB"
+  },
+  {
+    "entrada": "\n\n\n",
+    "valido": false
+  },
+  {
+    "entrada": "\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\nB",
+    "valido": true,
+    "titulo": "A\nB"
+  },
+  {
+    "entrada": "\u000b\u000b\u000b",
+    "valido": false
+  },
+  {
+    "entrada": "\u000bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u000b",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u000bB",
+    "valido": true,
+    "titulo": "A\u000bB"
+  },
+  {
+    "entrada": "\f\f\f",
+    "valido": false
+  },
+  {
+    "entrada": "\fxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\f",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\fB",
+    "valido": true,
+    "titulo": "A\fB"
+  },
+  {
+    "entrada": "\r\r\r",
+    "valido": false
+  },
+  {
+    "entrada": "\rxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\r",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\rB",
+    "valido": true,
+    "titulo": "A\rB"
+  },
+  {
+    "entrada": "   ",
+    "valido": false
+  },
+  {
+    "entrada": " xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A B",
+    "valido": true,
+    "titulo": "A B"
+  },
+  {
+    "entrada": "\u00a0\u00a0\u00a0",
+    "valido": false
+  },
+  {
+    "entrada": "\u00a0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u00a0",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u00a0B",
+    "valido": true,
+    "titulo": "A\u00a0B"
+  },
+  {
+    "entrada": "\u1680\u1680\u1680",
+    "valido": false
+  },
+  {
+    "entrada": "\u1680xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u1680",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u1680B",
+    "valido": true,
+    "titulo": "A\u1680B"
+  },
+  {
+    "entrada": "\u2000\u2000\u2000",
+    "valido": false
+  },
+  {
+    "entrada": "\u2000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2000",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2000B",
+    "valido": true,
+    "titulo": "A\u2000B"
+  },
+  {
+    "entrada": "\u2001\u2001\u2001",
+    "valido": false
+  },
+  {
+    "entrada": "\u2001xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2001",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2001B",
+    "valido": true,
+    "titulo": "A\u2001B"
+  },
+  {
+    "entrada": "\u2002\u2002\u2002",
+    "valido": false
+  },
+  {
+    "entrada": "\u2002xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2002",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2002B",
+    "valido": true,
+    "titulo": "A\u2002B"
+  },
+  {
+    "entrada": "\u2003\u2003\u2003",
+    "valido": false
+  },
+  {
+    "entrada": "\u2003xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2003",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2003B",
+    "valido": true,
+    "titulo": "A\u2003B"
+  },
+  {
+    "entrada": "\u2004\u2004\u2004",
+    "valido": false
+  },
+  {
+    "entrada": "\u2004xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2004",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2004B",
+    "valido": true,
+    "titulo": "A\u2004B"
+  },
+  {
+    "entrada": "\u2005\u2005\u2005",
+    "valido": false
+  },
+  {
+    "entrada": "\u2005xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2005",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2005B",
+    "valido": true,
+    "titulo": "A\u2005B"
+  },
+  {
+    "entrada": "\u2006\u2006\u2006",
+    "valido": false
+  },
+  {
+    "entrada": "\u2006xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2006",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2006B",
+    "valido": true,
+    "titulo": "A\u2006B"
+  },
+  {
+    "entrada": "\u2007\u2007\u2007",
+    "valido": false
+  },
+  {
+    "entrada": "\u2007xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2007",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2007B",
+    "valido": true,
+    "titulo": "A\u2007B"
+  },
+  {
+    "entrada": "\u2008\u2008\u2008",
+    "valido": false
+  },
+  {
+    "entrada": "\u2008xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2008",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2008B",
+    "valido": true,
+    "titulo": "A\u2008B"
+  },
+  {
+    "entrada": "\u2009\u2009\u2009",
+    "valido": false
+  },
+  {
+    "entrada": "\u2009xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2009",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2009B",
+    "valido": true,
+    "titulo": "A\u2009B"
+  },
+  {
+    "entrada": "\u200a\u200a\u200a",
+    "valido": false
+  },
+  {
+    "entrada": "\u200axxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u200a",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u200aB",
+    "valido": true,
+    "titulo": "A\u200aB"
+  },
+  {
+    "entrada": "\u2028\u2028\u2028",
+    "valido": false
+  },
+  {
+    "entrada": "\u2028xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2028",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2028B",
+    "valido": true,
+    "titulo": "A\u2028B"
+  },
+  {
+    "entrada": "\u2029\u2029\u2029",
+    "valido": false
+  },
+  {
+    "entrada": "\u2029xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u2029",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u2029B",
+    "valido": true,
+    "titulo": "A\u2029B"
+  },
+  {
+    "entrada": "\u202f\u202f\u202f",
+    "valido": false
+  },
+  {
+    "entrada": "\u202fxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u202f",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u202fB",
+    "valido": true,
+    "titulo": "A\u202fB"
+  },
+  {
+    "entrada": "\u205f\u205f\u205f",
+    "valido": false
+  },
+  {
+    "entrada": "\u205fxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u205f",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u205fB",
+    "valido": true,
+    "titulo": "A\u205fB"
+  },
+  {
+    "entrada": "\u3000\u3000\u3000",
+    "valido": false
+  },
+  {
+    "entrada": "\u3000xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u3000",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\u3000B",
+    "valido": true,
+    "titulo": "A\u3000B"
+  },
+  {
+    "entrada": "\ufeff\ufeff\ufeff",
+    "valido": false
+  },
+  {
+    "entrada": "\ufeffxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\ufeff",
+    "valido": true,
+    "titulo": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "entrada": "A\ufeffB",
+    "valido": true,
+    "titulo": "A\ufeffB"
+  },
+  {
+    "entrada": "\u0085xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u0085",
+    "valido": false
+  },
+  {
+    "entrada": "\u180exxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u180e",
+    "valido": false
+  },
+  {
+    "entrada": "\u200bxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u200b",
+    "valido": false
+  },
+  {
+    "entrada": "\u200exxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\u200e",
+    "valido": false
   }
 ]

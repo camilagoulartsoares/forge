@@ -69,3 +69,9 @@ Registre dúvidas a revisar.
 ## Referências
 
 Adicione referências utilizadas.
+
+A fixture compartilhada [casos-titulo.json](exemplos/casos-titulo.json) cobre os
+25 espacos reconhecidos por `String.trim`: entrada apenas com espacos, bordas
+junto ao limite de 120 unidades e preservacao no interior do titulo. Inclui
+caracteres visualmente semelhantes que nao devem ser removidos. PHP e JavaScript
+executam a mesma matriz para detectar divergencias de normalizacao.
