@@ -12,9 +12,9 @@ function lerIdentificador(string $valor): int
     if (!preg_match('/\A[1-9][0-9]*\z/D', $valor)
         || strlen($valor) > strlen($limite)
         || (strlen($valor) === strlen($limite) && strcmp($valor, $limite) > 0)) {
-        throw new \InvalidArgumentException('Identificador decimal positivo seguro esperado.');
+        throw new \Forge\Identidade\IdentificadorInvalido('Identificador decimal positivo seguro esperado.');
     }
     $id = (int) $valor;
-    if (!\Forge\Identidade\identificadorValido($id)) throw new \InvalidArgumentException('Identificador invalido.');
+    if (!\Forge\Identidade\identificadorValido($id)) throw new \Forge\Identidade\IdentificadorInvalido('Identificador invalido.');
     return $id;
 }

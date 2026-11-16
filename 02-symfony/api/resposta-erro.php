@@ -12,7 +12,10 @@ function respostaErro(\Throwable $erro): array
 {
     $status = 500;
     $corpo = ['erro' => 'erro_interno'];
-    if ($erro instanceof EntradaInvalida) {
+    if ($erro instanceof \Forge\Identidade\IdentificadorInvalido) {
+        $status = 422;
+        $corpo = ['erro' => 'entrada_invalida', 'campos' => ['id' => 'Identificador invalido.']];
+    } elseif ($erro instanceof EntradaInvalida) {
         $status = 422;
         $corpo = ['erro' => 'entrada_invalida', 'campos' => $erro->campos];
     } elseif ($erro instanceof \JsonException) {
