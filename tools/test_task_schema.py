@@ -131,6 +131,32 @@ class TaskSchemaTests(unittest.TestCase):
         for _, _, total, pending, completed in rows:
             self.assertEqual(total, pending + completed)
 
+    def test_rejected_updates_preserve_checks_uniqueness_and_foreign_keys(self):
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.execute("INSERT INTO tarefa_etiqueta VALUES (1, 1)")
+        tables = ["tarefas", "etiquetas", "tarefa_etiqueta"]
+        before = {table: self.db.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall() for table in tables}
+        for statement in [
+            "UPDATE tarefas SET id = 0 WHERE id = 1",
+            "UPDATE tarefas SET id = 2 WHERE id = 1",
+            "UPDATE tarefas SET id = 99 WHERE id = 1",
+            "UPDATE tarefas SET concluida = 2 WHERE id = 1",
+            "UPDATE tarefas SET titulo = ' ' WHERE id = 1",
+            "UPDATE etiquetas SET nome = 'PHP' WHERE id = 2",
+            "UPDATE etiquetas SET nome = '' WHERE id = 2",
+            "UPDATE tarefa_etiqueta SET etiqueta_id = 99 WHERE tarefa_id = 1",
+            "UPDATE tarefa_etiqueta SET tarefa_id = 99 WHERE tarefa_id = 1",
+        ]:
+            with self.subTest(statement=statement):
+                with self.assertRaises(sqlite3.IntegrityError):
+                    self.db.execute(statement)
+                for table in tables:
+                    self.assertEqual(before[table], self.db.execute(f"SELECT * FROM {table} ORDER BY 1").fetchall())
+        self.db.execute("UPDATE tarefas SET titulo = 'Revisar', concluida = 1 WHERE id = 1")
+        self.db.execute("UPDATE tarefa_etiqueta SET etiqueta_id = 2 WHERE tarefa_id = 1")
+        self.assertEqual(("Revisar", 1), self.db.execute("SELECT titulo, concluida FROM tarefas WHERE id = 1").fetchone())
+        self.assertEqual([(1, 2)], self.db.execute("SELECT * FROM tarefa_etiqueta").fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()
