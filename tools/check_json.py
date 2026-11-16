@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import math
 from pathlib import Path
 import sys
 
@@ -19,9 +20,16 @@ def reject_constant(value):
     raise ValueError(f"non-standard number: {value}")
 
 
+def finite_float(value):
+    result = float(value)
+    if not math.isfinite(result):
+        raise ValueError(f"number outside finite float range: {value}")
+    return result
+
+
 def validate(path):
     return json.loads(Path(path).read_text(encoding="utf-8"),
-                      object_pairs_hook=unique_keys, parse_constant=reject_constant)
+                      object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float)
 
 
 def main(argv=None):

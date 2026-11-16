@@ -32,6 +32,12 @@ class CheckJsonTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "non-standard"):
                 validate(self.write(value))
 
+    def test_exponents_cannot_silently_overflow_to_infinity(self):
+        for value in ["1e999", "-1e999", '{"value":1e309}']:
+            with self.assertRaisesRegex(ValueError, "finite float range"):
+                validate(self.write(value))
+        self.assertEqual([1e308, 0.0], validate(self.write('[1e308,0.0]')))
+
     def test_bad_utf8_and_syntax_are_failures(self):
         self.file.write_bytes(b'"\xff"')
         with self.assertRaises(ValueError):
