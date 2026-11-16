@@ -79,3 +79,11 @@ foreach ([true, 1.5, null] as $quantidadeInvalida) {
 }
 verificarIgual(1, $spy->gravacoes);
 echo 'OK: registro de pedidos' . PHP_EOL;
+
+foreach ([[1 => ['codigo' => 'A', 'quantidade' => 1]], ['produto' => ['codigo' => 'A', 'quantidade' => 1]],
+    [0 => ['codigo' => 'A', 'quantidade' => 1], 2 => ['codigo' => 'B', 'quantidade' => 1]]] as $naoLista) {
+    verificarExcecao(InvalidArgumentException::class, function () use ($caso, $naoLista) {
+        $caso->executar('nao-lista', $naoLista);
+    });
+}
+verificarIgual(1, $spy->gravacoes);

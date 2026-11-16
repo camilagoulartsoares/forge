@@ -30,3 +30,7 @@ verifique a exceção: confirme que entradas inválidas não chegaram a salvar.
 Consultar e depois salvar em memória não resolve concorrência em um banco.
 Se avançar para persistência real, documente como a unicidade será garantida
 atomicamente e como o conflito será convertido para o contrato do caso de uso.
+
+A colecao de itens deve ser uma lista PHP com chaves consecutivas a partir de
+zero, correspondente a um array JSON. Mapas associativos e listas com lacunas
+sao rejeitados antes de consultar ou salvar no adaptador.

@@ -14,7 +14,7 @@ final class Pedido
 
     public function __construct(string $id, array $itens)
     {
-        if (trim($id) === '' || $itens === []) {
+        if (trim($id) === '' || $itens === [] || array_keys($itens) !== range(0, count($itens) - 1)) {
             throw new InvalidArgumentException('Pedido exige identificador e itens.');
         }
 
