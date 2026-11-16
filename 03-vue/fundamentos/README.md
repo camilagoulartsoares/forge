@@ -60,3 +60,7 @@ quando o titulo normalizado nao mudou. IDs inexistentes provocam `RangeError`.
 [removerTarefa](remover-tarefa.mjs) remove pelo ID, independentemente da ordem
 visual. A lista original permanece intacta; ausencia ou duplicidade nao e
 tratada como sucesso. A operacao e apenas local, sem emitir chamadas HTTP.
+
+[exportarTarefas](exportar-tarefas.mjs) gera texto JSON com `id`, `titulo` e
+`concluida`, compativel com `importarTarefas`. Metadados adicionais, datas locais e
+proprietarios nao sao exportados. O chamador decide onde salvar o texto.
