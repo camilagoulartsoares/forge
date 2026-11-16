@@ -45,3 +45,27 @@ test('encerra no prazo mesmo quando a fonte ignora abort e trata rejeicao tardia
   controller.abort();
   await assert.rejects(cancelada, { name: 'AbortError' });
 });
+
+test('tempo limite inclui corpo pendente e ignora sua resolucao tardia', async () => {
+  let resolverCorpo;
+  let sinal;
+  const fonte = async (_url, { signal }) => {
+    sinal = signal;
+    return { ok: true, json: () => new Promise(resolver => { resolverCorpo = resolver; }) };
+  };
+  await assert.rejects(buscarTarefas('/', fonte, { timeoutMs: 5 }), { name: 'TimeoutError' });
+  assert.equal(sinal.aborted, true);
+  resolverCorpo([{ id: 1, titulo: 'Tardia', concluida: false }]);
+  await Promise.resolve();
+});
+test('cancelamento externo interrompe corpo pendente com motivo original', async () => {
+  const controller = new AbortController();
+  let corpoIniciado;
+  const iniciado = new Promise(resolver => { corpoIniciado = resolver; });
+  const fonte = async () => ({ ok: true, json: () => { corpoIniciado(); return new Promise(() => {}); } });
+  const consulta = buscarTarefas('/', fonte, { timeoutMs: 10000, signal: controller.signal });
+  await iniciado;
+  const motivo = new Error('Tela fechada');
+  controller.abort(motivo);
+  await assert.rejects(consulta, erro => erro === motivo);
+});
