@@ -87,3 +87,13 @@ foreach ([[1 => ['codigo' => 'A', 'quantidade' => 1]], ['produto' => ['codigo' =
     });
 }
 verificarIgual(1, $spy->gravacoes);
+
+foreach ([['bad' . "\xff", [['codigo' => 'A', 'quantidade' => 1]]],
+    ['utf8', [['codigo' => "\xc0\xaf", 'quantidade' => 1]]]] as [$id, $itensInvalidos]) {
+    verificarExcecao(InvalidArgumentException::class, function () use ($caso, $id, $itensInvalidos) {
+        $caso->executar($id, $itensInvalidos);
+    });
+}
+verificarIgual(1, $spy->gravacoes);
+$unicode = new Pedido("pedido-\xf0\x9f\x98\x80", [['codigo' => "Caf\xc3\xa9", 'quantidade' => 1]]);
+verificarIgual("Caf\xc3\xa9", $unicode->itens()[0]['codigo']);

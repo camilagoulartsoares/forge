@@ -34,3 +34,6 @@ atomicamente e como o conflito será convertido para o contrato do caso de uso.
 A colecao de itens deve ser uma lista PHP com chaves consecutivas a partir de
 zero, correspondente a um array JSON. Mapas associativos e listas com lacunas
 sao rejeitados antes de consultar ou salvar no adaptador.
+
+Identificador e codigo usam UTF-8 valido. A regra pertence ao dominio para
+que os adaptadores em memoria e JSON aceitem as mesmas entradas textuais.
