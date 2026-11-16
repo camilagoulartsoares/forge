@@ -28,8 +28,19 @@ def finite_float(value):
 
 
 def validate(path):
-    return json.loads(Path(path).read_text(encoding="utf-8"),
-                      object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float)
+    result = json.loads(Path(path).read_text(encoding="utf-8"),
+                        object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float)
+    pending = [result]
+    while pending:
+        value = pending.pop()
+        if isinstance(value, str) and any(0xD800 <= ord(char) <= 0xDFFF for char in value):
+            raise ValueError(f"unpaired Unicode surrogate: {ascii(value)}")
+        if isinstance(value, dict):
+            pending.extend(value.keys())
+            pending.extend(value.values())
+        elif isinstance(value, list):
+            pending.extend(value)
+    return result
 
 
 def main(argv=None):

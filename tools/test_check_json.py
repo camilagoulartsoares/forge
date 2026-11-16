@@ -38,6 +38,12 @@ class CheckJsonTests(unittest.TestCase):
                 validate(self.write(value))
         self.assertEqual([1e308, 0.0], validate(self.write('[1e308,0.0]')))
 
+    def test_escaped_surrogates_must_form_valid_unicode_in_keys_and_values(self):
+        for value in [r'"\ud800"', r'{"\udfff":1}', r'["a\ud800b"]']:
+            with self.assertRaisesRegex(ValueError, "unpaired Unicode surrogate"):
+                validate(self.write(value))
+        self.assertEqual(chr(0x1F600), validate(self.write(r'"\ud83d\ude00"')))
+
     def test_bad_utf8_and_syntax_are_failures(self):
         self.file.write_bytes(b'"\xff"')
         with self.assertRaises(ValueError):
