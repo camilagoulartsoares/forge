@@ -56,3 +56,7 @@ Essas funcoes retornam novas listas e nao persistem dados nem geram IDs de servi
 [renomearTarefa](renomear-tarefa.mjs) recebe lista, ID e novo titulo. Reutiliza a
 validacao do formulario, preserva o estado de conclusao e retorna a propria lista
 quando o titulo normalizado nao mudou. IDs inexistentes provocam `RangeError`.
+
+[removerTarefa](remover-tarefa.mjs) remove pelo ID, independentemente da ordem
+visual. A lista original permanece intacta; ausencia ou duplicidade nao e
+tratada como sucesso. A operacao e apenas local, sem emitir chamadas HTTP.
