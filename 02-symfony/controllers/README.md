@@ -37,3 +37,8 @@ servidor nem persiste dados. Execute `php 02-symfony/controllers/criacao-test.ph
 injetada. O servico recebe somente o titulo; a resposta valida o resultado,
 seleciona campos publicos e inclui `201` e `Location`. Entradas invalidas nao
 chamam o servico. Falhas do servico nao viram sucesso. Nao ha servidor instalado.
+
+[concluirTarefaHttp](concluir-tarefa.php) recebe o segmento da rota, a identidade
+ja obtida pelo adaptador de autenticacao e o servico existente. Recusa identidade
+invalida antes de interpretar o ID, delega a autorizacao por proprietario e
+retorna apenas ID e conclusao. Testes cobrem 200, 403, 404, 422 e 500.
