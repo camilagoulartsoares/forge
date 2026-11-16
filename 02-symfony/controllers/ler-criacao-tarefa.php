@@ -17,6 +17,8 @@ final class EntradaInvalida extends \InvalidArgumentException
     }
 }
 
+final class CorpoJsonInvalido extends \JsonException {}
+
 final class TipoConteudoNaoSuportado extends \RuntimeException {}
 
 function lerCriacaoTarefa(string $corpo, string $tipo = 'application/json'): array
@@ -24,9 +26,13 @@ function lerCriacaoTarefa(string $corpo, string $tipo = 'application/json'): arr
     if (strtolower(trim(explode(';', $tipo, 2)[0])) !== 'application/json') {
         throw new TipoConteudoNaoSuportado('Esperado application/json.');
     }
-    $entrada = json_decode($corpo, false, 512, JSON_THROW_ON_ERROR);
+    try {
+        $entrada = json_decode($corpo, false, 512, JSON_THROW_ON_ERROR);
+    } catch (\JsonException $erro) {
+        throw new CorpoJsonInvalido('Corpo JSON invalido.', $erro->getCode(), $erro);
+    }
     if (!$entrada instanceof \stdClass) {
-        throw new \JsonException('Esperado objeto JSON.');
+        throw new CorpoJsonInvalido('Esperado objeto JSON.');
     }
     $titulo = \Forge\Tarefas\validarTitulo($entrada->titulo ?? null);
     if (!$titulo['valido']) {

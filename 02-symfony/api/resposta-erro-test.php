@@ -8,7 +8,8 @@ require_once __DIR__ . '/../../01-fundamentos/php/testes-automatizados/exemplos/
 foreach ([
     [new Forge\Identidade\IdentificadorInvalido('interno'), 422, 'entrada_invalida'],
     [new InvalidArgumentException('erro de programacao'), 500, 'erro_interno'],
-    [new JsonException('interno'), 400, 'json_invalido'],
+    [new Forge\Http\CorpoJsonInvalido('interno'), 400, 'json_invalido'],
+    [new JsonException('Falha em arquivo interno'), 500, 'erro_interno'],
     [new Forge\Http\TipoConteudoNaoSuportado('interno'), 415, 'tipo_nao_suportado'],
     [new Forge\Http\EntradaInvalida(['titulo' => 'Obrigatorio.']), 422, 'entrada_invalida'],
     [new Forge\Aplicacao\AcessoNegado('interno'), 403, 'acesso_negado'],
@@ -31,4 +32,11 @@ try {
     throw new LogicException('Deveria rejeitar.');
 } catch (Forge\Identidade\IdentificadorInvalido $erro) {
     verificarIgual(['id' => 'Identificador invalido.'], Forge\Http\respostaErro($erro)['corpo']['campos']);
+}
+
+try {
+    Forge\Http\lerCriacaoTarefa('{');
+} catch (Forge\Http\CorpoJsonInvalido $erro) {
+    verificarIgual(true, $erro->getPrevious() instanceof JsonException);
+    verificarIgual(400, Forge\Http\respostaErro($erro)['status']);
 }

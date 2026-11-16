@@ -7,7 +7,7 @@ require_once __DIR__ . '/../../01-fundamentos/php/testes-automatizados/exemplos/
 
 verificarIgual(['titulo' => 'Estudar'], Forge\Http\lerCriacaoTarefa('{"titulo":"  Estudar ","id":99,"concluida":true}', 'Application/JSON; charset=utf-8'));
 foreach (['{', '[]', 'null', '1', '"texto"'] as $json) {
-    verificarExcecao(JsonException::class, function () use ($json) { Forge\Http\lerCriacaoTarefa($json); });
+    verificarExcecao(Forge\Http\CorpoJsonInvalido::class, function () use ($json) { Forge\Http\lerCriacaoTarefa($json); });
 }
 foreach (['{}', '{"titulo":null}', '{"titulo":[]}', '{"titulo":" "}'] as $json) {
     verificarExcecao(Forge\Http\EntradaInvalida::class, function () use ($json) { Forge\Http\lerCriacaoTarefa($json); });
