@@ -22,3 +22,14 @@ test('aplica ao titulo recebido o mesmo contrato usado no formulario', () => {
   }
   assert.equal(validarTarefas([{ id: 1, titulo: '😀'.repeat(60), concluida: true }]).length, 1);
 });
+
+test('campos obrigatorios devem ser proprios e enumeraveis como no JSON', () => {
+  const valida = { id: 1, titulo: 'Estudar', concluida: false };
+  assert.throws(() => validarTarefas([Object.create(valida)]), TypeError);
+  for (const campo of Object.keys(valida)) {
+    const tarefa = { ...valida };
+    Object.defineProperty(tarefa, campo, { enumerable: false });
+    assert.throws(() => validarTarefas([tarefa]), TypeError);
+  }
+  assert.equal(validarTarefas([valida])[0], valida);
+});
