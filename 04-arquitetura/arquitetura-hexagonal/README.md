@@ -72,3 +72,8 @@ no mesmo diretorio; rejeita dados corrompidos em vez de sobrescreve-los.
 Todos os escritores devem usar esse adaptador. Nao oferece transacoes entre
 varios arquivos nem garantias para sistemas de arquivos de rede. Execute
 `php 04-arquitetura/arquitetura-hexagonal/exemplos/pedidos-json-test.php`.
+
+O formato JSON persistido aceita apenas `id` e `itens`, com `codigo` e
+`quantidade` em cada item. Campos desconhecidos indicam um formato nao suportado:
+o adaptador recusa a leitura/escrita e preserva o arquivo, evitando apagar dados
+de uma versao diferente ao reserializar somente os campos conhecidos.

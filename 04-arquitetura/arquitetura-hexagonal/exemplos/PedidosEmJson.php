@@ -80,11 +80,15 @@ final class PedidosEmJson implements ArmazenamentoPedidos
         $pedidos = [];
         foreach ($registros as $registro) {
             if (!$registro instanceof \stdClass || !isset($registro->id, $registro->itens)
-                || !is_string($registro->id) || !is_array($registro->itens)) {
+                || !is_string($registro->id) || !is_array($registro->itens)
+                || array_diff(array_keys(get_object_vars($registro)), ['id', 'itens']) !== []) {
                 throw new \UnexpectedValueException('Registro de pedido invalido.');
             }
             $itens = array_map(function ($item): array {
-                if (!$item instanceof \stdClass) throw new \UnexpectedValueException('Item persistido invalido.');
+                if (!$item instanceof \stdClass
+                    || array_diff(array_keys(get_object_vars($item)), ['codigo', 'quantidade']) !== []) {
+                    throw new \UnexpectedValueException('Item persistido invalido ou com campos desconhecidos.');
+                }
                 return (array) $item;
             }, $registro->itens);
             $pedido = new Pedido($registro->id, $itens);

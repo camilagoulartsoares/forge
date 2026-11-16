@@ -27,6 +27,8 @@ try {
     $b->salvar(new Pedido('2', [['codigo' => 'Caneta', 'quantidade' => 1]]));
     verificarIgual(true, $a->existe('2'));
     foreach (['{', '{}', '[null]', '[{"id":"x","itens":[]}]',
+        '[{"id":"x","itens":[{"codigo":"A","quantidade":1}],"versaoFutura":2}]',
+        '[{"id":"x","itens":[{"codigo":"A","quantidade":1,"preco":99}]}]',
         '[' . substr($antes, 1, -1) . ',' . substr($antes, 1, -1) . ']'] as $corrompido) {
         file_put_contents($arquivo, $corrompido);
         verificarExcecao(Throwable::class, function () use ($a) {
