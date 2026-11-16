@@ -45,6 +45,9 @@ final class PedidosEmJson implements ArmazenamentoPedidos
             $temporario = tempnam(dirname($this->arquivo), 'pedidos-');
             if ($temporario === false) throw new \RuntimeException('Falha ao criar arquivo temporario.');
             try {
+                if (realpath(dirname($temporario)) !== dirname($this->arquivo)) {
+                    throw new \RuntimeException('Arquivo temporario deve ficar no diretorio de destino.');
+                }
                 if (file_put_contents($temporario, $json) !== strlen($json)
                     || !rename($temporario, $this->arquivo)) {
                     throw new \RuntimeException('Falha ao persistir pedidos.');
