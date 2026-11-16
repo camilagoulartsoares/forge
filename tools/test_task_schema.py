@@ -108,6 +108,17 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertEqual(["etiqueta_id", "tarefa_id"], [
             row[2] for row in self.db.execute("PRAGMA index_info(idx_tarefa_etiqueta_etiqueta)")])
 
+    def test_unlabelled_query_tracks_associations_without_duplicate_tasks(self):
+        sql = SCHEMA.with_name("tarefas-sem-etiquetas.sql").read_text(encoding="utf-8")
+        self.assertEqual([(1, "Estudar", 0), (2, "Testar", 0)], self.db.execute(sql).fetchall())
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (1, 2)])
+        self.assertEqual([(2, "Testar", 0)], self.db.execute(sql).fetchall())
+        self.db.execute("INSERT INTO tarefa_etiqueta VALUES (2, 1)")
+        self.assertEqual([], self.db.execute(sql).fetchall())
+        self.db.execute("DELETE FROM tarefa_etiqueta WHERE tarefa_id = 1")
+        self.assertEqual([(1, "Estudar", 0)], self.db.execute(sql).fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()

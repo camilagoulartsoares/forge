@@ -45,3 +45,8 @@ com `:etiqueta_id` vinculado pelo driver. O indice `(etiqueta_id, tarefa_id)`
 cobre a leitura da associacao nessa direcao. A [contagem por etiqueta](contar-tarefas-por-etiqueta.sql)
 usa `COUNT(te.tarefa_id)` para representar corretamente etiquetas com zero tarefas.
 O plano e verificado em SQLite; confira tambem `EXPLAIN` no MySQL de destino.
+
+[tarefas-sem-etiquetas.sql](tarefas-sem-etiquetas.sql) usa `NOT EXISTS` para
+identificar tarefas ainda nao classificadas, sem multiplicar linhas quando
+outras tarefas possuem varias etiquetas. O resultado acompanha inclusao e
+remocao das associacoes, preservando a tarefa em si.
