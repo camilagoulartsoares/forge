@@ -32,3 +32,8 @@ Este roteiro não instala Symfony. Referência: [Symfony Controllers](https://sy
 [lerCriacaoTarefa](ler-criacao-tarefa.php) decodifica o objeto JSON, valida o
 Content-Type e o título, e devolve somente os campos permitidos. Não instala
 servidor nem persiste dados. Execute `php 02-symfony/controllers/criacao-test.php`.
+
+[criarTarefaHttp](criar-tarefa.php) compoe o leitor com uma funcao de criacao
+injetada. O servico recebe somente o titulo; a resposta valida o resultado,
+seleciona campos publicos e inclui `201` e `Location`. Entradas invalidas nao
+chamam o servico. Falhas do servico nao viram sucesso. Nao ha servidor instalado.
