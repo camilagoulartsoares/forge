@@ -112,7 +112,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
                 if "\0" in decoded:
                     raise ValueError("NUL character in path")
                 resolved = (path.parent / decoded).resolve()
-            except (ValueError, OSError) as error:
+            except (ValueError, OSError, RuntimeError) as error:
                 errors.append(f"{path}:{number}: invalid local path: {target}: {error}")
                 continue
             if not resolved.is_relative_to(root.resolve()):
