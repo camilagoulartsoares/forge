@@ -58,3 +58,8 @@ barreira antes da gravacao: verificam ausencia de perda entre IDs distintos e
 rejeicao de duplicidade mesmo quando ambas as consultas iniciais indicam ausencia.
 Usam somente arquivos temporarios locais; sem PHP CLI, esses dois casos sao
 marcados como ignorados. A verificacao completa continua exigindo PHP.
+
+Arquivos removidos da arvore de trabalho nao sao enviados aos linters, mesmo
+quando ainda aparecem no indice Git. Links de documentos existentes para esses
+arquivos continuam sendo erros. Isso permite verificar uma remocao antes do
+commit sem mascarar referencias quebradas.

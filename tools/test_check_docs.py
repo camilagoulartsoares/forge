@@ -107,6 +107,21 @@ class CheckDocsTests(unittest.TestCase):
         self.check("[bad](missing.md)")
         self.assertEqual(1, subprocess.run(command, capture_output=True).returncode)
 
+    def test_cli_skips_removed_documents_but_still_rejects_links_to_them(self):
+        subprocess.run(["git", "init", "--quiet", str(self.root)], check=True)
+        removed = self.root / "removed.md"
+        removed.write_text("# Removed", encoding="utf-8")
+        self.check("# Remaining")
+        subprocess.run(["git", "-C", str(self.root), "add", "--", "README.md", "removed.md"], check=True)
+        removed.unlink()
+        command = [sys.executable, str(Path(__file__).with_name("check_docs.py")), "--root", str(self.root)]
+        result = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(0, result.returncode, result.stderr)
+        self.check("[removed](removed.md)")
+        result = subprocess.run(command, capture_output=True, text=True)
+        self.assertEqual(1, result.returncode)
+        self.assertIn("missing link", result.stderr)
+
     def test_cli_non_repository_returns_diagnostic_without_traceback(self):
         command = [sys.executable, str(Path(__file__).with_name("check_docs.py")), "--root", str(self.root)]
         result = subprocess.run(command, capture_output=True, text=True)

@@ -140,7 +140,8 @@ def main() -> int:
             capture_output=True,
             check=True,
         )
-        paths = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")) - {""})
+        paths = sorted({name for name in result.stdout.decode("utf-8").split("\0")
+                        if name and (args.root / name).is_file()})
     except (OSError, subprocess.CalledProcessError, UnicodeError) as error:
         detail = error.stderr.decode("utf-8", errors="replace").strip() if isinstance(error, subprocess.CalledProcessError) else str(error)
         print(f"Cannot enumerate documents: {detail}", file=sys.stderr)

@@ -32,7 +32,8 @@ def main(argv=None) -> int:
             ["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
             cwd=ROOT, capture_output=True, check=True, timeout=args.timeout,
         )
-        files = sorted(set(result.stdout.decode("utf-8").strip("\0").split("\0")))
+        files = sorted({name for name in result.stdout.decode("utf-8").split("\0")
+                        if name and (ROOT / name).is_file()})
         php_files = ["./" + name for name in files if name.endswith(".php")] if selected in (None, "php") else []
         js_files = ["./" + name for name in files if name.endswith(".mjs")] if selected in (None, "js") else []
         js_tests = [name for name in js_files if name.endswith(".test.mjs")]

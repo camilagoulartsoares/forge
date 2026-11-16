@@ -10,8 +10,9 @@ import check
 
 
 class CheckRunnerTests(unittest.TestCase):
-    def invoke(self, run, which=lambda name: name, argv=None):
-        with patch("check.subprocess.run", side_effect=run), patch("check.shutil.which", side_effect=which):
+    def invoke(self, run, which=lambda name: name, argv=None, exists=lambda path: True):
+        with patch("check.subprocess.run", side_effect=run), patch("check.shutil.which", side_effect=which), \
+                patch("check.Path.is_file", autospec=True, side_effect=exists):
             with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                 return check.main(argv or [])
 
@@ -26,6 +27,18 @@ class CheckRunnerTests(unittest.TestCase):
 
         self.assertEqual(7, self.invoke(run, argv=["--only", "docs"]))
         self.assertEqual(2, len(calls))
+
+    def test_removed_tracked_files_are_not_sent_to_linters(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            return subprocess.CompletedProcess(command, 0, stdout=b"removed.php\0remaining.php\0")
+
+        self.assertEqual(0, self.invoke(run, argv=["--only", "php"],
+                                        exists=lambda path: path.name != "removed.php"))
+        self.assertIn(["php", "-l", "./remaining.php"], calls)
+        self.assertFalse(any("./removed.php" in command for command in calls))
 
     def test_missing_runtime_is_not_success(self):
         def run(command, **kwargs):
