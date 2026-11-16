@@ -119,6 +119,18 @@ class TaskSchemaTests(unittest.TestCase):
         self.db.execute("DELETE FROM tarefa_etiqueta WHERE tarefa_id = 1")
         self.assertEqual([(1, "Estudar", 0)], self.db.execute(sql).fetchall())
 
+    def test_conditional_aggregation_keeps_zero_counts_and_status_totals(self):
+        sql = SCHEMA.with_name("resumir-conclusao-por-etiqueta.sql").read_text(encoding="utf-8")
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.execute("INSERT INTO tarefas VALUES (3, 'Publicar', 1)")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (2, 1), (3, 1)])
+        self.assertEqual([(1, "PHP", 3, 2, 1), (2, "JS", 0, 0, 0)], self.db.execute(sql).fetchall())
+        self.db.execute("UPDATE tarefas SET concluida = 1 WHERE id = 1")
+        rows = self.db.execute(sql).fetchall()
+        self.assertEqual([(1, "PHP", 3, 1, 2), (2, "JS", 0, 0, 0)], rows)
+        for _, _, total, pending, completed in rows:
+            self.assertEqual(total, pending + completed)
+
 
 if __name__ == "__main__":
     unittest.main()

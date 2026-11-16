@@ -50,3 +50,8 @@ O plano e verificado em SQLite; confira tambem `EXPLAIN` no MySQL de destino.
 identificar tarefas ainda nao classificadas, sem multiplicar linhas quando
 outras tarefas possuem varias etiquetas. O resultado acompanha inclusao e
 remocao das associacoes, preservando a tarefa em si.
+
+[resumir-conclusao-por-etiqueta.sql](resumir-conclusao-por-etiqueta.sql)
+pratica agregacao condicional com `CASE`: total, pendentes e concluidas por
+etiqueta. Etiquetas vazias retornam zeros, e pendentes mais concluidas igualam
+o total. Uma tarefa com varias etiquetas participa do resumo de cada uma.
