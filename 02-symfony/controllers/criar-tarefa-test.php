@@ -36,3 +36,9 @@ $tituloLimite = str_repeat("\xf0\x9f\x98\x80", 60);
 verificarIgual(201, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () use ($tituloLimite) {
     return ['id' => 1, 'titulo' => $tituloLimite, 'concluida' => false];
 })['status']);
+
+$noLimite = str_pad('{"titulo":"Limite"}', 16384, ' ');
+verificarIgual(201, Forge\Http\criarTarefaHttp($noLimite, 'application/json', $criar)['status']);
+$antesDoLimite = count($chamadas);
+verificarIgual(413, Forge\Http\criarTarefaHttp($noLimite . ' ', 'application/json', $criar)['status']);
+verificarIgual($antesDoLimite, count($chamadas));

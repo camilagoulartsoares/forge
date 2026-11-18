@@ -43,3 +43,8 @@ O [mapeador de erros](resposta-erro.php) produz status, cabeçalhos e corpo
 para um adaptador HTTP. Falhas inesperadas recebem um corpo fixo sem mensagens
 internas; erros tipados de acesso e ausência usam 403 e 404. Execute
 `php 02-symfony/api/resposta-erro-test.php`.
+
+O leitor didatico de criacao limita o corpo a 16 KiB (bytes), incluindo campos
+extras e espacos. Acima disso retorna 413 antes da decodificacao e da chamada
+ao servico. Esse limite protege o trabalho de parsing; um servidor real tambem
+precisa limitar a leitura da requisicao antes de montar a string em memoria.

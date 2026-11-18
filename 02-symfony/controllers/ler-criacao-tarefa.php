@@ -17,6 +17,8 @@ final class EntradaInvalida extends \InvalidArgumentException
     }
 }
 
+final class CorpoMuitoGrande extends \LengthException {}
+
 final class CorpoJsonInvalido extends \JsonException {}
 
 final class TipoConteudoNaoSuportado extends \RuntimeException {}
@@ -26,6 +28,7 @@ function lerCriacaoTarefa(string $corpo, string $tipo = 'application/json'): arr
     if (strtolower(trim(explode(';', $tipo, 2)[0])) !== 'application/json') {
         throw new TipoConteudoNaoSuportado('Esperado application/json.');
     }
+    if (strlen($corpo) > 16384) throw new CorpoMuitoGrande('Corpo excede 16 KiB.');
     try {
         $entrada = json_decode($corpo, false, 512, JSON_THROW_ON_ERROR);
     } catch (\JsonException $erro) {
