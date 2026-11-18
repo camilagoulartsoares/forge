@@ -1,0 +1,31 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { adicionarTarefa } from '../../03-vue/fundamentos/adicionar-tarefa.mjs';
+import { renomearTarefa } from '../../03-vue/fundamentos/renomear-tarefa.mjs';
+import { concluirTarefa } from '../../03-vue/fundamentos/concluir-tarefa.mjs';
+import { removerTarefa } from '../../03-vue/fundamentos/remover-tarefa.mjs';
+import { exportarTarefas } from '../../03-vue/fundamentos/exportar-tarefas.mjs';
+import { importarTarefas } from '../../03-vue/fundamentos/importar-tarefas.mjs';
+import { selecionarTarefas } from '../../03-vue/fundamentos/selecionar-tarefas.mjs';
+import { resumirTarefas } from '../../03-vue/pinia/resumo-tarefas.mjs';
+import { lerFiltroDaUrl, atualizarFiltroDaUrl } from '../../03-vue/vue-router/parametros-url.mjs';
+
+test('fluxo do desafio integra edicao, conclusao, rota, resumo e ida e volta JSON', () => {
+  const congelar = lista => Object.freeze(lista.map(Object.freeze));
+  const inicial = congelar([]);
+  const criada = congelar(adicionarTarefa(adicionarTarefa(inicial, 20, ' Estudar PHP '), 3, 'Revisar JS'));
+  const renomeada = congelar(renomearTarefa(criada, 20, 'Revisar PHP'));
+  const concluida = congelar(concluirTarefa(renomeada, 20));
+  const rota = atualizarFiltroDaUrl(new URLSearchParams('tag=estudo'), 'pendentes');
+  const vista = selecionarTarefas(concluida, { estado: lerFiltroDaUrl(rota), termo: 'revisar', direcao: 'desc' });
+  assert.deepEqual(vista.itens.map(t => t.id), [3]);
+  assert.deepEqual(resumirTarefas(concluida), { total: 2, pendentes: 1, concluidas: 1 });
+  const restaurada = congelar(importarTarefas([], exportarTarefas(concluida)));
+  assert.deepEqual(restaurada, concluida);
+  assert.deepEqual(removerTarefa(restaurada, 20).map(t => t.id), [3]);
+  assert.throws(() => importarTarefas(restaurada, exportarTarefas(criada)), TypeError);
+  assert.equal(criada[0].titulo, 'Estudar PHP');
+  assert.equal(renomeada[0].concluida, false);
+  assert.equal(restaurada.length, 2);
+  assert.deepEqual(inicial, []);
+});

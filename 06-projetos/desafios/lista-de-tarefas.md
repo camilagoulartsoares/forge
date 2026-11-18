@@ -30,3 +30,9 @@ Use uma função de requisição fake nos testes para controlar sucesso, falha
 e ordem de resolução, sem depender de uma API externa. Documente como iniciar
 o exemplo, executar testes e reproduzir cada cenário. Persistência, autenticação
 e publicação da aplicação ficam fora da entrega mínima; registre extensões separadamente.
+
+A [simulacao automatizada do fluxo](lista-de-tarefas.test.mjs) integra os
+modulos reais de edicao, conclusao, filtro de URL, resumo e importacao/exportacao.
+As listas intermediarias sao congeladas para detectar mutacoes entre etapas.
+Execute `node --test 06-projetos/desafios/lista-de-tarefas.test.mjs`; nao depende
+de servidor, Vue, Pinia ou rede, e nao substitui testes de uma interface real.
