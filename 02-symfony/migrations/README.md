@@ -28,3 +28,14 @@ não recupera automaticamente valores descartados. Use somente banco local
 descartável durante a prática e documente o resultado da recuperação testada.
 
 Referência: [MySQL 8.4: Statements That Cause an Implicit Commit](https://dev.mysql.com/doc/refman/8.4/en/implicit-commit.html).
+
+## Expansao executavel
+
+[adicionar-categoria-opcional.sql](exemplos/adicionar-categoria-opcional.sql)
+implementa a primeira etapa sobre o esquema local de tarefas: a coluna nasce
+nula, preservando linhas e INSERTs do cliente antigo. Valores informados nao
+podem ser vazios. Execute uma vez em banco descartavel; o script nao e idempotente.
+Os testes `tools/test_category_migration.py` usam SQLite em memoria, com banco
+vazio e populado. Nao instalam Doctrine nem validam bloqueios ou DDL do MySQL.
+A obrigatoriedade final continua dependendo do preenchimento e da verificacao
+do esquema no banco de destino, conforme o roteiro acima.
