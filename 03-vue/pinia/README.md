@@ -26,3 +26,9 @@ Crie uma instância de Pinia independente por teste para evitar vazamento de
 estado. Ao trocar a identidade autenticada, limpe dados que pertencem à sessão anterior.
 
 Referência: [Pinia: Defining a Store](https://pinia.vuejs.org/core-concepts/).
+
+O [getter puro de resumo](resumo-tarefas.mjs) implementa as contagens derivadas
+sem instalar Pinia. Em uma store, chame `resumirTarefas(state.tarefas)` no getter.
+Os testes integram a conclusao existente e verificam que o resumo acompanha a
+nova lista enquanto a anterior permanece intacta. Execute
+`node --test 03-vue/pinia/resumo-tarefas.test.mjs`.
