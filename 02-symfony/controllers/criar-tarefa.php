@@ -12,9 +12,9 @@ function criarTarefaHttp(string $corpo, string $tipo, callable $criar): array
     try {
         $entrada = lerCriacaoTarefa($corpo, $tipo);
         $tarefa = $criar($entrada);
+        $titulo = \Forge\Tarefas\validarTitulo(is_array($tarefa) ? ($tarefa['titulo'] ?? null) : null);
         if (!is_array($tarefa) || !\Forge\Identidade\identificadorValido($tarefa['id'] ?? null)
-            || !isset($tarefa['titulo']) || !\Forge\Tarefas\validarTitulo($tarefa['titulo'])['valido']
-            || $tarefa['titulo'] !== \Forge\Tarefas\validarTitulo($tarefa['titulo'])['titulo']
+            || !$titulo['valido'] || $tarefa['titulo'] !== $titulo['titulo']
             || ($tarefa['concluida'] ?? null) !== false) {
             throw new \UnexpectedValueException('Servico retornou uma criacao invalida.');
         }

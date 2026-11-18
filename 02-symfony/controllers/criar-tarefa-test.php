@@ -26,3 +26,13 @@ verificarIgual(['erro' => 'erro_interno'], Forge\Http\criarTarefaHttp('{"titulo"
     throw new JsonException('Detalhe de persistencia');
 })['corpo']);
 echo "OK: controller HTTP de criacao\n";
+
+foreach ([null, [], 42, "\xff", str_repeat('x', 121), ' sem normalizar '] as $tituloInvalido) {
+    verificarIgual(500, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () use ($tituloInvalido) {
+        return ['id' => 1, 'titulo' => $tituloInvalido, 'concluida' => false];
+    })['status']);
+}
+$tituloLimite = str_repeat("\xf0\x9f\x98\x80", 60);
+verificarIgual(201, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () use ($tituloLimite) {
+    return ['id' => 1, 'titulo' => $tituloLimite, 'concluida' => false];
+})['status']);
