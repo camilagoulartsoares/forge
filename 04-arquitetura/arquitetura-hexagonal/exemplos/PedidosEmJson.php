@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forge\Pedidos;
 
 require_once __DIR__ . '/ArmazenamentoPedidos.php';
+require_once __DIR__ . '/../../../01-fundamentos/php/introducao/exemplos/json-estrito.php';
 
 /** Adaptador didatico para arquivos locais; todos os escritores devem respeitar o mesmo lock. */
 final class PedidosEmJson implements ArmazenamentoPedidos
@@ -78,7 +79,7 @@ final class PedidosEmJson implements ArmazenamentoPedidos
         if (!file_exists($this->arquivo)) return [];
         $json = file_get_contents($this->arquivo);
         if ($json === false) throw new \RuntimeException('Falha ao ler pedidos.');
-        $registros = json_decode($json, false, 512, JSON_THROW_ON_ERROR);
+        $registros = \Forge\Json\decodificarJson($json);
         if (!is_array($registros)) throw new \UnexpectedValueException('Esperada lista de pedidos.');
         $pedidos = [];
         foreach ($registros as $registro) {
