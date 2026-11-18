@@ -173,3 +173,15 @@ test('cancelamento antigo de assinatura nao remove uma nova assinatura do mesmo 
   consulta.cancelar();
   assert.equal(chamadas, depois);
 });
+
+test('rejeicao assincrona de assinante e diagnosticada sem falhar a consulta', async (t) => {
+  const erros = [];
+  t.mock.method(console, 'error', (...args) => erros.push(args));
+  const consulta = criarConsultaTarefas(async () => []);
+  consulta.assinar(async () => { await Promise.resolve(); throw new Error('Falha assincrona'); });
+  await consulta.recarregar('/tarefas');
+  await new Promise(setImmediate);
+  assert.equal(consulta.estado.erro, null);
+  assert.equal(consulta.estado.carregando, false);
+  assert.ok(erros.some(([, erro]) => erro.message === 'Falha assincrona'));
+});

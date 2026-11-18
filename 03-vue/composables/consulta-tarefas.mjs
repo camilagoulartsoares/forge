@@ -8,11 +8,18 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
   let descartada = false;
   const assinantes = new Set();
 
+  function relatarErro(erro) {
+    console.error('Erro em assinante de consulta:', erro);
+  }
+
   function notificar(ouvinte, snapshot = estado) {
     try {
-      ouvinte(snapshot);
+      const resultado = ouvinte(snapshot);
+      if (resultado && typeof resultado.then === 'function') {
+        Promise.resolve(resultado).catch(relatarErro);
+      }
     } catch (erro) {
-      console.error('Erro em assinante de consulta:', erro);
+      relatarErro(erro);
     }
   }
 
