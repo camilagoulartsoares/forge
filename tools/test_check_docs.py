@@ -68,6 +68,15 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn("missing.md", errors[0])
         self.assertIn("missing link", self.check(r"`hidden \` [visible](absent.md)")[0])
 
+    def test_escaped_quotes_in_link_titles_do_not_disable_validation(self):
+        (self.root / "known.md").touch()
+        errors = self.check(r'[known](known.md "A \"quoted\" title")' + "\n" +
+                            r"[missing](absent.md 'It\'s missing')" + "\n" +
+                            r'![image](absent.png "An escaped \\\\ slash")')
+        self.assertEqual(2, len(errors))
+        self.assertIn(":2: missing link", errors[0])
+        self.assertIn(":3: missing link", errors[1])
+
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 
