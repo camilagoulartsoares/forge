@@ -19,6 +19,7 @@ final class PedidosEmJson implements ArmazenamentoPedidos
             throw new \InvalidArgumentException('Diretorio de armazenamento invalido.');
         }
         $this->arquivo = $diretorio . DIRECTORY_SEPARATOR . basename($arquivo);
+        $this->garantirCaminhosRegulares();
     }
 
     public function existe(string $id): bool
@@ -59,8 +60,18 @@ final class PedidosEmJson implements ArmazenamentoPedidos
         });
     }
 
+    private function garantirCaminhosRegulares(): void
+    {
+        clearstatcache(true, $this->arquivo);
+        clearstatcache(true, $this->arquivo . '.lock');
+        if (is_link($this->arquivo) || is_link($this->arquivo . '.lock')) {
+            throw new \RuntimeException('Arquivo e lock nao podem ser links simbolicos.');
+        }
+    }
+
     private function comLock(callable $operacao)
     {
+        $this->garantirCaminhosRegulares();
         $lock = fopen($this->arquivo . '.lock', 'c');
         if ($lock === false) throw new \RuntimeException('Falha ao abrir lock.');
         try {

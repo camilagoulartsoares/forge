@@ -77,3 +77,8 @@ O formato JSON persistido aceita apenas `id` e `itens`, com `codigo` e
 `quantidade` em cada item. Campos desconhecidos indicam um formato nao suportado:
 o adaptador recusa a leitura/escrita e preserva o arquivo, evitando apagar dados
 de uma versao diferente ao reserializar somente os campos conhecidos.
+
+O adaptador recusa links simbolicos no arquivo de dados e no lock, tanto na
+construcao quanto antes de cada operacao: ler atraves de um link e depois
+substituir esse link por rename quebraria o destino esperado. Use um diretorio
+local controlado pelo exemplo; a verificacao nao e um sandbox de filesystem.
