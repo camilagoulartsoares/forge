@@ -14,3 +14,10 @@ foreach (['{}', '{"titulo":null}', '{"titulo":[]}', '{"titulo":" "}'] as $json) 
 }
 verificarExcecao(Forge\Http\TipoConteudoNaoSuportado::class, function () { Forge\Http\lerCriacaoTarefa('{}', 'text/plain'); });
 echo "OK: entrada HTTP de criacao\n";
+
+foreach (['{"titulo":"A","titulo":"B"}', '{"titulo":"A","ti\u0074ulo":"B"}',
+    '{"titulo":"A","extra":{"id":1,"id":2}}'] as $duplicado) {
+    verificarExcecao(Forge\Http\CorpoJsonInvalido::class, function () use ($duplicado) {
+        Forge\Http\lerCriacaoTarefa($duplicado);
+    });
+}

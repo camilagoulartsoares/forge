@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forge\Http;
 
 require_once __DIR__ . '/../api/validar-titulo.php';
+require_once __DIR__ . '/../../01-fundamentos/php/introducao/exemplos/json-estrito.php';
 
 final class EntradaInvalida extends \InvalidArgumentException
 {
@@ -30,7 +31,7 @@ function lerCriacaoTarefa(string $corpo, string $tipo = 'application/json'): arr
     }
     if (strlen($corpo) > 16384) throw new CorpoMuitoGrande('Corpo excede 16 KiB.');
     try {
-        $entrada = json_decode($corpo, false, 512, JSON_THROW_ON_ERROR);
+        $entrada = \Forge\Json\decodificarJson($corpo);
     } catch (\JsonException $erro) {
         throw new CorpoJsonInvalido('Corpo JSON invalido.', $erro->getCode(), $erro);
     }
