@@ -77,6 +77,13 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn(":2: missing link", errors[0])
         self.assertIn(":3: missing link", errors[1])
 
+    def test_only_spaces_and_tabs_may_follow_a_closing_fence(self):
+        for suffix in [chr(0xA0), chr(0x2003)]:
+            errors = self.check("```text\n```" + suffix + "\n[hidden](absent.md)\n```\n[visible](missing.md)")
+            self.assertEqual(1, len(errors))
+            self.assertIn(":5: missing link", errors[0])
+        self.assertEqual([], self.check("```text\n[hidden](absent.md)\n``` \t"))
+
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 

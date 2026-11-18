@@ -75,7 +75,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
     for number, line in enumerate(content.splitlines(), 1):
         if fence is not None:
             match = FENCE.match(line)
-            if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
+            if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip(" \t"):
                 fence = None
             continue
         opening = FENCE.match(line) if not in_comment else None
