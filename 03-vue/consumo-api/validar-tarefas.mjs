@@ -6,7 +6,10 @@ export function validarTarefas(tarefas) {
   const ids = new Set();
   for (const tarefa of tarefas) {
     if (tarefa === null || typeof tarefa !== 'object' || Array.isArray(tarefa)
-      || !['id', 'titulo', 'concluida'].every(campo => Object.prototype.propertyIsEnumerable.call(tarefa, campo))
+      || !['id', 'titulo', 'concluida'].every(campo => {
+        const descritor = Object.getOwnPropertyDescriptor(tarefa, campo);
+        return descritor?.enumerable && Object.hasOwn(descritor, 'value');
+      })
       || !identificadorValido(tarefa.id)
       || !validarTitulo(tarefa.titulo).valido
       || typeof tarefa.concluida !== 'boolean') {

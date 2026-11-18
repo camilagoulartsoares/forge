@@ -33,3 +33,13 @@ test('campos obrigatorios devem ser proprios e enumeraveis como no JSON', () => 
   }
   assert.equal(validarTarefas([valida])[0], valida);
 });
+
+test('nao executa getters de campos obrigatorios durante a validacao', () => {
+  for (const campo of ['id', 'titulo', 'concluida']) {
+    let leituras = 0;
+    const tarefa = { id: 1, titulo: 'A', concluida: false };
+    Object.defineProperty(tarefa, campo, { enumerable: true, get() { leituras += 1; return { id: 1, titulo: 'A', concluida: false }[campo]; } });
+    assert.throws(() => validarTarefas([tarefa]), TypeError);
+    assert.equal(leituras, 0);
+  }
+});
