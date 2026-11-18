@@ -68,9 +68,10 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     assinar(ouvinte) {
       if (descartada) throw new Error('Consulta ja descartada.');
       if (typeof ouvinte !== 'function') throw new TypeError('Assinante deve ser uma funcao.');
-      assinantes.add(ouvinte);
-      notificar(ouvinte);
-      return () => assinantes.delete(ouvinte);
+      const assinatura = snapshot => ouvinte(snapshot);
+      assinantes.add(assinatura);
+      notificar(assinatura);
+      return () => assinantes.delete(assinatura);
     },
     descartar() {
       if (descartada) return;

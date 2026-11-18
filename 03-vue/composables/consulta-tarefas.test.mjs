@@ -156,3 +156,20 @@ test('cancelar ou recarregar nao aborta requisicoes ja encerradas', async () => 
   consulta.descartar();
   assert.deepEqual(sinais.map(sinal => sinal.aborted), [false, false]);
 });
+
+test('cancelamento antigo de assinatura nao remove uma nova assinatura do mesmo callback', async () => {
+  const consulta = criarConsultaTarefas(async () => []);
+  let chamadas = 0;
+  const callback = () => { chamadas += 1; };
+  const antiga = consulta.assinar(callback);
+  antiga();
+  const atual = consulta.assinar(callback);
+  antiga();
+  const antes = chamadas;
+  await consulta.recarregar('/tarefas');
+  assert.ok(chamadas > antes);
+  atual();
+  const depois = chamadas;
+  consulta.cancelar();
+  assert.equal(chamadas, depois);
+});
