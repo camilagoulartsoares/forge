@@ -158,6 +158,13 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn("Symlink loop", errors[0])
         self.assertIn(":2: missing link", errors[1])
 
+    def test_invalid_percent_encoded_utf8_is_not_replaced_by_a_different_filename(self):
+        (self.root / (chr(0xFFFD) + ".md")).touch()
+        errors = self.check("[bad](%FF.md)\n[valid](%C3%A7.md)")
+        self.assertIn(":1: invalid local path", errors[0])
+        (self.root / (chr(0xE7) + ".md")).touch()
+        self.assertEqual([], self.check("[valid](%C3%A7.md)"))
+
     def test_invalid_local_path_does_not_hide_later_errors(self):
         errors = self.check("[bad](file%00.md)\n[missing](absent.md)")
         self.assertEqual(2, len(errors))

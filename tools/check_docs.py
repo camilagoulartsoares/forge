@@ -114,7 +114,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
             if parsed.scheme or parsed.netloc or not parsed.path:
                 continue
             try:
-                decoded = unquote(parsed.path)
+                decoded = unquote(parsed.path, errors="strict")
                 if "\0" in decoded:
                     raise ValueError("NUL character in path")
                 resolved = (path.parent / decoded).resolve()
