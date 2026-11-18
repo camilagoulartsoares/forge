@@ -82,3 +82,7 @@ O adaptador recusa links simbolicos no arquivo de dados e no lock, tanto na
 construcao quanto antes de cada operacao: ler atraves de um link e depois
 substituir esse link por rename quebraria o destino esperado. Use um diretorio
 local controlado pelo exemplo; a verificacao nao e um sandbox de filesystem.
+
+Consultas usam lock compartilhado (`LOCK_SH`), permitindo leitores simultaneos.
+Gravacoes mantem `LOCK_EX` durante leitura, verificacao de unicidade e rename;
+o arquivo de lock separado continua estavel quando o arquivo JSON e substituido.

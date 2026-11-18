@@ -29,7 +29,7 @@ final class PedidosEmJson implements ArmazenamentoPedidos
 
     public function buscar(string $id): ?Pedido
     {
-        return $this->comLock(function () use ($id) { return $this->ler()[$id] ?? null; });
+        return $this->comLock(function () use ($id) { return $this->ler()[$id] ?? null; }, LOCK_SH);
     }
 
     public function salvar(Pedido $pedido): void
@@ -69,13 +69,13 @@ final class PedidosEmJson implements ArmazenamentoPedidos
         }
     }
 
-    private function comLock(callable $operacao)
+    private function comLock(callable $operacao, int $modo = LOCK_EX)
     {
         $this->garantirCaminhosRegulares();
         $lock = fopen($this->arquivo . '.lock', 'c');
         if ($lock === false) throw new \RuntimeException('Falha ao abrir lock.');
         try {
-            if (!flock($lock, LOCK_EX)) throw new \RuntimeException('Falha ao adquirir lock.');
+            if (!flock($lock, $modo)) throw new \RuntimeException('Falha ao adquirir lock.');
             return $operacao();
         } finally {
             flock($lock, LOCK_UN);
