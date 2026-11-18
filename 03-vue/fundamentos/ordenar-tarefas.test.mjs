@@ -44,3 +44,12 @@ test('rejeita datas ausentes, impossiveis ou sem normalizacao mesmo em lista uni
   assert.equal(ordenarTarefas([{ id: 1, criadaEm: '2024-02-29T00:00:00.000Z' }], 'data').length, 1);
   assert.equal(ordenarTarefas([{ id: 1, titulo: 'Sem data' }]).length, 1);
 });
+
+test('inverte criterio sem inverter desempate por id e sem mutar origem', () => {
+  assert.deepEqual(ordenarTarefas(tarefas, 'titulo', 'desc').map(t => t.id), [3, 1, 2]);
+  assert.deepEqual(ordenarTarefas(tarefas, 'data', 'desc').map(t => t.id), [2, 1, 3]);
+  assert.deepEqual(tarefas.map(t => t.id), [3, 2, 1]);
+  for (const direcao of ['DESC', 'outra', null, ['asc']]) {
+    assert.throws(() => ordenarTarefas([], 'titulo', direcao), RangeError);
+  }
+});

@@ -28,3 +28,8 @@ separadamente, evitando adicionar estruturas sem uma necessidade demonstrada.
 
 Compare sua solução com o [exemplo JavaScript de ordenação](../../03-vue/fundamentos/README.md),
 que usa funções para os critérios e um desempate explícito por identificador.
+
+O exemplo `ordenarTarefas(lista, criterio, direcao)` aceita `asc` (padrao) e
+`desc`. A direcao inverte o criterio escolhido, mantendo o desempate por ID
+crescente. `selecionarTarefas` e `paginarTarefas` tambem aceitam `direcao` nas
+opcoes. Isso permite exercitar a inversao proposta sem duplicar comparadores.

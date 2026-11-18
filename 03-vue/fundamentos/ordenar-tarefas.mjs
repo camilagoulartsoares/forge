@@ -5,10 +5,12 @@ const criterios = {
   data: (a, b) => (a.criadaEm < b.criadaEm ? -1 : Number(a.criadaEm > b.criadaEm)),
 };
 
-export function ordenarTarefas(tarefas, criterio = 'titulo') {
+export function ordenarTarefas(tarefas, criterio = 'titulo', direcao = 'asc') {
   if (typeof criterio !== 'string' || !Object.hasOwn(criterios, criterio)) {
     throw new RangeError('Criterio de ordenacao desconhecido.');
   }
+
+  if (direcao !== 'asc' && direcao !== 'desc') throw new RangeError('Direcao de ordenacao desconhecida.');
 
   if (criterio === 'data') {
     for (const tarefa of tarefas) {
@@ -20,5 +22,5 @@ export function ordenarTarefas(tarefas, criterio = 'titulo') {
     }
   }
 
-  return [...tarefas].sort((a, b) => criterios[criterio](a, b) || a.id - b.id);
+  return [...tarefas].sort((a, b) => (direcao === 'desc' ? -1 : 1) * criterios[criterio](a, b) || a.id - b.id);
 }
