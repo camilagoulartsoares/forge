@@ -35,6 +35,28 @@ class CategoryMigrationTests(unittest.TestCase):
                 self.db.execute("UPDATE tarefas SET categoria = ? WHERE id = 1", (value,))
         self.assertEqual("Backend", self.db.execute("SELECT categoria FROM tarefas").fetchone()[0])
 
+    def test_backfill_is_bound_repeatable_and_preserves_existing_classification(self):
+        self.expand()
+        self.db.executemany("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", [(1, "PHP"), (2, "JS")])
+        sql = (MIGRATIONS / "preencher-categoria.sql").read_text(encoding="utf-8")
+        self.assertEqual(1, self.db.execute(sql, {"id": 1, "categoria": "Backend"}).rowcount)
+        self.assertEqual(0, self.db.execute(sql, {"id": 1, "categoria": "Outra"}).rowcount)
+        self.assertEqual(0, self.db.execute(sql, {"id": 999, "categoria": "Backend"}).rowcount)
+        value = "'); DROP TABLE tarefas; --"
+        self.db.execute(sql, {"id": 2, "categoria": value})
+        self.assertEqual([(1, "Backend"), (2, value)], self.db.execute("SELECT id, categoria FROM tarefas ORDER BY id").fetchall())
+
+    def test_failed_backfill_batch_rolls_back_prior_updates(self):
+        self.expand()
+        self.db.executemany("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", [(1, "PHP"), (2, "JS")])
+        self.db.commit()
+        sql = (MIGRATIONS / "preencher-categoria.sql").read_text(encoding="utf-8")
+        with self.assertRaises(sqlite3.IntegrityError):
+            with self.db:
+                self.db.execute(sql, {"id": 1, "categoria": "Backend"})
+                self.db.execute(sql, {"id": 2, "categoria": ""})
+        self.assertEqual([(None,), (None,)], self.db.execute("SELECT categoria FROM tarefas ORDER BY id").fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()

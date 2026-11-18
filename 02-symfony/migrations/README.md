@@ -39,3 +39,9 @@ Os testes `tools/test_category_migration.py` usam SQLite em memoria, com banco
 vazio e populado. Nao instalam Doctrine nem validam bloqueios ou DDL do MySQL.
 A obrigatoriedade final continua dependendo do preenchimento e da verificacao
 do esquema no banco de destino, conforme o roteiro acima.
+
+[preencher-categoria.sql](exemplos/preencher-categoria.sql) recebe ID e categoria
+vinculados pelo driver, sem inventar um valor padrao. Atualiza somente linhas
+ainda nulas; repetir o lote nao apaga classificacoes ja feitas. Confira a quantidade
+de linhas afetadas e as pendencias antes da etapa final. O teste de rollback
+cobre somente DML em transacao; nao implica rollback automatico do ALTER TABLE.
