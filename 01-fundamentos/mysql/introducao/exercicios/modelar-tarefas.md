@@ -55,3 +55,10 @@ remocao das associacoes, preservando a tarefa em si.
 pratica agregacao condicional com `CASE`: total, pendentes e concluidas por
 etiqueta. Etiquetas vazias retornam zeros, e pendentes mais concluidas igualam
 o total. Uma tarefa com varias etiquetas participa do resumo de cada uma.
+
+[paginar-tarefas.sql](paginar-tarefas.sql) demonstra paginacao por cursor de ID:
+use `apos_id = 0` na primeira pagina e o ultimo ID retornado nas seguintes.
+O adaptador deve validar e vincular inteiros (`apos_id` de 0 ao maximo seguro,
+`limite` de 1 a 100). Remover linhas anteriores ao cursor nao pula registros
+restantes, como pode ocorrer com OFFSET. O exemplo nao oferece snapshot entre
+paginas: novas linhas maiores que o cursor podem aparecer na pagina seguinte.

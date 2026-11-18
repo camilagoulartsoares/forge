@@ -157,6 +157,19 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertEqual(("Revisar", 1), self.db.execute("SELECT titulo, concluida FROM tarefas WHERE id = 1").fetchone())
         self.assertEqual([(1, 2)], self.db.execute("SELECT * FROM tarefa_etiqueta").fetchall())
 
+    def test_keyset_pages_survive_deletions_before_cursor_and_keep_new_larger_ids(self):
+        sql = SCHEMA.with_name("paginar-tarefas.sql").read_text(encoding="utf-8")
+        self.db.executemany("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", [(3, "Tres"), (4, "Quatro"), (5, "Cinco")])
+        page = lambda cursor: [row[0] for row in self.db.execute(sql, {"apos_id": cursor, "limite": 2})]
+        self.assertEqual([1, 2], page(0))
+        self.db.execute("DELETE FROM tarefas WHERE id = 1")
+        self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (6, 'Seis')")
+        self.assertEqual([3, 4], page(2))
+        self.assertEqual([5, 6], page(4))
+        self.assertEqual([], page(6))
+        self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (9007199254740991, 'Limite')")
+        self.assertEqual([9007199254740991], page(6))
+
 
 if __name__ == "__main__":
     unittest.main()
