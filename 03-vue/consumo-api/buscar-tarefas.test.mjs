@@ -105,3 +105,11 @@ test('cancelamento sem timeout encerra fonte pendente que ignora signal', async 
   controller.abort(motivo);
   await assert.rejects(consulta, erro => erro === motivo);
 });
+
+test('rejeita resposta com ok nao booleano antes de ler o corpo', async () => {
+  for (const ok of ['false', 1, {}, undefined]) {
+    let leituras = 0;
+    await assert.rejects(buscarTarefas('/', async () => ({ ok, json() { leituras += 1; return []; } })), TypeError);
+    assert.equal(leituras, 0);
+  }
+});

@@ -51,6 +51,9 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
   }
   const resposta = await aguardarComCancelamento(requisitar(url, { headers: { Accept: 'application/json' }, signal }), signal);
   signal?.throwIfAborted();
+  if (resposta === null || typeof resposta !== 'object' || typeof resposta.ok !== 'boolean') {
+    throw new TypeError('Resposta HTTP invalida.');
+  }
   if (!resposta.ok) {
     throw new ErroHttp(resposta.status);
   }
