@@ -97,3 +97,11 @@ test('Response de erro preserva corpo e JSON malformado falha na leitura real', 
   assert.equal(indisponivel.bodyUsed, false);
   await assert.rejects(buscarTarefas('/tarefas', async () => new Response('{')), SyntaxError);
 });
+
+test('cancelamento sem timeout encerra fonte pendente que ignora signal', async () => {
+  const controller = new AbortController();
+  const consulta = buscarTarefas('/', () => new Promise(() => {}), { signal: controller.signal });
+  const motivo = new Error('Sair da tela');
+  controller.abort(motivo);
+  await assert.rejects(consulta, erro => erro === motivo);
+});

@@ -8,6 +8,21 @@ export class ErroHttp extends Error {
   }
 }
 
+async function aguardarComCancelamento(promessa, signal) {
+  if (!signal) return promessa;
+  let cancelar;
+  const cancelamento = new Promise((_resolver, rejeitar) => {
+    cancelar = () => rejeitar(signal.reason);
+    signal.addEventListener('abort', cancelar, { once: true });
+    if (signal.aborted) cancelar();
+  });
+  try {
+    return await Promise.race([promessa, cancelamento]);
+  } finally {
+    signal.removeEventListener('abort', cancelar);
+  }
+}
+
 export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal, timeoutMs } = {}) {
   signal?.throwIfAborted();
   if (timeoutMs !== undefined) {
@@ -34,13 +49,13 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
       signal?.removeEventListener('abort', cancelar);
     }
   }
-  const resposta = await requisitar(url, { headers: { Accept: 'application/json' }, signal });
+  const resposta = await aguardarComCancelamento(requisitar(url, { headers: { Accept: 'application/json' }, signal }), signal);
   signal?.throwIfAborted();
   if (!resposta.ok) {
     throw new ErroHttp(resposta.status);
   }
 
-  const tarefas = await resposta.json();
+  const tarefas = await aguardarComCancelamento(resposta.json(), signal);
   signal?.throwIfAborted();
   return validarTarefas(tarefas);
 }

@@ -35,3 +35,7 @@ leitura do JSON. O tempo limite rejeita com `TimeoutError`; cancelamento externo
 preserva seu motivo. Timer e ouvinte externo sao removidos ao encerrar.
 A consulta encerra no prazo mesmo se uma fonte injetada ignorar o sinal.
 Nesse caso, o trabalho interno da fonte pode continuar; `fetch` respeita o abort.
+
+Mesmo sem `timeoutMs`, abortar `signal` encerra a espera da requisicao ou do
+corpo JSON. O motivo original e preservado e os ouvintes sao removidos ao terminar.
+Fontes injetadas que ignoram o sinal podem continuar seu trabalho interno.
