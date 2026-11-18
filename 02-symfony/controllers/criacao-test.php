@@ -21,3 +21,7 @@ foreach (['{"titulo":"A","titulo":"B"}', '{"titulo":"A","ti\u0074ulo":"B"}',
         Forge\Http\lerCriacaoTarefa($duplicado);
     });
 }
+
+verificarExcecao(Forge\Http\CorpoJsonInvalido::class, function () {
+    Forge\Http\lerCriacaoTarefa('{"titulo":"Valida","extra":1e999}');
+});

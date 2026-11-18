@@ -49,3 +49,12 @@ Registre dúvidas a revisar.
 ## Referências
 
 Adicione referências utilizadas.
+
+## Leitura JSON sem ambiguidades
+
+O [decoder estrito](exemplos/json-estrito.php) usa `json_decode` para validar
+a gramatica, UTF-8 e profundidade; em seguida rejeita nomes de propriedades
+duplicados (inclusive escapes equivalentes) e numeros convertidos para infinito.
+Objetos distintos podem repetir os mesmos nomes. O leitor HTTP e o adaptador
+de pedidos usam essa funcao para nao aceitar dados diferentes das fixtures.
+Execute `php 01-fundamentos/php/introducao/exemplos/json-estrito-test.php`.

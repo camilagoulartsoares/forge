@@ -17,3 +17,8 @@ verificarIgual(2, count((array) decodificarJson('{"a":1,"A":2}')));
 verificarIgual(null, decodificarJson('null'));
 verificarExcecao(JsonException::class, function () { decodificarJson('{'); });
 echo "OK: JSON estrito sem chaves ambiguas\n";
+
+foreach (['1e999', '-1e999', '{"x":[1e309]}'] as $numero) {
+    verificarExcecao(JsonException::class, function () use ($numero) { decodificarJson($numero); });
+}
+verificarIgual(1e308, decodificarJson('1e308'));

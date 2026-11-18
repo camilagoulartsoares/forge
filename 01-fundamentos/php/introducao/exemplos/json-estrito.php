@@ -27,5 +27,13 @@ REGEX;
             $pilha[$nivel][$chave] = true;
         }
     }
+    $pendentes = [$resultado];
+    while ($pendentes !== []) {
+        $valor = array_pop($pendentes);
+        if (is_float($valor) && !is_finite($valor)) throw new \JsonException('Numero fora do intervalo finito.');
+        if (is_array($valor) || $valor instanceof \stdClass) {
+            foreach ((array) $valor as $filho) $pendentes[] = $filho;
+        }
+    }
     return $resultado;
 }
