@@ -60,6 +60,14 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual([], self.check("~~~php`allowed`\n[hidden](absent.md)\n~~~"))
         self.assertEqual([], self.check("```html <!-- literal info\n[hidden](absent.md)\n```"))
 
+    def test_escaped_backticks_do_not_hide_links_but_backslashes_inside_code_are_literal(self):
+        self.assertIn("missing link", self.check(r"\`[visible](absent.md)\`")[0])
+        self.assertEqual([], self.check(r"\\`[hidden](absent.md)`"))
+        errors = self.check(r"\```[hidden](absent.md)`` [visible](missing.md)")
+        self.assertEqual(1, len(errors))
+        self.assertIn("missing.md", errors[0])
+        self.assertIn("missing link", self.check(r"`hidden \` [visible](absent.md)")[0])
+
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 
