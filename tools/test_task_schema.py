@@ -170,6 +170,18 @@ class TaskSchemaTests(unittest.TestCase):
         self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (9007199254740991, 'Limite')")
         self.assertEqual([9007199254740991], page(6))
 
+    def test_task_page_is_limited_before_joining_all_labels(self):
+        self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (3, 'Nova')")
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (1, 2), (3, 2)])
+        sql = SCHEMA.with_name("paginar-tarefas-etiquetas.sql").read_text(encoding="utf-8")
+        rows = self.db.execute(sql, {"apos_id": 0, "limite": 2}).fetchall()
+        self.assertEqual([(1, "Estudar", "PHP"), (1, "Estudar", "JS"), (2, "Testar", None)], rows)
+        self.assertEqual([(3, "Nova", "JS")], self.db.execute(sql, {"apos_id": 2, "limite": 2}).fetchall())
+        naive = SCHEMA.with_name("listar-tarefas-etiquetas.sql").read_text(encoding="utf-8").rstrip().removesuffix(";") + " LIMIT 2"
+        self.assertEqual({1}, {row[0] for row in self.db.execute(naive)})
+        self.assertEqual({1, 2}, {row[0] for row in rows})
+
 
 if __name__ == "__main__":
     unittest.main()

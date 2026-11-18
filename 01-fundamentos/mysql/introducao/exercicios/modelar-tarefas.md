@@ -62,3 +62,9 @@ O adaptador deve validar e vincular inteiros (`apos_id` de 0 ao maximo seguro,
 `limite` de 1 a 100). Remover linhas anteriores ao cursor nao pula registros
 restantes, como pode ocorrer com OFFSET. O exemplo nao oferece snapshot entre
 paginas: novas linhas maiores que o cursor podem aparecer na pagina seguinte.
+
+[paginar-tarefas-etiquetas.sql](paginar-tarefas-etiquetas.sql) limita primeiro
+as tarefas e so depois busca todas as etiquetas. Aplicar LIMIT diretamente na
+juncao limita linhas, podendo cortar etiquetas e reduzir a quantidade de tarefas.
+A pagina pode ter mais linhas que `limite`; avance pelo maior ID de tarefa,
+nao pela quantidade de linhas da juncao. Os mesmos limites de cursor se aplicam.
