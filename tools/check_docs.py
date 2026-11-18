@@ -72,7 +72,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
         return [f"{path}: cannot read UTF-8: {error}"]
     fence = None
     in_comment = False
-    for number, line in enumerate(content.splitlines(), 1):
+    for number, line in enumerate(content.split("\n"), 1):
         if fence is not None:
             match = FENCE.match(line)
             if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip(" \t"):

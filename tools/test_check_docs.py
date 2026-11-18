@@ -84,6 +84,15 @@ class CheckDocsTests(unittest.TestCase):
             self.assertIn(":5: missing link", errors[0])
         self.assertEqual([], self.check("```text\n[hidden](absent.md)\n``` \t"))
 
+    def test_unicode_separators_are_content_not_markdown_line_endings(self):
+        for separator in [chr(0x85), chr(0x2028), chr(0x2029)]:
+            errors = self.check("Intro" + separator + "[missing](absent.md)")
+            self.assertEqual(1, len(errors))
+            self.assertIn(":1: missing link", errors[0])
+        errors = self.check("```\n```" + chr(0x2028) + "[hidden](absent.md)")
+        self.assertEqual(1, len(errors))
+        self.assertIn("unclosed code fence", errors[0])
+
     def test_unclosed_fence(self):
         self.assertIn("unclosed code fence", self.check("~~~php\necho 1;")[0])
 
