@@ -1,3 +1,4 @@
+import { aguardarComCancelamento } from '../consumo-api/aguardar-cancelamento.mjs';
 import { buscarTarefas } from '../consumo-api/buscar-tarefas.mjs';
 import { validarTarefas } from '../consumo-api/validar-tarefas.mjs';
 
@@ -51,7 +52,7 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
     publicar({ ...estado, erro: null, carregando: true });
     if (atual !== versao || controller.signal.aborted) return;
     try {
-      const dados = await buscar(url, undefined, { signal: controller.signal });
+      const dados = await aguardarComCancelamento(buscar(url, undefined, { signal: controller.signal }), controller.signal);
       if (atual === versao && !controller.signal.aborted) {
         validarTarefas(dados);
         const copias = dados.map(tarefa => ({ ...tarefa }));

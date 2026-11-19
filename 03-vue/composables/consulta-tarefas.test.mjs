@@ -205,3 +205,12 @@ test('reentrada durante copia nao publica snapshot de consulta superada', async 
   assert.equal(snapshots.some(ids => ids.includes(1)), false);
   assert.equal(consulta.estado.dados[0].id, 2);
 });
+
+test('cancelar libera a promessa de recarregar mesmo se buscar ignora signal', { timeout: 1000 }, async () => {
+  const consulta = criarConsultaTarefas(() => new Promise(() => {}));
+  const pendente = consulta.recarregar('/tarefas');
+  consulta.cancelar();
+  await pendente;
+  assert.equal(consulta.estado.carregando, false);
+  assert.equal(consulta.estado.erro, null);
+});

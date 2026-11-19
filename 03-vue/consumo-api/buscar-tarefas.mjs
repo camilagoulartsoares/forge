@@ -1,3 +1,4 @@
+import { aguardarComCancelamento } from './aguardar-cancelamento.mjs';
 import { validarTarefas } from './validar-tarefas.mjs';
 
 export class ErroHttp extends Error {
@@ -5,21 +6,6 @@ export class ErroHttp extends Error {
     super(`Falha HTTP: ${status}`);
     this.name = 'ErroHttp';
     this.status = status;
-  }
-}
-
-async function aguardarComCancelamento(promessa, signal) {
-  if (!signal) return promessa;
-  let cancelar;
-  const cancelamento = new Promise((_resolver, rejeitar) => {
-    cancelar = () => rejeitar(signal.reason);
-    signal.addEventListener('abort', cancelar, { once: true });
-    if (signal.aborted) cancelar();
-  });
-  try {
-    return await Promise.race([promessa, cancelamento]);
-  } finally {
-    signal.removeEventListener('abort', cancelar);
   }
 }
 
