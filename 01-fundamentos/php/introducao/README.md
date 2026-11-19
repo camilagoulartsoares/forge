@@ -64,3 +64,14 @@ sao executados pelos decoders PHP, JavaScript e Python. Incluem escapes,
 Unicode, duplicidades por objeto, nomes especiais e expoentes fora do intervalo.
 Essa matriz verifica o subconjunto interoperavel usado nos exemplos, sem prometer
 identidade de representacao para numeros arbitrariamente grandes.
+
+## Tipagem depende do chamador
+
+`declare(strict_types=1)` nao torna uma funcao estrita para todos os consumidores:
+a chamada segue a configuracao do arquivo que a realiza. O
+[exemplo de chamada coerciva](exemplos/chamada-coerciva.php) usa intencionalmente
+`strict_types=0`: strings numericas chegam como inteiros ao calculo. O
+[teste comparativo](exemplos/tipagem-test.php) mostra que a mesma entrada e
+rejeitada a partir de um chamador estrito, enquanto as regras contra negativos
+continuam valendo nos dois casos. Nao confunda essa conversao com validacao de
+entrada HTTP. Execute `php 01-fundamentos/php/introducao/exemplos/tipagem-test.php`.
