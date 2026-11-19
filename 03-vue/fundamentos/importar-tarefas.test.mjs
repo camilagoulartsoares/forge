@@ -18,3 +18,10 @@ test('lote malformado, invalido ou conflitante nao produz importacao parcial', (
   }
   assert.throws(() => importarTarefas(origem, []), TypeError);
 });
+
+test('importacao recusa nomes JSON repetidos inclusive com escapes equivalentes', () => {
+  for (const json of ['[{"id":2,"id":3,"titulo":"Nova","concluida":false}]',
+    '[{"id":2,"titulo":"Nova","ti\\u0074ulo":"Outra","concluida":false}]']) {
+    assert.throws(() => importarTarefas([], json), SyntaxError);
+  }
+});
