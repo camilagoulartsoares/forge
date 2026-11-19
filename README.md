@@ -83,7 +83,7 @@ Para começar, consulte a [preparação do ambiente](00-onboarding/ambiente/READ
 ## Executar os exemplos e as verificações
 
 Os exemplos versionados são independentes e não exigem instalar Symfony ou Vue.
-Na raiz, com Python 3.10+, Git, PHP 7.4+ e Node.js 18+, execute:
+Na raiz, com Python 3.10+, Git, PHP 7.4+ e Node.js 18.13+, execute:
 
 ```sh
 python tools/check.py

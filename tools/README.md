@@ -2,7 +2,7 @@
 
 ## Todas as verificações
 
-Com Python 3.10+, Git, PHP 7.4+ e Node.js 18+, execute `python tools/check.py`
+Com Python 3.10+, Git, PHP 7.4+ e Node.js 18.13+, execute `python tools/check.py`
 na raiz. O comando roda o verificador Markdown, os testes Python/SQL, a sintaxe
 de todos os arquivos PHP, as suítes PHP e os testes JavaScript. Não instala
 dependências nem exige banco ou acesso à rede. Interrompe na primeira falha
@@ -63,3 +63,8 @@ Arquivos removidos da arvore de trabalho nao sao enviados aos linters, mesmo
 quando ainda aparecem no indice Git. Links de documentos existentes para esses
 arquivos continuam sendo erros. Isso permite verificar uma remocao antes do
 commit sem mascarar referencias quebradas.
+
+O executor confere PHP 7.4+ e Node.js 18.13+ antes dos linters da area.
+O minimo de Node inclui as APIs de mocks utilizadas pelos testes, introduzidas
+na versao 18.13, conforme a [documentacao do test runner](https://nodejs.org/download/release/latest-v18.x/docs/api/test.html#class-mocktracker).
+Runtime presente mas antigo retorna codigo 2 com diagnostico explicito.

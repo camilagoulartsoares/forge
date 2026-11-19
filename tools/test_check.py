@@ -40,6 +40,19 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertIn(["php", "-l", "./remaining.php"], calls)
         self.assertFalse(any("./removed.php" in command for command in calls))
 
+    def test_unsupported_runtime_stops_before_lint(self):
+        calls = []
+
+        def run(command, **kwargs):
+            calls.append(command)
+            if command[:2] == ["node", "-e"]:
+                return subprocess.CompletedProcess(command, 2)
+            return subprocess.CompletedProcess(command, 0, stdout=b"source.mjs\0")
+
+        self.assertEqual(2, self.invoke(run, argv=["--only", "js"]))
+        self.assertTrue(any(command[:2] == ["node", "-e"] for command in calls))
+        self.assertFalse(any("--check" in command for command in calls))
+
     def test_missing_runtime_is_not_success(self):
         def run(command, **kwargs):
             return subprocess.CompletedProcess(command, 0, stdout=b"sample.php\0")
