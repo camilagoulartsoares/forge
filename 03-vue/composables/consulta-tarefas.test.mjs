@@ -185,3 +185,23 @@ test('rejeicao assincrona de assinante e diagnosticada sem falhar a consulta', a
   assert.equal(consulta.estado.carregando, false);
   assert.ok(erros.some(([, erro]) => erro.message === 'Falha assincrona'));
 });
+
+test('copia nao publica dados alterados por getters de metadados', async () => {
+  const tarefa = { get extra() { this.id = 0; return 'meta'; }, id: 1, titulo: 'A', concluida: false };
+  const consulta = criarConsultaTarefas(async () => [tarefa]);
+  await consulta.recarregar('/tarefas');
+  assert.deepEqual(consulta.estado.dados, []);
+  assert.ok(consulta.estado.erro instanceof TypeError);
+});
+test('reentrada durante copia nao publica snapshot de consulta superada', async () => {
+  let consulta;
+  let nova;
+  const antiga = { get extra() { nova = consulta.recarregar('nova'); return 'meta'; }, id: 1, titulo: 'Antiga', concluida: false };
+  const snapshots = [];
+  consulta = criarConsultaTarefas(async url => url === 'antiga' ? [antiga] : [{ id: 2, titulo: 'Nova', concluida: false }]);
+  consulta.assinar(estado => snapshots.push(estado.dados.map(t => t.id)));
+  await consulta.recarregar('antiga');
+  await nova;
+  assert.equal(snapshots.some(ids => ids.includes(1)), false);
+  assert.equal(consulta.estado.dados[0].id, 2);
+});

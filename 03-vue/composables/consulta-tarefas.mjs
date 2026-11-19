@@ -54,7 +54,11 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
       const dados = await buscar(url, undefined, { signal: controller.signal });
       if (atual === versao && !controller.signal.aborted) {
         validarTarefas(dados);
-        publicar({ ...estado, dados: Object.freeze(dados.map((t) => Object.freeze({ ...t }))) });
+        const copias = dados.map(tarefa => ({ ...tarefa }));
+        validarTarefas(copias);
+        if (atual === versao && !controller.signal.aborted) {
+          publicar({ ...estado, dados: Object.freeze(copias.map(Object.freeze)) });
+        }
       }
     } catch (erro) {
       if (atual === versao && !controller.signal.aborted) {
