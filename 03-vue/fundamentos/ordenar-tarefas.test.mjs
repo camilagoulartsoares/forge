@@ -53,3 +53,11 @@ test('inverte criterio sem inverter desempate por id e sem mutar origem', () => 
     assert.throws(() => ordenarTarefas([], 'titulo', direcao), RangeError);
   }
 });
+
+test('nao converte titulos ou identificadores invalidos silenciosamente', () => {
+  for (const tarefa of [{ id: 1, titulo: 12 }, { id: '1', titulo: 'A' }, { id: 0, titulo: 'A' }]) {
+    assert.throws(() => ordenarTarefas([tarefa]), TypeError);
+  }
+  assert.throws(() => ordenarTarefas([{ id: 1, titulo: 'A' }, { id: 1, titulo: 'B' }]), TypeError);
+  assert.throws(() => ordenarTarefas(new Array(1)), TypeError);
+});

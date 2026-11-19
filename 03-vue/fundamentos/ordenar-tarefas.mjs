@@ -1,3 +1,5 @@
+import { identificadorValido } from './identificador.mjs';
+
 const porTitulo = new Intl.Collator('pt-BR', { sensitivity: 'base' });
 
 const criterios = {
@@ -11,6 +13,16 @@ export function ordenarTarefas(tarefas, criterio = 'titulo', direcao = 'asc') {
   }
 
   if (direcao !== 'asc' && direcao !== 'desc') throw new RangeError('Direcao de ordenacao desconhecida.');
+
+  if (!Array.isArray(tarefas)) throw new TypeError('Lista de tarefas invalida.');
+  const ids = new Set();
+  for (const tarefa of tarefas) {
+    if (tarefa === null || typeof tarefa !== 'object' || !identificadorValido(tarefa.id)
+      || ids.has(tarefa.id) || (criterio === 'titulo' && typeof tarefa.titulo !== 'string')) {
+      throw new TypeError('Campos de ordenacao invalidos.');
+    }
+    ids.add(tarefa.id);
+  }
 
   if (criterio === 'data') {
     for (const tarefa of tarefas) {
