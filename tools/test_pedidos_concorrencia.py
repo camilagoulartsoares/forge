@@ -64,6 +64,58 @@ class PedidosConcurrencyTests(unittest.TestCase):
                         process.kill()
                     process.communicate(timeout=10)
 
+    def test_reader_sees_intact_original_while_writer_appends_orders(self):
+        reader_code = r"""
+require $argv[1];
+$repo = new Forge\Pedidos\PedidosEmJson($argv[2]);
+$deadline = hrtime(true) + 8000000000;
+$reads = 0;
+do {
+    $original = $repo->buscar('original');
+    if ($original === null || $original->itens()[0]['quantidade'] !== 1) exit(6);
+    if ($reads++ === 0) file_put_contents($argv[3], 'ready');
+    usleep(1000);
+} while (!file_exists($argv[4]) && hrtime(true) < $deadline);
+if (!file_exists($argv[4])) exit(7);
+echo $reads;
+"""
+        writer_code = r"""
+require $argv[1];
+$repo = new Forge\Pedidos\PedidosEmJson($argv[2]);
+for ($i = 1; $i <= 20; $i++) {
+    $repo->salvar(new Forge\Pedidos\Pedido('id-' . $i, [['codigo' => 'Livro', 'quantidade' => 1]]));
+    usleep(1000);
+}
+"""
+        with tempfile.TemporaryDirectory(prefix="forge-reader-") as directory:
+            root = Path(directory)
+            database = root / "pedidos.json"
+            database.write_text('[{"id":"original","itens":[{"codigo":"Livro","quantidade":1}]}]', encoding="utf-8")
+            ready, stop = root / "ready", root / "stop"
+            reader = subprocess.Popen([PHP, "-r", reader_code, str(ADAPTER), str(database), str(ready), str(stop)],
+                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            try:
+                deadline = time.monotonic() + 5
+                while not ready.exists():
+                    self.assertIsNone(reader.poll(), "Reader failed before writer started")
+                    self.assertLess(time.monotonic(), deadline)
+                    time.sleep(0.005)
+                writer = subprocess.run([PHP, "-r", writer_code, str(ADAPTER), str(database)],
+                                        capture_output=True, timeout=10)
+                self.assertEqual(0, writer.returncode, writer.stderr)
+                self.assertEqual(b"", writer.stderr)
+                stop.touch()
+                stdout, stderr = reader.communicate(timeout=10)
+                self.assertEqual(0, reader.returncode, stderr)
+                self.assertEqual(b"", stderr)
+                self.assertGreater(int(stdout), 0)
+                self.assertEqual(21, len(json.loads(database.read_text(encoding="utf-8"))))
+            finally:
+                stop.touch()
+                if reader.poll() is None:
+                    reader.kill()
+                reader.communicate(timeout=10)
+
     def test_distinct_concurrent_orders_are_both_preserved(self):
         codes, records = self.race(["primeiro", "segundo"])
         self.assertEqual([0, 0], codes)
