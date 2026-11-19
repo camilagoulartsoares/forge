@@ -4,7 +4,10 @@ import { identificadorValido } from '../fundamentos/identificador.mjs';
 export function validarTarefas(tarefas) {
   if (!Array.isArray(tarefas)) throw new TypeError('Resposta de tarefas invalida.');
   const ids = new Set();
-  for (const tarefa of tarefas) {
+  for (let indice = 0; indice < tarefas.length; indice += 1) {
+    const item = Object.getOwnPropertyDescriptor(tarefas, indice);
+    if (!item?.enumerable || !Object.hasOwn(item, 'value')) throw new TypeError('Resposta de tarefas invalida.');
+    const tarefa = item.value;
     if (tarefa === null || typeof tarefa !== 'object' || Array.isArray(tarefa)
       || !['id', 'titulo', 'concluida'].every(campo => {
         const descritor = Object.getOwnPropertyDescriptor(tarefa, campo);

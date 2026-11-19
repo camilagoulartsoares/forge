@@ -43,3 +43,16 @@ test('nao executa getters de campos obrigatorios durante a validacao', () => {
     assert.equal(leituras, 0);
   }
 });
+
+test('valida indices reais sem confiar em iterador ou getter do array', () => {
+  const valida = { id: 1, titulo: 'A', concluida: false };
+  const mentirosa = [null];
+  mentirosa[Symbol.iterator] = function* () { yield valida; };
+  assert.throws(() => validarTarefas(mentirosa), TypeError);
+  const acessora = [];
+  Object.defineProperty(acessora, 0, { enumerable: true, get() { throw new Error('Nao executar'); } });
+  assert.throws(() => validarTarefas(acessora), TypeError);
+  const esparsa = new Array(1);
+  Object.setPrototypeOf(esparsa, { 0: valida, [Symbol.iterator]: Array.prototype[Symbol.iterator] });
+  assert.throws(() => validarTarefas(esparsa), TypeError);
+});
