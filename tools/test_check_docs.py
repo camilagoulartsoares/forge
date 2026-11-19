@@ -190,6 +190,14 @@ class CheckDocsTests(unittest.TestCase):
         (self.root / (chr(0xE7) + ".md")).touch()
         self.assertEqual([], self.check("[valid](%C3%A7.md)"))
 
+    def test_controls_in_html_entities_cannot_alias_an_existing_url(self):
+        (self.root / "ab.md").touch()
+        for target in ["a&#9;b.md", "a&#10;b.md", "a&#13;b.md"]:
+            errors = self.check("[bad](<" + target + ">)")
+            self.assertEqual(1, len(errors))
+            self.assertIn("invalid link", errors[0])
+            self.assertNotIn("\n", errors[0])
+
     def test_invalid_local_path_does_not_hide_later_errors(self):
         errors = self.check("[bad](file%00.md)\n[missing](absent.md)")
         self.assertEqual(2, len(errors))
