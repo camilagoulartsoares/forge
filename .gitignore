@@ -1,8 +1,9 @@
 vendor/
 node_modules/
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+!.env.*.example
 **/var/cache/
 **/var/log/
 **/public/build/
