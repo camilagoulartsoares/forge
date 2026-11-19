@@ -12,3 +12,12 @@ test('valida nomes por objeto sem confundir caracteres estruturais dentro de str
   assert.equal(decodificarJson(JSON.stringify({ texto })).texto, texto);
   assert.equal(decodificarJson('"\\ud83d\\ude00"'), '\u{1F600}');
 });
+
+test('executa os mesmos casos JSON usados no PHP e Python', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const casos = JSON.parse(await readFile(new URL('../../01-fundamentos/php/testes-automatizados/exemplos/casos-json.json', import.meta.url), 'utf8'));
+  for (const caso of casos) {
+    if (caso.valido) assert.doesNotThrow(() => decodificarJson(caso.texto), caso.nome);
+    else assert.throws(() => decodificarJson(caso.texto), SyntaxError, caso.nome);
+  }
+});

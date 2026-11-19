@@ -58,3 +58,9 @@ duplicados (inclusive escapes equivalentes) e numeros convertidos para infinito.
 Objetos distintos podem repetir os mesmos nomes. O leitor HTTP e o adaptador
 de pedidos usam essa funcao para nao aceitar dados diferentes das fixtures.
 Execute `php 01-fundamentos/php/introducao/exemplos/json-estrito-test.php`.
+
+Os [casos de aceitacao JSON compartilhados](../testes-automatizados/exemplos/casos-json.json)
+sao executados pelos decoders PHP, JavaScript e Python. Incluem escapes,
+Unicode, duplicidades por objeto, nomes especiais e expoentes fora do intervalo.
+Essa matriz verifica o subconjunto interoperavel usado nos exemplos, sem prometer
+identidade de representacao para numeros arbitrariamente grandes.

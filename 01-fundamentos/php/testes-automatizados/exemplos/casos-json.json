@@ -1,0 +1,102 @@
+[
+  {
+    "nome": "null",
+    "texto": "null",
+    "valido": true
+  },
+  {
+    "nome": "booleano",
+    "texto": "true",
+    "valido": true
+  },
+  {
+    "nome": "numero",
+    "texto": "-12.5e2",
+    "valido": true
+  },
+  {
+    "nome": "finito",
+    "texto": "1e308",
+    "valido": true
+  },
+  {
+    "nome": "objetos distintos",
+    "texto": "[{\"id\":1},{\"id\":2}]",
+    "valido": true
+  },
+  {
+    "nome": "nomes distintos",
+    "texto": "{\"a\":1,\"A\":2}",
+    "valido": true
+  },
+  {
+    "nome": "numericos textuais",
+    "texto": "{\"1\":true,\"01\":false}",
+    "valido": true
+  },
+  {
+    "nome": "nomes especiais",
+    "texto": "{\"__proto__\":1,\"constructor\":2}",
+    "valido": true
+  },
+  {
+    "nome": "estruturais na string",
+    "texto": "{\"texto\": \"\\\"{:}\\\\\\ud83d\\ude00\"}",
+    "valido": true
+  },
+  {
+    "nome": "par surrogate",
+    "texto": "\"\\ud83d\\ude00\"",
+    "valido": true
+  },
+  {
+    "nome": "duplicado",
+    "texto": "{\"a\":1,\"a\":2}",
+    "valido": false
+  },
+  {
+    "nome": "escape equivalente",
+    "texto": "{\"a\":1,\"\\u0061\":2}",
+    "valido": false
+  },
+  {
+    "nome": "duplicado aninhado",
+    "texto": "{\"x\":[{\"id\":1,\"id\":2}]}",
+    "valido": false
+  },
+  {
+    "nome": "expoente",
+    "texto": "1e999",
+    "valido": false
+  },
+  {
+    "nome": "expoente negativo",
+    "texto": "-1e999",
+    "valido": false
+  },
+  {
+    "nome": "NaN",
+    "texto": "NaN",
+    "valido": false
+  },
+  {
+    "nome": "surrogate valor",
+    "texto": "\"\\ud800\"",
+    "valido": false
+  },
+  {
+    "nome": "surrogate chave",
+    "texto": "{\"\\udfff\":1}",
+    "valido": false
+  },
+  {
+    "nome": "lixo apos objeto",
+    "texto": "{}x",
+    "valido": false
+  },
+  {
+    "nome": "virgula final",
+    "texto": "[1,]",
+    "valido": false
+  }
+]

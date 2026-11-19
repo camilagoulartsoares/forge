@@ -26,3 +26,12 @@ verificarIgual(1e308, decodificarJson('1e308'));
 $textoEscapado = str_repeat(chr(92), 10000);
 $documento = json_encode(['texto' => $textoEscapado, 'outro' => '{:}'], JSON_THROW_ON_ERROR);
 verificarIgual($textoEscapado, decodificarJson($documento)->texto);
+
+$casosJson = json_decode(file_get_contents(__DIR__ . '/../../testes-automatizados/exemplos/casos-json.json'), true, 512, JSON_THROW_ON_ERROR);
+foreach ($casosJson as $casoJson) {
+    if ($casoJson['valido']) {
+        decodificarJson($casoJson['texto']);
+    } else {
+        verificarExcecao(JsonException::class, function () use ($casoJson) { decodificarJson($casoJson['texto']); });
+    }
+}
