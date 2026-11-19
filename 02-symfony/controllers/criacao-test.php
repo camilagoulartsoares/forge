@@ -25,3 +25,10 @@ foreach (['{"titulo":"A","titulo":"B"}', '{"titulo":"A","ti\u0074ulo":"B"}',
 verificarExcecao(Forge\Http\CorpoJsonInvalido::class, function () {
     Forge\Http\lerCriacaoTarefa('{"titulo":"Valida","extra":1e999}');
 });
+
+foreach (["\0application/json", "application/json\0", "application/json;\r\nX: valor", "application/json; charset=utf-8\x7f"] as $tipoInvalido) {
+    verificarExcecao(Forge\Http\TipoConteudoNaoSuportado::class, function () use ($tipoInvalido) {
+        Forge\Http\lerCriacaoTarefa('{"titulo":"Valida"}', $tipoInvalido);
+    });
+}
+verificarIgual(['titulo' => 'Valida'], Forge\Http\lerCriacaoTarefa('{"titulo":"Valida"}', "\tapplication/json\t; charset=utf-8"));

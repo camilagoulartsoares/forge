@@ -26,7 +26,8 @@ final class TipoConteudoNaoSuportado extends \RuntimeException {}
 
 function lerCriacaoTarefa(string $corpo, string $tipo = 'application/json'): array
 {
-    if (strtolower(trim(explode(';', $tipo, 2)[0])) !== 'application/json') {
+    if (preg_match('/[\x00-\x08\x0A-\x1F\x7F]/', $tipo)
+        || strtolower(trim(explode(';', $tipo, 2)[0])) !== 'application/json') {
         throw new TipoConteudoNaoSuportado('Esperado application/json.');
     }
     if (strlen($corpo) > 16384) throw new CorpoMuitoGrande('Corpo excede 16 KiB.');
