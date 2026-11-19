@@ -42,3 +42,14 @@ verificarIgual(201, Forge\Http\criarTarefaHttp($noLimite, 'application/json', $c
 $antesDoLimite = count($chamadas);
 verificarIgual(413, Forge\Http\criarTarefaHttp($noLimite . ' ', 'application/json', $criar)['status']);
 verificarIgual($antesDoLimite, count($chamadas));
+
+foreach ([new Forge\Identidade\IdentificadorInvalido('ID gerado pelo servidor'),
+    new Forge\Http\CorpoJsonInvalido('Arquivo interno invalido')] as $interno) {
+    verificarIgual(500, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () use ($interno) { throw $interno; })['status']);
+}
+verificarIgual(422, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () {
+    throw new Forge\Http\EntradaInvalida(['titulo' => 'Regra de negocio.']);
+})['status']);
+verificarIgual(403, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () {
+    throw new Forge\Aplicacao\AcessoNegado('Sem acesso.');
+})['status']);
