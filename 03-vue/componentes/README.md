@@ -25,3 +25,11 @@ Use um controle nativo acessível e uma chave estável na lista, nunca o índice
 quando a ordem puder mudar. Documente o nome e o payload dos eventos.
 
 Referência: [Vue Component Events](https://vuejs.org/guide/components/events.html).
+
+O [gerador de intencao](intencao-conclusao.mjs) torna o payload do contrato
+executavel sem instalar Vue. No handler do botao nativo, chame
+`criarIntencaoConclusao(tarefa, ocupado)` e, se nao retornar `null`, encaminhe
+`emit(intencao.evento, intencao.payload)`. O pai aplica a atualizacao e controla
+`ocupado`; a funcao nunca altera a prop. O teste verifica payloads e bloqueio
+por estado ocupado, sem substituir verificacoes de teclado no componente real.
+Execute `node --test 03-vue/componentes/intencao-conclusao.test.mjs`.
