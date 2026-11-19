@@ -182,6 +182,18 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertEqual({1}, {row[0] for row in self.db.execute(naive)})
         self.assertEqual({1, 2}, {row[0] for row in rows})
 
+    def test_summary_counts_shared_task_once_per_label_and_updates_after_unlink(self):
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.execute("UPDATE tarefas SET concluida = 1 WHERE id = 2")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (1, 2), (2, 1)])
+        sql = SCHEMA.with_name("resumir-conclusao-por-etiqueta.sql").read_text(encoding="utf-8")
+        self.assertEqual([(1, "PHP", 2, 1, 1), (2, "JS", 1, 1, 0)], self.db.execute(sql).fetchall())
+        self.db.execute("DELETE FROM tarefa_etiqueta WHERE tarefa_id = 1 AND etiqueta_id = 1")
+        self.assertEqual([(1, "PHP", 1, 0, 1), (2, "JS", 1, 1, 0)], self.db.execute(sql).fetchall())
+        self.db.execute("DELETE FROM tarefa_etiqueta")
+        self.db.execute("DELETE FROM etiquetas")
+        self.assertEqual([], self.db.execute(sql).fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()
