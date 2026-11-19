@@ -53,3 +53,13 @@ verificarIgual(422, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'applicati
 verificarIgual(403, Forge\Http\criarTarefaHttp('{"titulo":"Valida"}', 'application/json', function () {
     throw new Forge\Aplicacao\AcessoNegado('Sem acesso.');
 })['status']);
+
+$corpoUnicode = json_encode(['titulo' => 'Valida', 'extra' => str_repeat("\xf0\x9f\x98\x80", 4000)], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+verificarIgual(true, strlen($corpoUnicode) < 16384);
+$corpoUnicode = str_pad($corpoUnicode, 16384, ' ');
+verificarIgual(201, Forge\Http\criarTarefaHttp($corpoUnicode, 'application/json', $criar)['status']);
+$chamadasAntesDoCorpoGrande = count($chamadas);
+$corpoUnicodeGrande = json_encode(['titulo' => 'Valida', 'extra' => str_repeat("\xf0\x9f\x98\x80", 4100)], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+verificarIgual(true, strlen($corpoUnicodeGrande) > 16384);
+verificarIgual(413, Forge\Http\criarTarefaHttp($corpoUnicodeGrande, 'application/json', $criar)['status']);
+verificarIgual($chamadasAntesDoCorpoGrande, count($chamadas));
