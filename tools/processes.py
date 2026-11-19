@@ -3,10 +3,11 @@
 import os
 import signal
 import subprocess
+import sys
 
 
 def run_with_timeout(command, *, cwd, timeout):
-    options = {"cwd": cwd}
+    options = {"cwd": cwd, "stdout": sys.stdout, "stderr": sys.stderr, "stdin": subprocess.DEVNULL}
     if os.name == "nt":
         options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
     else:
