@@ -8,23 +8,28 @@ namespace Forge\Json;
 function decodificarJson(string $texto)
 {
     $resultado = json_decode($texto, false, 512, JSON_THROW_ON_ERROR);
-    $padrao = <<<'REGEX'
-/"[^"\\]*(?:\\.[^"\\]*)*"|[{}\[\]:,]/s
-REGEX;
-    if (preg_match_all($padrao, $texto, $tokens) === false) {
-        throw new \JsonException('Nao foi possivel verificar as chaves JSON.');
-    }
     $pilha = [];
-    foreach ($tokens[0] as $indice => $token) {
-        if ($token === '{' || $token === '[') {
-            $pilha[] = $token === '{' ? [] : null;
-        } elseif ($token === '}' || $token === ']') {
+    $tamanho = strlen($texto);
+    for ($posicao = 0; $posicao < $tamanho; $posicao++) {
+        $caractere = $texto[$posicao];
+        if ($caractere === '{' || $caractere === '[') {
+            $pilha[] = $caractere === '{' ? [] : null;
+        } elseif ($caractere === '}' || $caractere === ']') {
             array_pop($pilha);
-        } elseif ($token[0] === '"' && ($tokens[0][$indice + 1] ?? null) === ':') {
-            $chave = json_decode($token, false, 512, JSON_THROW_ON_ERROR);
-            $nivel = count($pilha) - 1;
-            if (isset($pilha[$nivel][$chave])) throw new \JsonException('Chave JSON duplicada.');
-            $pilha[$nivel][$chave] = true;
+        } elseif ($caractere === '"') {
+            $inicio = $posicao++;
+            // A gramatica ja foi validada: escapes e fechamento sempre existem.
+            while ($texto[$posicao] !== '"') {
+                $posicao += $texto[$posicao] === chr(92) ? 2 : 1;
+            }
+            $proximo = $posicao + 1;
+            while ($proximo < $tamanho && strpos(" \t\r\n", $texto[$proximo]) !== false) $proximo++;
+            if ($proximo < $tamanho && $texto[$proximo] === ':') {
+                $chave = json_decode(substr($texto, $inicio, $posicao - $inicio + 1), false, 512, JSON_THROW_ON_ERROR);
+                $nivel = count($pilha) - 1;
+                if (isset($pilha[$nivel][$chave])) throw new \JsonException('Chave JSON duplicada.');
+                $pilha[$nivel][$chave] = true;
+            }
         }
     }
     $pendentes = [$resultado];

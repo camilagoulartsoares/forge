@@ -22,3 +22,7 @@ foreach (['1e999', '-1e999', '{"x":[1e309]}'] as $numero) {
     verificarExcecao(JsonException::class, function () use ($numero) { decodificarJson($numero); });
 }
 verificarIgual(1e308, decodificarJson('1e308'));
+
+$textoEscapado = str_repeat(chr(92), 10000);
+$documento = json_encode(['texto' => $textoEscapado, 'outro' => '{:}'], JSON_THROW_ON_ERROR);
+verificarIgual($textoEscapado, decodificarJson($documento)->texto);
