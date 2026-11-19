@@ -75,3 +75,8 @@ A fixture compartilhada [casos-titulo.json](exemplos/casos-titulo.json) cobre os
 junto ao limite de 120 unidades e preservacao no interior do titulo. Inclui
 caracteres visualmente semelhantes que nao devem ser removidos. PHP e JavaScript
 executam a mesma matriz para detectar divergencias de normalizacao.
+
+O teste de integracao `tools/test_php_configuration.py` inicia PHP com
+`zend.assertions=-1`, comprova que `assert(false)` foi removido e verifica
+que os helpers ainda falham para tipos diferentes e excecoes ausentes.
+Isso valida a independencia da configuracao de assertions indicada acima.
