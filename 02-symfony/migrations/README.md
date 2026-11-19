@@ -45,3 +45,8 @@ vinculados pelo driver, sem inventar um valor padrao. Atualiza somente linhas
 ainda nulas; repetir o lote nao apaga classificacoes ja feitas. Confira a quantidade
 de linhas afetadas e as pendencias antes da etapa final. O teste de rollback
 cobre somente DML em transacao; nao implica rollback automatico do ALTER TABLE.
+
+Uma categoria nula nao conta como preenchimento: `COALESCE` a converte em
+entrada vazia, rejeitada pelo CHECK existente, preservando a pendencia.
+O parametro aparece uma unica vez, sem depender de binds nomeados repetidos.
+O chamador deve fornecer uma classificacao explicita antes de considerar a linha migrada.

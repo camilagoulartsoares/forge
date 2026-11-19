@@ -57,6 +57,15 @@ class CategoryMigrationTests(unittest.TestCase):
                 self.db.execute(sql, {"id": 2, "categoria": ""})
         self.assertEqual([(None,), (None,)], self.db.execute("SELECT categoria FROM tarefas ORDER BY id").fetchall())
 
+    def test_null_category_does_not_report_a_filled_row(self):
+        self.expand()
+        self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (1, 'Pendente')")
+        sql = (MIGRATIONS / "preencher-categoria.sql").read_text(encoding="utf-8")
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute(sql, {"id": 1, "categoria": None})
+        self.assertIsNone(self.db.execute("SELECT categoria FROM tarefas").fetchone()[0])
+        self.assertEqual(1, self.db.execute(sql, {"id": 1, "categoria": "Backend"}).rowcount)
+
 
 if __name__ == "__main__":
     unittest.main()
