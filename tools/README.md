@@ -68,3 +68,8 @@ O executor confere PHP 7.4+ e Node.js 18.13+ antes dos linters da area.
 O minimo de Node inclui as APIs de mocks utilizadas pelos testes, introduzidas
 na versao 18.13, conforme a [documentacao do test runner](https://nodejs.org/download/release/latest-v18.x/docs/api/test.html#class-mocktracker).
 Runtime presente mas antigo retorna codigo 2 com diagnostico explicito.
+
+Com `--timeout`, cada verificacao roda em um grupo de processos proprio.
+Ao expirar ou interromper, o executor encerra tambem descendentes (por exemplo,
+os workers de `node --test`), usando o grupo no POSIX e `taskkill /T` no Windows.
+O teste de regressao cria um filho real e comprova que ele nao sobrevive ao prazo.

@@ -7,6 +7,8 @@ import shutil
 import subprocess
 import sys
 
+from processes import run_with_timeout
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -71,7 +73,8 @@ def main(argv=None) -> int:
             if command[0] in executables:
                 command = [executables[command[0]], *command[1:]]
             print("RUN: " + " ".join(command), flush=True)
-            result = subprocess.run(command, cwd=ROOT, timeout=args.timeout)
+            result = (run_with_timeout(command, cwd=ROOT, timeout=args.timeout)
+                      if args.timeout is not None else subprocess.run(command, cwd=ROOT))
             if result.returncode:
                 return result.returncode if result.returncode > 0 else 1
     except KeyboardInterrupt:

@@ -11,7 +11,8 @@ import check
 
 class CheckRunnerTests(unittest.TestCase):
     def invoke(self, run, which=lambda name: name, argv=None, exists=lambda path: True):
-        with patch("check.subprocess.run", side_effect=run), patch("check.shutil.which", side_effect=which), \
+        with patch("check.subprocess.run", side_effect=run), patch("check.run_with_timeout", side_effect=run), \
+                patch("check.shutil.which", side_effect=which), \
                 patch("check.Path.is_file", autospec=True, side_effect=exists):
             with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                 return check.main(argv or [])
