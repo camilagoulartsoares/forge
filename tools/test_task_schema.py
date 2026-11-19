@@ -194,6 +194,21 @@ class TaskSchemaTests(unittest.TestCase):
         self.db.execute("DELETE FROM etiquetas")
         self.assertEqual([], self.db.execute(sql).fetchall())
 
+    def test_transactional_delete_keeps_shared_labels_and_rolls_back_failed_unlink(self):
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (2, 1)])
+        self.db.commit()
+        with self.assertRaises(sqlite3.IntegrityError):
+            with self.db:
+                self.db.execute("DELETE FROM tarefa_etiqueta WHERE tarefa_id = ?", (1,))
+                self.db.execute("DELETE FROM etiquetas WHERE id = ?", (1,))
+        self.assertEqual([(1, 1), (2, 1)], self.db.execute("SELECT * FROM tarefa_etiqueta ORDER BY tarefa_id").fetchall())
+        with self.db:
+            self.db.execute("DELETE FROM tarefa_etiqueta WHERE tarefa_id = ?", (1,))
+            self.db.execute("DELETE FROM tarefas WHERE id = ?", (1,))
+        self.assertEqual([(2, "Testar")], self.db.execute("SELECT id, titulo FROM tarefas").fetchall())
+        self.assertEqual([(1, "PHP")], self.db.execute("SELECT * FROM etiquetas").fetchall())
+        self.assertEqual([(2, 1)], self.db.execute("SELECT * FROM tarefa_etiqueta").fetchall())
+
 
 if __name__ == "__main__":
     unittest.main()
