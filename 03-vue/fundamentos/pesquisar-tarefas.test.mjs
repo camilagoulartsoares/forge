@@ -30,3 +30,9 @@ test('consulta vazia preserva ordem e retorna novo array', () => {
 test('termos repetidos nao exigem ocorrencias repetidas no titulo', () => {
   assert.deepEqual(pesquisarTarefas(tarefas, 'api API api').map((t) => t.id), [1, 3]);
 });
+
+test('entrada malformada e rejeitada tambem na consulta vazia', () => {
+  for (const tarefas of [null, {}, [null], [{ titulo: 42 }], [,]]) {
+    for (const consulta of ['', 'api']) assert.throws(() => pesquisarTarefas(tarefas, consulta), TypeError);
+  }
+});
