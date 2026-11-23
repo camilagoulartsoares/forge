@@ -82,6 +82,13 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
         if opening and (opening[1][0] != "`" or "`" not in opening[2]):
             fence = opening[1]
             continue
+        # Inline Markdown inside a comment cannot consume the comment terminator.
+        if in_comment:
+            end = line.find('-->')
+            if end == -1:
+                continue
+            line = line[end + 3:]
+            in_comment = False
         line = without_inline_code(line)
         visible = []
         while line:

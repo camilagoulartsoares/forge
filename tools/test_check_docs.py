@@ -114,6 +114,12 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual(1, len(errors))
         self.assertIn(":4: missing link", errors[0])
 
+    def test_backticks_in_multiline_comment_cannot_hide_its_closing_marker(self):
+        errors = self.check('<!--\n` --> [visible](absent.md) `\n[second](missing.md)')
+        self.assertEqual(2, len(errors))
+        self.assertIn(':2: missing link', errors[0])
+        self.assertIn(':3: missing link', errors[1])
+
     def test_unclosed_html_comment_hides_remaining_content(self):
         self.assertEqual([], self.check("# Title\n<!-- [draft](absent.md)\n```php"))
 
