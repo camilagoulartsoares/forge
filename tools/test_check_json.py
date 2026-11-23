@@ -44,6 +44,13 @@ class CheckJsonTests(unittest.TestCase):
                 validate(self.write(value))
         self.assertEqual(chr(0x1F600), validate(self.write(r'"\ud83d\ude00"')))
 
+    def test_integer_literals_must_fit_the_shared_finite_number_range(self):
+        for value in ['9' * 400, '-' + '9' * 400]:
+            with self.assertRaisesRegex(ValueError, 'finite float range'):
+                validate(self.write(value))
+        value = 9007199254740993
+        self.assertEqual(value, validate(self.write(str(value))))
+
     def test_bad_utf8_and_syntax_are_failures(self):
         self.file.write_bytes(b'"\xff"')
         with self.assertRaises(ValueError):

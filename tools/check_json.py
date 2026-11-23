@@ -27,9 +27,14 @@ def finite_float(value):
     return result
 
 
+def finite_integer(value):
+    finite_float(value)  # Match PHP/JS finite range without losing Python integer precision.
+    return int(value)
+
+
 def validate(path):
     result = json.loads(Path(path).read_text(encoding="utf-8"),
-                        object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float)
+                        object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float, parse_int=finite_integer)
     pending = [result]
     while pending:
         value = pending.pop()
