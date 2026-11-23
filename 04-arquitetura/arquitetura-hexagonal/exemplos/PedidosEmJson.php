@@ -107,8 +107,10 @@ final class PedidosEmJson implements ArmazenamentoPedidos
                 return (array) $item;
             }, $registro->itens);
             $pedido = new Pedido($registro->id, $itens);
-            if ($pedido->id() !== $registro->id || isset($pedidos[$pedido->id()])) {
-                throw new \UnexpectedValueException('Identificador persistido invalido ou duplicado.');
+            if ($pedido->id() !== $registro->id
+                || array_column($pedido->itens(), 'codigo') !== array_column($itens, 'codigo')
+                || isset($pedidos[$pedido->id()])) {
+                throw new \UnexpectedValueException('Pedido persistido nao canonico ou duplicado.');
             }
             $pedidos[$pedido->id()] = $pedido;
         }

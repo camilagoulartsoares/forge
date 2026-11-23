@@ -86,3 +86,8 @@ local controlado pelo exemplo; a verificacao nao e um sandbox de filesystem.
 Consultas usam lock compartilhado (`LOCK_SH`), permitindo leitores simultaneos.
 Gravacoes mantem `LOCK_EX` durante leitura, verificacao de unicidade e rename;
 o arquivo de lock separado continua estavel quando o arquivo JSON e substituido.
+
+Identificadores e codigos persistidos devem estar normalizados. Um codigo com
+espacos nas bordas e rejeitado na leitura, preservando os bytes do arquivo;
+registrar outro pedido nao deve alterar silenciosamente os registros anteriores.
+A entrada do dominio continua normalizando os codigos antes da primeira gravacao.

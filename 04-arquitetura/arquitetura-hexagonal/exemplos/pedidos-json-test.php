@@ -27,6 +27,7 @@ try {
     $b->salvar(new Pedido('2', [['codigo' => 'Caneta', 'quantidade' => 1]]));
     verificarIgual(true, $a->existe('2'));
     foreach (['{', '{}', '[null]',
+        '[{"id":"x","itens":[{"codigo":" A ","quantidade":1}]}]',
         '[{"id":"x","id":"y","itens":[{"codigo":"A","quantidade":1}]}]',
         '[{"id":"x","itens":[{"codigo":"A","quantidade":1,"quantidade":2}]}]', '[{"id":"x","itens":[]}]',
         '[{"id":"x","itens":[{"codigo":"A","quantidade":1}],"versaoFutura":2}]',
