@@ -13,7 +13,24 @@ class CategoryMigrationTests(unittest.TestCase):
     def setUp(self):
         self.db = sqlite3.connect(":memory:")
         self.addCleanup(self.db.close)
+        self.db.execute("PRAGMA foreign_keys = ON")
         self.db.executescript(SCHEMA.read_text(encoding="utf-8"))
+
+    def test_expansion_and_backfill_preserve_shared_label_relationships(self):
+        self.db.executemany("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", [(1, 'PHP'), (2, 'JS')])
+        self.db.execute("INSERT INTO etiquetas VALUES (1, 'Estudos')")
+        self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (2, 1)])
+        self.db.commit()
+        self.expand()
+        sql = (MIGRATIONS / 'preencher-categoria.sql').read_text(encoding='utf-8')
+        self.db.execute(sql, {'id': 1, 'categoria': 'Backend'})
+        self.assertEqual([(1, 1), (2, 1)], self.db.execute('SELECT * FROM tarefa_etiqueta ORDER BY tarefa_id').fetchall())
+        self.assertEqual([], self.db.execute('PRAGMA foreign_key_check').fetchall())
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute('DELETE FROM tarefas WHERE id = 1')
+        with self.assertRaises(sqlite3.IntegrityError):
+            self.db.execute('INSERT INTO tarefa_etiqueta VALUES (999, 1)')
+        self.assertEqual([('Backend',), (None,)], self.db.execute('SELECT categoria FROM tarefas ORDER BY id').fetchall())
 
     def expand(self):
         self.db.executescript((MIGRATIONS / "adicionar-categoria-opcional.sql").read_text(encoding="utf-8"))
