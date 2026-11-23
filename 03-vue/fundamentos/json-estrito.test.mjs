@@ -21,3 +21,12 @@ test('executa os mesmos casos JSON usados no PHP e Python', async () => {
     else assert.throws(() => decodificarJson(caso.texto), SyntaxError, caso.nome);
   }
 });
+
+test('strings extensas com escapes nao confundem nomes nem delimitadores', () => {
+  const texto = String.raw`\\\"{}[],:` .repeat(10000);
+  const chave = 'chave' + texto;
+  const objeto = { [chave]: texto, filhos: [{ [chave]: 'outro objeto' }] };
+  assert.deepEqual(decodificarJson(JSON.stringify(objeto)), objeto);
+  const nomeCodificado = JSON.stringify(chave);
+  assert.throws(() => decodificarJson(`{${nomeCodificado}:1,${nomeCodificado}:2}`), SyntaxError);
+});
