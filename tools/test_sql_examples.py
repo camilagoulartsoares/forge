@@ -48,6 +48,15 @@ class SqlExamplesTests(unittest.TestCase):
     def test_not_exists_finds_customer_without_orders_despite_null_reference(self):
         self.assertEqual([(2, "Bruno")], self.query("sem-pedidos.sql"))
 
+    def test_not_in_with_null_does_not_replace_the_existing_not_exists(self):
+        original = (EXAMPLES / 'sem-pedidos.sql').read_text(encoding='utf-8')
+        alternate = original.replace('WHERE NOT EXISTS (\n    SELECT 1', 'WHERE clientes.id NOT IN (\n    SELECT pedidos.cliente_id')
+        alternate = alternate.replace('    WHERE pedidos.cliente_id = clientes.id\n', '')
+        self.assertNotEqual(original, alternate)
+        self.assertEqual([], self.query('sem-pedidos.sql', original, alternate))
+        self.assertEqual([(2, 'Bruno')], self.query('sem-pedidos.sql', original, alternate.replace('SELECT NULL', 'SELECT 1')))
+        self.assertEqual([(2, 'Bruno')], self.query('sem-pedidos.sql'))
+
     def test_union_removes_duplicates(self):
         self.assertEqual([("Ana",), ("Bruno",)], self.query("uniao.sql"))
 
