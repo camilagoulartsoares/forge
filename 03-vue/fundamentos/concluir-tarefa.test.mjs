@@ -14,7 +14,7 @@ test('atualiza por id e preserva a origem e referencias nao alteradas', () => {
 
 test('recusa identificador ausente duplicado ou invalido sem escolher item arbitrario', () => {
   assert.throws(() => concluirTarefa([], 1), RangeError);
-  assert.throws(() => concluirTarefa([{ id: 1 }, { id: 1 }], 1), /duplicado/);
+  assert.throws(() => concluirTarefa([{ id: 1, concluida: false }, { id: 1, concluida: false }], 1), /duplicado/);
   assert.throws(() => concluirTarefa([{ id: 1 }], 1), TypeError);
   for (const id of ['1', 0, -1, NaN, Number.MAX_SAFE_INTEGER + 1]) {
     assert.throws(() => concluirTarefa([], id), TypeError);
@@ -25,4 +25,13 @@ test('identificador repetido distante nao e confundido com atualizacao unica', (
   const lista = [{ id: 1, concluida: false }, { id: 2, concluida: false }, { id: 1, concluida: true }];
   assert.throws(() => concluirTarefa(lista, 1), /duplicado/);
   assert.equal(lista[0].concluida, false);
+});
+
+test('recusa colecoes e registros malformados antes de procurar o alvo', () => {
+  for (const lista of [{ length: 0 }, 'abc', [null], [{ id: 1, concluida: false }, null],
+    [{ id: 1, concluida: false }, { id: 0, concluida: false }],
+    [{ id: 1, concluida: false }, { id: 2, concluida: 'false' }],
+    [{ id: 1, concluida: false }, ,]]) {
+    assert.throws(() => concluirTarefa(lista, 1), TypeError);
+  }
 });
