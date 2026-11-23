@@ -182,6 +182,28 @@ class TaskSchemaTests(unittest.TestCase):
         self.assertEqual({1}, {row[0] for row in self.db.execute(naive)})
         self.assertEqual({1, 2}, {row[0] for row in rows})
 
+    def test_joined_keyset_pages_reconstruct_listing_for_sparse_ids_and_page_sizes(self):
+        self.db.executemany('INSERT INTO tarefas(id, titulo) VALUES (?, ?)', [(17, 'Tres'), (99, 'Quatro'), (9007199254740991, 'Fim')])
+        self.db.executemany('INSERT INTO etiquetas VALUES (?, ?)', [(2, 'JS'), (3, 'SQL')])
+        self.db.executemany('INSERT INTO tarefa_etiqueta VALUES (?, ?)', [(1, 1), (1, 2), (17, 1), (17, 2), (17, 3), (99, 3)])
+        listing = self.db.execute(SCHEMA.with_name('listar-tarefas-etiquetas.sql').read_text(encoding='utf-8')).fetchall()
+        sql = SCHEMA.with_name('paginar-tarefas-etiquetas.sql').read_text(encoding='utf-8')
+        for size in [1, 2, 3, 4]:
+            with self.subTest(size=size):
+                cursor, combined = 0, []
+                for _ in range(6):
+                    page = self.db.execute(sql, {'apos_id': cursor, 'limite': size}).fetchall()
+                    if not page:
+                        break
+                    ids = {row[0] for row in page}
+                    self.assertLessEqual(len(ids), size)
+                    self.assertGreater(min(ids), cursor)
+                    cursor = max(ids)
+                    combined.extend(page)
+                else:
+                    self.fail('Pagination did not terminate')
+                self.assertEqual(listing, combined)
+
     def test_summary_counts_shared_task_once_per_label_and_updates_after_unlink(self):
         self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
         self.db.execute("UPDATE tarefas SET concluida = 1 WHERE id = 2")
