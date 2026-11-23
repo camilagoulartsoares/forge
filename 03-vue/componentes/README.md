@@ -33,3 +33,8 @@ executavel sem instalar Vue. No handler do botao nativo, chame
 `ocupado`; a funcao nunca altera a prop. O teste verifica payloads e bloqueio
 por estado ocupado, sem substituir verificacoes de teclado no componente real.
 Execute `node --test 03-vue/componentes/intencao-conclusao.test.mjs`.
+
+O pai pode aplicar o `payload` com [alterarConclusao](../fundamentos/alterar-conclusao.mjs).
+A funcao recebe o estado desejado: permite reabrir uma tarefa e repetir a mesma
+intencao sem inverter o estado novamente. A prop original permanece intacta.
+Execute `node --test 03-vue/fundamentos/alterar-conclusao.test.mjs` na raiz.
