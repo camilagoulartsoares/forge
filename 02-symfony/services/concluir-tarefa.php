@@ -98,7 +98,11 @@ final class ConcluirTarefa
         if (!identificadorValido($id)) {
             throw new IdentificadorInvalido('Identificador deve ser um inteiro positivo seguro.');
         }
-        $tarefa = $this->repositorio->buscar($id);
+        try {
+            $tarefa = $this->repositorio->buscar($id);
+        } catch (\Throwable $erro) {
+            throw new \RuntimeException('Falha ao consultar tarefas.', 0, $erro);
+        }
         if ($tarefa === null) {
             throw new TarefaNaoEncontrada('Tarefa nao encontrada.');
         }
@@ -115,7 +119,11 @@ final class ConcluirTarefa
             return $tarefa;
         }
         $resultado = $tarefa->concluir();
-        $this->repositorio->salvar($resultado);
+        try {
+            $this->repositorio->salvar($resultado);
+        } catch (\Throwable $erro) {
+            throw new \RuntimeException('Falha ao persistir tarefa.', 0, $erro);
+        }
 
         return $resultado;
     }
