@@ -20,7 +20,7 @@ function respostaErro(\Throwable $erro): array
         $corpo = ['erro' => 'entrada_invalida', 'campos' => ['id' => 'Identificador invalido.']];
     } elseif ($erro instanceof EntradaInvalida) {
         $status = 422;
-        $corpo = ['erro' => 'entrada_invalida', 'campos' => $erro->campos];
+        $corpo = ['erro' => 'entrada_invalida', 'campos' => $erro->campos()];
     } elseif ($erro instanceof CorpoJsonInvalido) {
         $status = 400;
         $corpo = ['erro' => 'json_invalido'];

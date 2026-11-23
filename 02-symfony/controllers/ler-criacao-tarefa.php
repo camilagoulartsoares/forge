@@ -9,12 +9,24 @@ require_once __DIR__ . '/../../01-fundamentos/php/introducao/exemplos/json-estri
 
 final class EntradaInvalida extends \InvalidArgumentException
 {
-    public array $campos;
+    private array $campos;
 
     public function __construct(array $campos)
     {
+        if ($campos === []) throw new \InvalidArgumentException('Informe erros de campos.');
+        foreach ($campos as $campo => $mensagem) {
+            if (!is_string($campo) || trim($campo) === '' || preg_match('//u', $campo) !== 1
+                || !is_string($mensagem) || trim($mensagem) === '' || preg_match('//u', $mensagem) !== 1) {
+                throw new \InvalidArgumentException('Erros de campos devem ser textos UTF-8.');
+            }
+        }
         parent::__construct('Entrada invalida.');
         $this->campos = $campos;
+    }
+
+    public function campos(): array
+    {
+        return $this->campos;
     }
 }
 
