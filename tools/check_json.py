@@ -35,16 +35,18 @@ def finite_integer(value):
 def validate(path):
     result = json.loads(Path(path).read_text(encoding="utf-8"),
                         object_pairs_hook=unique_keys, parse_constant=reject_constant, parse_float=finite_float, parse_int=finite_integer)
-    pending = [result]
+    pending = [(result, 0)]
     while pending:
-        value = pending.pop()
+        value, depth = pending.pop()
+        if isinstance(value, (dict, list)) and depth >= 511:
+            raise ValueError("JSON exceeds nesting limit")
         if isinstance(value, str) and any(0xD800 <= ord(char) <= 0xDFFF for char in value):
             raise ValueError(f"unpaired Unicode surrogate: {ascii(value)}")
         if isinstance(value, dict):
-            pending.extend(value.keys())
-            pending.extend(value.values())
+            pending.extend((item, depth + 1) for item in value.keys())
+            pending.extend((item, depth + 1) for item in value.values())
         elif isinstance(value, list):
-            pending.extend(value)
+            pending.extend((item, depth + 1) for item in value)
     return result
 
 

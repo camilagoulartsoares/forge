@@ -7,6 +7,7 @@ export function decodificarJson(texto) {
     const caractere = texto[posicao];
     if (caractere === '{' || caractere === '[') {
       pilha.push(caractere === '{' ? new Set() : null);
+      if (pilha.length >= 512) throw new SyntaxError('JSON excede o limite de aninhamento.');
     } else if (caractere === '}' || caractere === ']') {
       pilha.pop();
     } else if (caractere === '"') {

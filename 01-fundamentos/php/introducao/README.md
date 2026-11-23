@@ -75,3 +75,9 @@ a chamada segue a configuracao do arquivo que a realiza. O
 rejeitada a partir de um chamador estrito, enquanto as regras contra negativos
 continuam valendo nos dois casos. Nao confunda essa conversao com validacao de
 entrada HTTP. Execute `php 01-fundamentos/php/introducao/exemplos/tipagem-test.php`.
+
+O subconjunto JSON compartilhado aceita ate 511 containers aninhados (objetos ou
+arrays), alinhado ao `json_decode` com profundidade 512. JavaScript e o validador
+Python de fixtures aplicam o mesmo teto para evitar arquivos aceitos localmente
+que falhem no backend. As fixtures compartilhadas cobrem os dois lados do limite.
+Esse teto nao substitui limites de tamanho do corpo HTTP ou do arquivo de entrada.
