@@ -77,3 +77,7 @@ O teste de regressao cria um filho real e comprova que ele nao sobrevive ao praz
 O prazo maximo e 4294967 segundos, abaixo do limite de espera em milissegundos
 do Windows. Valores finitos maiores tambem sao recusados na CLI, antes de criar
 processos, evitando `OverflowError` em vez do diagnostico de argumento invalido.
+
+Caminhos locais em links usam `/`, inclusive quando o verificador roda no Windows.
+Barras invertidas literais ou codificadas como `%5C` sao recusadas para nao
+aprovar um link que so resolve como caminho local em uma plataforma.

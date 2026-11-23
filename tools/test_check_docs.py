@@ -227,6 +227,14 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn("missing link", self.check(r"\\[real](missing.md)")[0])
         self.assertIn("missing link", self.check(r"\![real](missing.md)")[0])
 
+    def test_windows_separators_are_not_portable_markdown_urls(self):
+        folder = self.root / 'guides'
+        folder.mkdir()
+        (folder / 'note.md').touch()
+        for target in [r'guides\note.md', 'guides%5Cnote.md']:
+            self.assertIn('invalid local path', self.check('[note](<' + target + '>)')[0])
+        self.assertEqual([], self.check('[note](guides/note.md)'))
+
     def test_local_link_decodes_html_character_references(self):
         (self.root / "a&b.md").touch()
         self.assertEqual([], self.check("[notes](a&amp;b.md) [notes](a&#38;b.md)"))

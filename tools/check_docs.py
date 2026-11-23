@@ -124,6 +124,8 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
                 continue
             try:
                 decoded = unquote(parsed.path, errors="strict")
+                if "\\" in decoded:
+                    raise ValueError("Use forward slashes in Markdown paths")
                 if "\0" in decoded:
                     raise ValueError("NUL character in path")
                 resolved = (path.parent / decoded).resolve()
