@@ -214,3 +214,27 @@ test('cancelar libera a promessa de recarregar mesmo se buscar ignora signal', {
   assert.equal(consulta.estado.carregando, false);
   assert.equal(consulta.estado.erro, null);
 });
+
+test('falha ao atualizar preserva o ultimo snapshot valido e permite recuperar', async () => {
+  const fonte = [{ id: 1, titulo: 'Primeira', concluida: false }];
+  const erro = new Error('Offline');
+  let rodada = 0;
+  const consulta = criarConsultaTarefas(async () => {
+    rodada += 1;
+    if (rodada === 2) throw erro;
+    return fonte;
+  });
+  await consulta.recarregar('/tarefas');
+  const primeiro = consulta.estado;
+  fonte[0].titulo = 'Atualizada';
+  await consulta.recarregar('/tarefas');
+  assert.equal(consulta.estado.dados, primeiro.dados);
+  assert.equal(consulta.estado.dados[0].titulo, 'Primeira');
+  assert.equal(consulta.estado.erro, erro);
+  assert.equal(consulta.estado.carregando, false);
+  await consulta.recarregar('/tarefas');
+  assert.equal(consulta.estado.erro, null);
+  assert.equal(consulta.estado.dados[0].titulo, 'Atualizada');
+  assert.equal(primeiro.dados[0].titulo, 'Primeira');
+  consulta.descartar();
+});
