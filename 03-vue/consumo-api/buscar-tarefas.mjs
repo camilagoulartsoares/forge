@@ -3,6 +3,9 @@ import { validarTarefas } from './validar-tarefas.mjs';
 
 export class ErroHttp extends Error {
   constructor(status) {
+    if (!Number.isInteger(status) || status < 0 || status > 599 || (status > 0 && status < 100)) {
+      throw new TypeError('Status HTTP invalido.');
+    }
     super(`Falha HTTP: ${status}`);
     this.name = 'ErroHttp';
     this.status = status;

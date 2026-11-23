@@ -113,3 +113,15 @@ test('rejeita resposta com ok nao booleano antes de ler o corpo', async () => {
     assert.equal(leituras, 0);
   }
 });
+
+test('status HTTP precisa ser numerico e valido mesmo em fontes injetadas', async () => {
+  for (const status of [undefined, null, '503', NaN, Infinity, 99, 600, 404.5, -1]) {
+    let leituras = 0;
+    await assert.rejects(buscarTarefas('/', async () => ({
+      ok: false, status, json() { leituras += 1; return []; },
+    })), TypeError);
+    assert.equal(leituras, 0);
+  }
+  const erroDeRede = Response.error();
+  await assert.rejects(buscarTarefas('/', async () => erroDeRede), erro => erro instanceof ErroHttp && erro.status === 0);
+});
