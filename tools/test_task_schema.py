@@ -92,6 +92,19 @@ class TaskSchemaTests(unittest.TestCase):
         for identifier in [999, "1 OR 1=1"]:
             self.assertEqual([], self.db.execute(sql, {"etiqueta_id": identifier}).fetchall())
 
+    def test_global_summary_counts_tasks_once_and_returns_zero_for_empty_collection(self):
+        sql = SCHEMA.with_name('resumir-tarefas.sql').read_text(encoding='utf-8')
+        self.assertEqual([(2, 2, 0)], self.db.execute(sql).fetchall())
+        self.db.execute("INSERT INTO etiquetas VALUES (2, 'JS')")
+        self.db.executemany('INSERT INTO tarefa_etiqueta VALUES (?, ?)', [(1, 1), (1, 2), (2, 1)])
+        self.db.execute('UPDATE tarefas SET concluida = 1 WHERE id = 2')
+        self.assertEqual([(2, 1, 1)], self.db.execute(sql).fetchall())
+        self.db.execute('UPDATE tarefas SET concluida = 1')
+        self.assertEqual([(2, 0, 2)], self.db.execute(sql).fetchall())
+        self.db.execute('DELETE FROM tarefa_etiqueta')
+        self.db.execute('DELETE FROM tarefas')
+        self.assertEqual([(0, 0, 0)], self.db.execute(sql).fetchall())
+
     def test_label_counts_include_zero_without_counting_outer_join_placeholder(self):
         sql = SCHEMA.with_name("contar-tarefas-por-etiqueta.sql").read_text(encoding="utf-8")
         self.db.execute("INSERT INTO etiquetas VALUES (2, 'JavaScript')")

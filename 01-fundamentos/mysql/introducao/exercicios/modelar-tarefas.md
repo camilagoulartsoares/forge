@@ -68,3 +68,8 @@ as tarefas e so depois busca todas as etiquetas. Aplicar LIMIT diretamente na
 juncao limita linhas, podendo cortar etiquetas e reduzir a quantidade de tarefas.
 A pagina pode ter mais linhas que `limite`; avance pelo maior ID de tarefa,
 nao pela quantidade de linhas da juncao. Os mesmos limites de cursor se aplicam.
+
+[resumir-tarefas.sql](resumir-tarefas.sql) calcula o resumo global de total,
+pendentes e concluidas. Consulta a tabela de tarefas diretamente para nao
+multiplicar contagens quando uma tarefa possui varias etiquetas. Sem tarefas,
+`COALESCE` transforma a ausencia de soma em zero, mantendo o contrato do resumo.
