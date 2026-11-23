@@ -74,6 +74,21 @@ class CategoryMigrationTests(unittest.TestCase):
                 self.db.execute(sql, {"id": 2, "categoria": ""})
         self.assertEqual([(None,), (None,)], self.db.execute("SELECT categoria FROM tarefas ORDER BY id").fetchall())
 
+    def test_read_only_preflight_lists_remaining_backfill_work_in_stable_order(self):
+        self.expand()
+        self.db.executemany("INSERT INTO tarefas(id, titulo) VALUES (?, ?)", [(9, 'JS'), (1, 'PHP')])
+        sql = (MIGRATIONS / 'verificar-categorias-pendentes.sql').read_text(encoding='utf-8')
+        backfill = (MIGRATIONS / 'preencher-categoria.sql').read_text(encoding='utf-8')
+        before = self.db.total_changes
+        self.assertEqual([(1, 'PHP'), (9, 'JS')], self.db.execute(sql).fetchall())
+        self.assertEqual(before, self.db.total_changes)
+        self.db.execute(backfill, {'id': 1, 'categoria': 'Backend'})
+        self.assertEqual([(9, 'JS')], self.db.execute(sql).fetchall())
+        self.db.execute(backfill, {'id': 9, 'categoria': 'Frontend'})
+        self.assertEqual([], self.db.execute(sql).fetchall())
+        self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (10, 'Cliente antigo')")
+        self.assertEqual([(10, 'Cliente antigo')], self.db.execute(sql).fetchall())
+
     def test_null_category_does_not_report_a_filled_row(self):
         self.expand()
         self.db.execute("INSERT INTO tarefas(id, titulo) VALUES (1, 'Pendente')")

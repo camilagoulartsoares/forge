@@ -50,3 +50,9 @@ Uma categoria nula nao conta como preenchimento: `COALESCE` a converte em
 entrada vazia, rejeitada pelo CHECK existente, preservando a pendencia.
 O parametro aparece uma unica vez, sem depender de binds nomeados repetidos.
 O chamador deve fornecer uma classificacao explicita antes de considerar a linha migrada.
+
+[verificar-categorias-pendentes.sql](exemplos/verificar-categorias-pendentes.sql)
+executa a etapa de conferencia: lista IDs e titulos ainda sem categoria, sem
+alterar dados. Resultado vazio vale para aquele snapshot; clientes antigos ainda
+podem inserir NULL depois. Atualize todos os escritores antes de impor NOT NULL
+no banco de destino. A consulta nao substitui essa coordenacao da aplicacao.
