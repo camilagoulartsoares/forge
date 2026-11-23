@@ -103,7 +103,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
                 if start == -1:
                     visible.append(line)
                     break
-                visible.append(line[:start])
+                visible.append(line[:start] + " ")
                 line = line[start + 4:]
                 in_comment = True
         line = "".join(visible)

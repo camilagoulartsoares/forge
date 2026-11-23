@@ -109,6 +109,12 @@ class CheckDocsTests(unittest.TestCase):
     def test_links_after_inline_code_are_still_checked(self):
         self.assertIn("missing link", self.check("`code` [real link](absent.md)")[0])
 
+    def test_removing_comments_does_not_manufacture_links_between_tokens(self):
+        self.assertEqual([], self.check('[literal]<!-- separator -->(absent.md)'))
+        errors = self.check('[literal]<!-- separator -->(absent.md) [real](missing.md)')
+        self.assertEqual(1, len(errors))
+        self.assertIn('missing.md', errors[0])
+
     def test_html_comments_are_ignored_without_shifting_lines(self):
         errors = self.check("<!--\n[hidden](absent.md)\n-->\n[visible](missing.md)")
         self.assertEqual(1, len(errors))
