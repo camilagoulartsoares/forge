@@ -36,6 +36,12 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual([], self.check("[new](new.md)"))
         self.assertFalse(path_case_matches(self.root / "TARGET.md", self.root))
 
+    def test_escaped_closing_brackets_in_labels_do_not_hide_targets(self):
+        errors = self.check(r'[label \] text](absent.md)' + '\n' + r'![alt \] text](absent.png)')
+        self.assertEqual(2, len(errors))
+        self.assertIn('absent.md', errors[0])
+        self.assertIn('absent.png', errors[1])
+
     def test_missing_local_link_has_line_number(self):
         self.assertIn(":2: missing link", self.check("# Study\n[missing](absent.md)")[0])
 
