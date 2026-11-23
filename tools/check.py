@@ -17,9 +17,9 @@ def positive_timeout(raw):
     try:
         value = float(raw)
     except ValueError:
-        raise argparse.ArgumentTypeError("timeout must be a positive finite number") from None
-    if not math.isfinite(value) or value <= 0:
-        raise argparse.ArgumentTypeError("timeout must be a positive finite number")
+        raise argparse.ArgumentTypeError("timeout must be positive and at most 4294967 seconds") from None
+    if not math.isfinite(value) or value <= 0 or value > 4294967:
+        raise argparse.ArgumentTypeError("timeout must be positive and at most 4294967 seconds")
     return value
 
 

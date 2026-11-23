@@ -73,3 +73,7 @@ Com `--timeout`, cada verificacao roda em um grupo de processos proprio.
 Ao expirar ou interromper, o executor encerra tambem descendentes (por exemplo,
 os workers de `node --test`), usando o grupo no POSIX e `taskkill /T` no Windows.
 O teste de regressao cria um filho real e comprova que ele nao sobrevive ao prazo.
+
+O prazo maximo e 4294967 segundos, abaixo do limite de espera em milissegundos
+do Windows. Valores finitos maiores tambem sao recusados na CLI, antes de criar
+processos, evitando `OverflowError` em vez do diagnostico de argumento invalido.

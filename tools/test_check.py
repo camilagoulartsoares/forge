@@ -146,7 +146,7 @@ class CheckRunnerTests(unittest.TestCase):
         self.assertEqual(2, len(calls))
 
     def test_timeout_must_be_positive_and_finite(self):
-        for value in ["0", "-1", "nan", "inf", "wrong"]:
+        for value in ["0", "-1", "nan", "inf", "wrong", "1e300", "4294968"]:
             with self.assertRaises(SystemExit):
                 self.invoke(lambda *a, **k: None, argv=["--timeout", value])
 
