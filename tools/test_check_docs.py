@@ -42,6 +42,13 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn('absent.md', errors[0])
         self.assertIn('absent.png', errors[1])
 
+    def test_nested_brackets_in_labels_do_not_hide_links_or_images(self):
+        errors = self.check('[outer [inner] label](absent.md) ![alt [nested] text](absent.png)')
+        self.assertEqual(2, len(errors))
+        self.assertIn('absent.md', errors[0])
+        self.assertIn('absent.png', errors[1])
+        self.assertEqual([], self.check('[' * 20000 + 'unclosed labels'))
+
     def test_missing_local_link_has_line_number(self):
         self.assertIn(":2: missing link", self.check("# Study\n[missing](absent.md)")[0])
 

@@ -10,8 +10,30 @@ import sys
 from urllib.parse import unquote, urlsplit
 
 
-LINK = re.compile(r"""!?\[(?:\\[^\n]|[^\\\]\n])*\]\((<[^>\n]+>|[^\s)]+)(?:\s+(?:"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'))?\)""")
+DESTINATION = re.compile(r"""\((<[^>\n]+>|[^\s)]+)(?:\s+(?:"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*'))?\)""")
 FENCE = re.compile(r"^ {0,3}(`{3,}|~{3,})(.*)$")
+
+
+def link_destinations(line):
+    """Recognize balanced labels without retrying a regex at every opening bracket."""
+    openings = []
+    position = 0
+    while position < len(line):
+        char = line[position]
+        if char == "\\":
+            position += 2
+            continue
+        if char == '[':
+            openings.append(position)
+        elif char == ']' and openings:
+            openings.pop()
+            destination = DESTINATION.match(line, position + 1)
+            if destination:
+                yield destination[1]
+                position = destination.end()
+                openings.clear()  # An enclosing label cannot become a nested link.
+                continue
+        position += 1
 
 
 def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) -> bool:
@@ -107,12 +129,8 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
                 line = line[start + 4:]
                 in_comment = True
         line = "".join(visible)
-        for match in LINK.finditer(line):
-            bracket = match.start() + int(match[0].startswith("!"))
-            prefix = line[:bracket]
-            if (len(prefix) - len(prefix.rstrip("\\"))) % 2:
-                continue
-            target = unescape(match[1].strip("<>"))
+        for destination in link_destinations(line):
+            target = unescape(destination.strip("<>"))
             try:
                 if any(ord(char) < 32 or ord(char) == 127 for char in target):
                     raise ValueError("Control character in URL")
