@@ -86,3 +86,7 @@ A suite PHP exige build de 64 bits: os testes de interoperabilidade exercitam
 IDs ate `9007199254740991`. O preflight verifica `PHP_INT_SIZE` antes das suites;
 um PHP de 32 bits nao consegue representar esses IDs como `int`, mesmo quando
 a versao e recente. O parser de rota continua respeitando tambem `PHP_INT_MAX`.
+
+URLs `file:` e caminhos absolutos com unidade Windows nao sao links externos
+portaveis: o verificador os recusa. Use um destino relativo ao documento para
+que o link aponte para o mesmo arquivo no clone local e no GitHub.

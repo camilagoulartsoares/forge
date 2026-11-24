@@ -132,6 +132,10 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
             except ValueError as error:
                 errors.append(f"{path}:{number}: invalid link: {ascii(target)}: {error}")
                 continue
+            if parsed.scheme.lower() == 'file' or (len(parsed.scheme) == 1
+                    and unquote(parsed.path).startswith(('/', chr(92)))):
+                errors.append(f"{path}:{number}: nonportable local URL: {ascii(target)}")
+                continue
             if parsed.scheme or parsed.netloc or not parsed.path:
                 continue
             try:

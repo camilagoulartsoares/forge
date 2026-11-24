@@ -158,6 +158,13 @@ class CheckDocsTests(unittest.TestCase):
         self.document.write_bytes(b"\xff")
         self.assertIn("cannot read UTF-8", check_file(self.document, self.root)[0])
 
+    def test_file_urls_and_absolute_drive_paths_are_not_portable_links(self):
+        for target in ['file:///tmp/notes.md', 'FILE:///C:/notes.md', 'C:/notes.md', r'C:\notes.md']:
+            errors = self.check('[local](<' + target + '>)')
+            self.assertEqual(1, len(errors), target)
+            self.assertIn('nonportable local URL', errors[0])
+        self.assertEqual([], self.check('[web](https://example.invalid/notes.md)'))
+
     def test_link_outside_repository(self):
         self.assertIn("outside repository", self.check("[outside](../outside.md)")[0])
 
