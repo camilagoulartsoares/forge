@@ -63,7 +63,7 @@ export function criarConsultaTarefas(buscar = buscarTarefas) {
       }
     } catch (erro) {
       if (atual === versao && !controller.signal.aborted) {
-        publicar({ ...estado, erro });
+        publicar({ ...estado, erro: erro instanceof Error ? erro : new Error('Falha ao consultar tarefas.', { cause: erro }) });
       }
     } finally {
       if (atual === versao) {

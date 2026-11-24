@@ -238,3 +238,14 @@ test('falha ao atualizar preserva o ultimo snapshot valido e permite recuperar',
   assert.equal(primeiro.dados[0].titulo, 'Primeira');
   consulta.descartar();
 });
+
+test('rejeicoes sem objeto Error continuam visiveis como falhas', async () => {
+  for (const causa of [null, undefined, false, 0, 'offline']) {
+    const consulta = criarConsultaTarefas(async () => { throw causa; });
+    await consulta.recarregar('/tarefas');
+    assert.ok(consulta.estado.erro instanceof Error);
+    assert.equal(consulta.estado.erro.cause, causa);
+    assert.equal(consulta.estado.carregando, false);
+    consulta.descartar();
+  }
+});
