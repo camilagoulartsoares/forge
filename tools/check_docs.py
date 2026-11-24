@@ -122,7 +122,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
         if opening and (opening[1][0] != "`" or "`" not in opening[2]):
             fence = opening[1]
             continue
-        line, in_comment = visible_inline(line, in_comment)
+        line, in_comment = visible_inline(line, in_comment, code_gap=" ")
         for destination in link_destinations(line):
             target = unescape(destination.strip("<>"))
             try:

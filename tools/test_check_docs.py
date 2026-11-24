@@ -113,6 +113,12 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual([], self.check("Text ``code ` [not a link](absent.md)`` end"))
         self.assertIn("missing link", self.check("Text ``unmatched `[link](absent.md)")[0])
 
+    def test_inline_code_cannot_join_literal_tokens_into_a_link(self):
+        self.assertEqual([], self.check('[literal]`code`(absent.md)'))
+        errors = self.check('[literal]`code`(absent.md) [real](missing.md)')
+        self.assertEqual(1, len(errors))
+        self.assertIn('missing.md', errors[0])
+
     def test_links_after_inline_code_are_still_checked(self):
         self.assertIn("missing link", self.check("`code` [real link](absent.md)")[0])
 
