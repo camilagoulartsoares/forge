@@ -54,35 +54,49 @@ def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) ->
     return True
 
 
-def without_inline_code(line: str) -> str:
-    """Only matching backtick runs delimit code; unmatched runs remain literal."""
-    runs = list(re.finditer(r"`+", line))
-    escaped = []
-    for run in runs:
-        cursor = run.start() - 1
-        while cursor >= 0 and line[cursor] == "\\":
-            cursor -= 1
-        escaped.append((run.start() - 1 - cursor) % 2)
-    following = [None] * len(runs)
+def visible_inline(line: str, in_comment=False, *, comments=True, code_gap=""):
+    """Process code and comments in source order; delimiters inside either are literal."""
+    tokens = list(re.finditer(r"<!--|-->|`+" if comments else r"`+", line))
+    following = {}
+    escaped = {}
     last_by_length = {}
-    for index in range(len(runs) - 1, -1, -1):
-        length = runs[index].end() - runs[index].start()
+    for index in range(len(tokens) - 1, -1, -1):
+        token = tokens[index]
+        if not token[0].startswith('`'):
+            continue
+        cursor = token.start() - 1
+        while cursor >= 0 and line[cursor] == chr(92):
+            cursor -= 1
+        escaped[index] = (token.start() - 1 - cursor) % 2
+        length = len(token[0])
         following[index] = last_by_length.get(length - escaped[index])
         last_by_length[length] = index
-    cursor = 0
+    cursor, index = 0, 0
     pieces = []
-    index = 0
-    while index < len(runs):
-        opening = runs[index]
-        closing = following[index]
-        if closing is None:
-            index += 1
-            continue
-        pieces.append(line[cursor:opening.start() + escaped[index]])
-        cursor = runs[closing].end()
-        index = closing + 1
-    pieces.append(line[cursor:])
-    return "".join(pieces)
+    while index < len(tokens):
+        token = tokens[index]
+        if in_comment:
+            if token[0] == '-->':
+                in_comment = False
+                cursor = token.end()
+        elif token[0] == '<!--':
+            pieces.append(line[cursor:token.start()] + ' ')
+            cursor = token.end()
+            in_comment = True
+        elif token[0].startswith('`'):
+            closing = following[index]
+            if closing is not None:
+                pieces.append(line[cursor:token.start() + escaped[index]] + code_gap)
+                cursor = tokens[closing].end()
+                index = closing
+        index += 1
+    if not in_comment:
+        pieces.append(line[cursor:])
+    return ''.join(pieces), in_comment
+
+
+def without_inline_code(line: str) -> str:
+    return visible_inline(line, comments=False)[0]
 
 
 def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[str]:
@@ -104,31 +118,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
         if opening and (opening[1][0] != "`" or "`" not in opening[2]):
             fence = opening[1]
             continue
-        # Inline Markdown inside a comment cannot consume the comment terminator.
-        if in_comment:
-            end = line.find('-->')
-            if end == -1:
-                continue
-            line = line[end + 3:]
-            in_comment = False
-        line = without_inline_code(line)
-        visible = []
-        while line:
-            if in_comment:
-                end = line.find("-->")
-                if end == -1:
-                    break
-                line = line[end + 3:]
-                in_comment = False
-            else:
-                start = line.find("<!--")
-                if start == -1:
-                    visible.append(line)
-                    break
-                visible.append(line[:start] + " ")
-                line = line[start + 4:]
-                in_comment = True
-        line = "".join(visible)
+        line, in_comment = visible_inline(line, in_comment)
         for destination in link_destinations(line):
             target = unescape(destination.strip("<>"))
             try:

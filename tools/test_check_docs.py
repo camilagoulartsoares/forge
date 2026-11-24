@@ -136,6 +136,11 @@ class CheckDocsTests(unittest.TestCase):
     def test_unclosed_html_comment_hides_remaining_content(self):
         self.assertEqual([], self.check("# Title\n<!-- [draft](absent.md)\n```php"))
 
+    def test_backticks_inside_same_line_comment_cannot_hide_visible_links(self):
+        errors = self.check('<!-- ` hidden --> [visible](absent.md) `')
+        self.assertEqual(1, len(errors))
+        self.assertIn('absent.md', errors[0])
+
     def test_comment_markers_inside_code_are_literal(self):
         self.assertEqual([], self.check("```html\n<!-- literal\n```\nText `<!--` end"))
 
