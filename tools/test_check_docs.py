@@ -133,6 +133,10 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn(':2: missing link', errors[0])
         self.assertIn(':3: missing link', errors[1])
 
+    def test_escaped_html_comment_opener_remains_visible_markdown(self):
+        self.assertIn('missing link', self.check(r'\<!-- [visible](absent.md)')[0])
+        self.assertEqual([], self.check(r'\\<!-- [hidden](absent.md) -->'))
+
     def test_unclosed_html_comment_hides_remaining_content(self):
         self.assertEqual([], self.check("# Title\n<!-- [draft](absent.md)\n```php"))
 

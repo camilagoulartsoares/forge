@@ -80,9 +80,13 @@ def visible_inline(line: str, in_comment=False, *, comments=True, code_gap=""):
                 in_comment = False
                 cursor = token.end()
         elif token[0] == '<!--':
-            pieces.append(line[cursor:token.start()] + ' ')
-            cursor = token.end()
-            in_comment = True
+            escape_cursor = token.start() - 1
+            while escape_cursor >= 0 and line[escape_cursor] == chr(92):
+                escape_cursor -= 1
+            if (token.start() - 1 - escape_cursor) % 2 == 0:
+                pieces.append(line[cursor:token.start()] + ' ')
+                cursor = token.end()
+                in_comment = True
         elif token[0].startswith('`'):
             closing = following[index]
             if closing is not None:
