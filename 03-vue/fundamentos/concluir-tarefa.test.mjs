@@ -35,3 +35,9 @@ test('recusa colecoes e registros malformados antes de procurar o alvo', () => {
     assert.throws(() => concluirTarefa(lista, 1), TypeError);
   }
 });
+
+test('nao devolve colecao com IDs duplicados fora do alvo', () => {
+  const tarefas = [{ id: 1, concluida: false }, { id: 2, concluida: false }, { id: 2, concluida: true }];
+  assert.throws(() => concluirTarefa(tarefas, 1), /duplicado/);
+  assert.equal(tarefas[0].concluida, false);
+});
