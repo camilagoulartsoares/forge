@@ -81,3 +81,8 @@ arrays), alinhado ao `json_decode` com profundidade 512. JavaScript e o validado
 Python de fixtures aplicam o mesmo teto para evitar arquivos aceitos localmente
 que falhem no backend. As fixtures compartilhadas cobrem os dois lados do limite.
 Esse teto nao substitui limites de tamanho do corpo HTTP ou do arquivo de entrada.
+
+Nomes de propriedades iniciados por NUL sao recusados pelo leitor PHP que usa
+`stdClass`. O subconjunto compartilhado aplica a mesma restricao em JavaScript
+e Python. NUL em valores textuais ou no interior de um nome continua permitido;
+nao se trata de uma proibicao geral de caracteres de controle escapados em JSON.

@@ -17,6 +17,7 @@ export function decodificarJson(texto) {
       while (proximo < texto.length && ' \t\r\n'.includes(texto[proximo])) proximo += 1;
       if (texto[proximo] === ':') {
         const chave = JSON.parse(texto.slice(inicio, posicao + 1));
+        if (chave.startsWith('\0')) throw new SyntaxError('Chave JSON iniciada por NUL.');
         const chaves = pilha[pilha.length - 1];
         if (chaves.has(chave)) throw new SyntaxError('Chave JSON duplicada.');
         chaves.add(chave);

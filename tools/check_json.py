@@ -10,6 +10,8 @@ import sys
 def unique_keys(pairs):
     result = {}
     for key, value in pairs:
+        if key.startswith("\0"):
+            raise ValueError("JSON key starts with NUL")
         if key in result:
             raise ValueError(f"duplicate key: {ascii(key)}")
         result[key] = value
