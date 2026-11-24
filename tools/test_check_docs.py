@@ -274,6 +274,15 @@ class CheckDocsTests(unittest.TestCase):
             self.assertIn('invalid local path', self.check('[note](<' + target + '>)')[0])
         self.assertEqual([], self.check('[note](guides/note.md)'))
 
+    def test_invalid_character_references_do_not_alias_existing_filenames(self):
+        (self.root / 'aA.md').touch()
+        for name in ['a&#00000065;.md', 'a&#x0000041;.md', 'a&notareal;.md']:
+            errors = self.check('[literal](<' + name + '>)')
+            self.assertEqual(1, len(errors))
+            self.assertIn('missing link', errors[0])
+            self.assertIn(name, errors[0])
+        self.assertEqual([], self.check('[decimal](a&#0000065;.md) [hex](a&#x000041;.md)'))
+
     def test_destinations_decode_markdown_escapes_without_inventing_entities(self):
         for name in ['a_b.md', 'a&amp;.md', 'a&copy.md']:
             (self.root / name).touch()

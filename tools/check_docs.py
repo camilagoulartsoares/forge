@@ -2,6 +2,7 @@
 
 import argparse
 from html import unescape
+from html.entities import html5
 from pathlib import Path
 import os
 import re
@@ -44,8 +45,9 @@ def link_destinations(line):
 def decode_destination(target):
     # CommonMark escapes punctuation; character references require a semicolon.
     # One pass keeps an escaped ampersand from becoming a new character reference.
-    return re.sub(r'\\([!-/:-@\[-`{-~])|&(?:\#[xX][0-9a-fA-F]+|\#[0-9]+|[A-Za-z][A-Za-z0-9]+);',
-                  lambda match: match[1] if match[1] is not None else unescape(match[0]), target)
+    return re.sub(r'\\([!-/:-@\[-`{-~])|&(?:\#[xX][0-9a-fA-F]{1,6}|\#[0-9]{1,7}|[A-Za-z][A-Za-z0-9]+);',
+                  lambda match: (match[1] if match[1] is not None else
+                                 unescape(match[0]) if match[0].startswith('&#') or match[0][1:] in html5 else match[0]), target)
 
 
 def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) -> bool:

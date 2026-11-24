@@ -90,3 +90,9 @@ a versao e recente. O parser de rota continua respeitando tambem `PHP_INT_MAX`.
 URLs `file:` e caminhos absolutos com unidade Windows nao sao links externos
 portaveis: o verificador os recusa. Use um destino relativo ao documento para
 que o link aponte para o mesmo arquivo no clone local e no GitHub.
+
+Referencias de caracteres nos destinos seguem os limites do
+[CommonMark](https://spec.commonmark.org/0.31.2/#entity-and-numeric-character-references):
+nomes HTML5 completos, 1 a 7 digitos decimais ou 1 a 6 hexadecimais, com ponto
+e virgula. Sequencias invalidas permanecem literais e nao podem apontar por
+engano para outro arquivo existente.
