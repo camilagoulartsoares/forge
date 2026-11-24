@@ -73,3 +73,8 @@ nao pela quantidade de linhas da juncao. Os mesmos limites de cursor se aplicam.
 pendentes e concluidas. Consulta a tabela de tarefas diretamente para nao
 multiplicar contagens quando uma tarefa possui varias etiquetas. Sem tarefas,
 `COALESCE` transforma a ausencia de soma em zero, mantendo o contrato do resumo.
+
+A restricao dos IDs tambem exige valor integral com `id = ROUND(id, 0)`.
+Isso impede IDs fracionarios no SQLite, cujo tipo BIGINT tem afinidade numerica
+e sozinho nao garante inteiros. No MySQL o tipo ja armazena inteiros; valide a
+entrada antes do bind para evitar coercoes ou arredondamentos do servidor.

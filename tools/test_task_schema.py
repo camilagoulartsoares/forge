@@ -84,6 +84,15 @@ class TaskSchemaTests(unittest.TestCase):
             self.db.execute(f"INSERT INTO {table}(id, {column}) VALUES (?, ?)", (9007199254740991, "Limite"))
             self.assertIsNotNone(self.db.execute(f"SELECT id FROM {table} WHERE id = ?", (9007199254740991,)).fetchone())
 
+    def test_fractional_identifiers_are_rejected_on_insert_and_update(self):
+        for table, column in [('tarefas', 'titulo'), ('etiquetas', 'nome')]:
+            with self.subTest(table=table):
+                with self.assertRaises(sqlite3.IntegrityError):
+                    self.db.execute(f'INSERT INTO {table}(id, {column}) VALUES (?, ?)', (3.5, 'Fracionario'))
+                with self.assertRaises(sqlite3.IntegrityError):
+                    self.db.execute(f'UPDATE {table} SET id = ? WHERE id = 1', (1.5,))
+                self.assertIsNotNone(self.db.execute(f'SELECT id FROM {table} WHERE id = 1').fetchone())
+
     def test_filter_by_label_uses_bound_parameter_and_keeps_task_cardinality(self):
         self.db.executemany("INSERT INTO tarefa_etiqueta VALUES (?, ?)", [(1, 1), (2, 1)])
         sql = SCHEMA.with_name("tarefas-por-etiqueta.sql").read_text(encoding="utf-8")
