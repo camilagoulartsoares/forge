@@ -1,7 +1,7 @@
 import { estadoValido } from '../fundamentos/estados.mjs';
 
 export function lerFiltroDaRota(query) {
-  const estado = query?.estado;
+  const estado = query != null && Object.hasOwn(query, 'estado') ? query.estado : undefined;
   return estadoValido(estado) ? estado : 'todas';
 }
 

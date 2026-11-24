@@ -29,3 +29,10 @@ test('atualiza estado sem perder parametros ou alterar a origem', () => {
   assert.equal(origem.estado, 'pendentes');
   assert.throws(() => atualizarFiltroDaRota(origem, 'outro'), RangeError);
 });
+
+test('ignora filtro herdado e preserva objetos de query sem prototipo', () => {
+  assert.equal(lerFiltroDaRota(Object.create({ estado: 'concluidas' })), 'todas');
+  const query = Object.assign(Object.create(null), { estado: 'pendentes' });
+  assert.equal(lerFiltroDaRota(query), 'pendentes');
+  assert.equal(lerFiltroDaRota({}), 'todas');
+});
