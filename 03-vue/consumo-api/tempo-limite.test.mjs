@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { getEventListeners } from 'node:events';
 import { buscarTarefas } from './buscar-tarefas.mjs';
 
 const aguardarAbort = (_url, { signal }) => new Promise((_resolver, rejeitar) => {
@@ -15,13 +16,13 @@ test('tempo limite aborta consulta e preserva motivo do cancelamento externo', a
 });
 test('remove timer e ouvinte tanto no sucesso quanto na falha', async (t) => {
   const controller = new AbortController();
-  const remover = t.mock.method(controller.signal, 'removeEventListener');
   const limpar = t.mock.method(globalThis, 'clearTimeout');
   assert.deepEqual(await buscarTarefas('/', async () => ({ ok: true, json: async () => [] }),
     { signal: controller.signal, timeoutMs: 10000 }), []);
+  assert.equal(getEventListeners(controller.signal, 'abort').length, 0);
   await assert.rejects(buscarTarefas('/', async () => { throw new Error('Rede'); },
     { signal: controller.signal, timeoutMs: 10000 }), /Rede/);
-  assert.equal(remover.mock.callCount(), 2);
+  assert.equal(getEventListeners(controller.signal, 'abort').length, 0);
   assert.equal(limpar.mock.callCount(), 2);
 });
 test('limites invalidos e sinal previamente cancelado nao iniciam requisicao', async () => {
