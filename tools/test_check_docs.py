@@ -168,6 +168,16 @@ class CheckDocsTests(unittest.TestCase):
     def test_link_outside_repository(self):
         self.assertIn("outside repository", self.check("[outside](../outside.md)")[0])
 
+    def test_link_containing_an_image_checks_both_destinations(self):
+        errors = self.check('[link ![alt](missing.png)](absent.md)')
+        self.assertEqual(2, len(errors))
+        self.assertIn('missing.png', errors[0])
+        self.assertIn('absent.md', errors[1])
+        # Escaping ! leaves an ordinary inner link, which cannot be nested in another link.
+        errors = self.check(r'[outer \![inner](inside.md)](outside.md)')
+        self.assertEqual(1, len(errors))
+        self.assertIn('inside.md', errors[0])
+
     def test_image_link_is_checked(self):
         self.assertIn("missing link", self.check("![diagram](missing.png)")[0])
 

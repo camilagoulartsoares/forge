@@ -24,14 +24,19 @@ def link_destinations(line):
             position += 2
             continue
         if char == '[':
-            openings.append(position)
+            escape_cursor = position - 2
+            while escape_cursor >= 0 and line[escape_cursor] == chr(92):
+                escape_cursor -= 1
+            image = position > 0 and line[position - 1] == '!' and (position - 2 - escape_cursor) % 2 == 0
+            openings.append(image)
         elif char == ']' and openings:
-            openings.pop()
+            image = openings.pop()
             destination = DESTINATION.match(line, position + 1)
             if destination:
                 yield destination[1]
                 position = destination.end()
-                openings.clear()  # An enclosing label cannot become a nested link.
+                if not image:
+                    openings.clear()  # Links may contain images, but not other links.
                 continue
         position += 1
 
