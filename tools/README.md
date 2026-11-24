@@ -2,7 +2,7 @@
 
 ## Todas as verificações
 
-Com Python 3.10+, Git, PHP 7.4+ e Node.js 18.13+, execute `python tools/check.py`
+Com Python 3.10+, Git, PHP 7.4+ (64 bits) e Node.js 18.13+, execute `python tools/check.py`
 na raiz. O comando roda o verificador Markdown, os testes Python/SQL, a sintaxe
 de todos os arquivos PHP, as suítes PHP e os testes JavaScript. Não instala
 dependências nem exige banco ou acesso à rede. Interrompe na primeira falha
@@ -64,7 +64,7 @@ quando ainda aparecem no indice Git. Links de documentos existentes para esses
 arquivos continuam sendo erros. Isso permite verificar uma remocao antes do
 commit sem mascarar referencias quebradas.
 
-O executor confere PHP 7.4+ e Node.js 18.13+ antes dos linters da area.
+O executor confere PHP 7.4+ (64 bits) e Node.js 18.13+ antes dos linters da area.
 O minimo de Node inclui as APIs de mocks utilizadas pelos testes, introduzidas
 na versao 18.13, conforme a [documentacao do test runner](https://nodejs.org/download/release/latest-v18.x/docs/api/test.html#class-mocktracker).
 Runtime presente mas antigo retorna codigo 2 com diagnostico explicito.
@@ -81,3 +81,8 @@ processos, evitando `OverflowError` em vez do diagnostico de argumento invalido.
 Caminhos locais em links usam `/`, inclusive quando o verificador roda no Windows.
 Barras invertidas literais ou codificadas como `%5C` sao recusadas para nao
 aprovar um link que so resolve como caminho local em uma plataforma.
+
+A suite PHP exige build de 64 bits: os testes de interoperabilidade exercitam
+IDs ate `9007199254740991`. O preflight verifica `PHP_INT_SIZE` antes das suites;
+um PHP de 32 bits nao consegue representar esses IDs como `int`, mesmo quando
+a versao e recente. O parser de rota continua respeitando tambem `PHP_INT_MAX`.

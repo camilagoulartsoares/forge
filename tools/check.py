@@ -61,7 +61,7 @@ def main(argv=None) -> int:
                 commands.append([sys.executable, "tools/check_json.py", *json_files])
             commands.append([sys.executable, "-m", "unittest", "discover", "-s", "tools", "-p", "test_*.py"])
         if php_files:
-            commands.append(["php", "-r", 'if (PHP_VERSION_ID < 70400) { fwrite(STDERR, "PHP 7.4+ required.\\n"); exit(2); }'])
+            commands.append(["php", "-r", 'if (PHP_VERSION_ID < 70400 || PHP_INT_SIZE < 8) { fwrite(STDERR, "PHP 7.4+ on a 64-bit build required.\\n"); exit(2); }'])
         if js_files:
             commands.append(["node", "-e", "const [major, minor] = process.versions.node.split('.').map(Number); if (major < 18 || (major === 18 && minor < 13)) { console.error('Node.js 18.13+ required for test mocks.'); process.exit(2); }"])
         commands.extend(["php", "-l", name] for name in php_files)
