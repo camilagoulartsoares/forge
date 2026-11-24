@@ -44,3 +44,18 @@ foreach (['2024-03-09T10:00:00+00:00' => 'Boa noite', '2024-03-10T10:00:00+00:00
 $vespera = new Saudacao(relogioFixo('2026-01-01T02:59:59+00:00'), new DateTimeZone('America/Sao_Paulo'));
 verificarIgual('Boa noite', $vespera->mensagem());
 echo 'OK: saudacao com relogio injetado' . PHP_EOL;
+
+
+// A mesma instancia precisa consultar o relogio novamente a cada mensagem.
+$movel = new class implements Relogio {
+    public DateTimeImmutable $instante;
+    public function __construct() { $this->instante = new DateTimeImmutable('2026-01-01T08:59:59+00:00'); }
+    public function agora(): DateTimeImmutable { return $this->instante; }
+};
+$mesmaSaudacao = new Saudacao($movel, new DateTimeZone('America/Sao_Paulo'));
+foreach (['2026-01-01T08:59:59+00:00' => 'Boa noite', '2026-01-01T09:00:00+00:00' => 'Bom dia',
+    '2026-01-01T15:00:00+00:00' => 'Boa tarde', '2026-01-01T21:00:00+00:00' => 'Boa noite'] as $instante => $mensagem) {
+    $movel->instante = new DateTimeImmutable($instante);
+    verificarIgual($mensagem, $mesmaSaudacao->mensagem());
+    verificarIgual($instante, $movel->instante->format(DATE_ATOM));
+}
