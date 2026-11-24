@@ -274,6 +274,13 @@ class CheckDocsTests(unittest.TestCase):
             self.assertIn('invalid local path', self.check('[note](<' + target + '>)')[0])
         self.assertEqual([], self.check('[note](guides/note.md)'))
 
+    def test_destinations_decode_markdown_escapes_without_inventing_entities(self):
+        for name in ['a_b.md', 'a&amp;.md', 'a&copy.md']:
+            (self.root / name).touch()
+        self.assertEqual([], self.check(r'[escaped](a\_b.md)'))
+        self.assertEqual([], self.check(r'[literal entity](a\&amp;.md)'))
+        self.assertEqual([], self.check('[no semicolon](a&copy.md)'))
+
     def test_local_link_decodes_html_character_references(self):
         (self.root / "a&b.md").touch()
         self.assertEqual([], self.check("[notes](a&amp;b.md) [notes](a&#38;b.md)"))

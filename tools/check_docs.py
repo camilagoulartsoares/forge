@@ -41,6 +41,13 @@ def link_destinations(line):
         position += 1
 
 
+def decode_destination(target):
+    # CommonMark escapes punctuation; character references require a semicolon.
+    # One pass keeps an escaped ampersand from becoming a new character reference.
+    return re.sub(r'\\([!-/:-@\[-`{-~])|&(?:\#[xX][0-9a-fA-F]+|\#[0-9]+|[A-Za-z][A-Za-z0-9]+);',
+                  lambda match: match[1] if match[1] is not None else unescape(match[0]), target)
+
+
 def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) -> bool:
     # abspath normalizes dots but preserves the spelling erased by Windows resolve().
     candidate = Path(os.path.abspath(candidate))
@@ -129,7 +136,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
             continue
         line, in_comment = visible_inline(line, in_comment, code_gap=" ")
         for destination in link_destinations(line):
-            target = unescape(destination.strip("<>"))
+            target = decode_destination(destination.strip("<>"))
             try:
                 if any(ord(char) < 32 or ord(char) == 127 for char in target):
                     raise ValueError("Control character in URL")
