@@ -32,3 +32,12 @@ test('sinal previamente abortado preserva motivo e nao deixa listener', async ()
   await assert.rejects(aguardarComCancelamento(new Promise(() => {}), signal), erro => erro === signal.reason);
   assert.equal(getEventListeners(signal, 'abort').length, 0);
 });
+
+test('cancelamento previo vence fontes ja resolvidas ou rejeitadas', async () => {
+  const signal = AbortSignal.abort(new Error('Cancelado antes da espera'));
+  for (const fonte of [Promise.resolve('Nao publicar'), Promise.reject(new Error('Falha da fonte'))]) {
+    await assert.rejects(aguardarComCancelamento(fonte, signal), erro => erro === signal.reason);
+    assert.equal(getEventListeners(signal, 'abort').length, 0);
+  }
+  await new Promise(setImmediate);
+});

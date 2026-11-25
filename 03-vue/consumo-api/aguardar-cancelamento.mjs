@@ -7,7 +7,7 @@ export async function aguardarComCancelamento(promessa, signal) {
     if (signal.aborted) cancelar();
   });
   try {
-    return await Promise.race([promessa, cancelamento]);
+    return await Promise.race([cancelamento, promessa]);
   } finally {
     signal.removeEventListener('abort', cancelar);
   }
