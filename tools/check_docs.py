@@ -1,7 +1,6 @@
 """Check UTF-8, fenced blocks and inline local Markdown links without dependencies."""
 
 import argparse
-from html import unescape
 from html.entities import html5
 from pathlib import Path
 import os
@@ -45,9 +44,21 @@ def link_destinations(line):
 def decode_destination(target):
     # CommonMark escapes punctuation; character references require a semicolon.
     # One pass keeps an escaped ampersand from becoming a new character reference.
+    def replace_reference(match):
+        if match[1] is not None:
+            return match[1]
+        reference = match[0]
+        if reference.startswith('&#'):
+            digits = reference[2:-1]
+            codepoint = int(digits[1:], 16) if digits.startswith(('x', 'X')) else int(digits)
+            if codepoint == 0 or 0xD800 <= codepoint <= 0xDFFF or codepoint > 0x10FFFF:
+                return chr(0xFFFD)
+            return chr(codepoint)
+        return html5.get(reference[1:], reference)
+
     return re.sub(r'\\([!-/:-@\[-`{-~])|&(?:\#[xX][0-9a-fA-F]{1,6}|\#[0-9]{1,7}|[A-Za-z][A-Za-z0-9]+);',
-                  lambda match: (match[1] if match[1] is not None else
-                                 unescape(match[0]) if match[0].startswith('&#') or match[0][1:] in html5 else match[0]), target)
+                  replace_reference, target)
+
 
 
 def path_case_matches(candidate: Path, root: Path, cache: dict | None = None) -> bool:

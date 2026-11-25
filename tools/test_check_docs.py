@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 import io
 
-from check_docs import check_file, main, path_case_matches, without_inline_code
+from check_docs import check_file, main, path_case_matches, without_inline_code, decode_destination
 
 
 class CheckDocsTests(unittest.TestCase):
@@ -246,6 +246,18 @@ class CheckDocsTests(unittest.TestCase):
         self.assertIn(":1: invalid local path", errors[0])
         (self.root / (chr(0xE7) + ".md")).touch()
         self.assertEqual([], self.check("[valid](%C3%A7.md)"))
+
+    def test_numeric_references_preserve_codepoints_instead_of_html_compatibility_mappings(self):
+        (self.root / 'ab.md').touch()
+        for codepoint in range(1, 32):
+            errors = self.check('[control](a&#' + str(codepoint) + ';b.md)')
+            self.assertEqual(1, len(errors), codepoint)
+            self.assertIn('invalid link', errors[0])
+        for codepoint in [0x80, 0x85, 0x9F]:
+            self.assertEqual(chr(codepoint), decode_destination('&#' + str(codepoint) + ';'))
+            self.assertEqual(chr(codepoint), decode_destination('&#x' + format(codepoint, 'x') + ';'))
+        for reference in ['&#0;', '&#xD800;', '&#1114112;']:
+            self.assertEqual(chr(0xFFFD), decode_destination(reference))
 
     def test_controls_in_html_entities_cannot_alias_an_existing_url(self):
         (self.root / "ab.md").touch()
