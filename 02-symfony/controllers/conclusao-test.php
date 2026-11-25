@@ -8,7 +8,7 @@ require_once __DIR__ . '/../../01-fundamentos/php/testes-automatizados/exemplos/
 
 $repo = new Forge\Aplicacao\TarefasEmMemoria([new Forge\Aplicacao\Tarefa(1, false, 7)]);
 $servico = new Forge\Aplicacao\ConcluirTarefa($repo);
-foreach ([['1', null, 403], ['invalido', null, 403], ['1', 8, 403], ['1e2', 7, 422], ['9', 7, 404]] as [$id, $usuario, $status]) {
+foreach ([['1', null, 403], ['invalido', null, 403], ['1', 8, 404], ['1e2', 7, 422], ['9', 7, 404]] as [$id, $usuario, $status]) {
     verificarIgual($status, Forge\Http\concluirTarefaHttp($id, $usuario, $servico)['status']);
     verificarIgual(false, $repo->buscar(1)->concluida());
 }
@@ -22,3 +22,17 @@ $falho = new class implements Forge\Aplicacao\RepositorioTarefas {
 };
 verificarIgual(500, Forge\Http\concluirTarefaHttp('1', 7, new Forge\Aplicacao\ConcluirTarefa($falho))['status']);
 echo "OK: controller HTTP de conclusao\n";
+
+
+$privado = new Forge\Aplicacao\TarefasEmMemoria([
+    new Forge\Aplicacao\Tarefa(1, false, 7), new Forge\Aplicacao\Tarefa(2, true, 9), new Forge\Aplicacao\Tarefa(3),
+]);
+$servicoPrivado = new Forge\Aplicacao\ConcluirTarefa($privado);
+$ausente = Forge\Http\concluirTarefaHttp('999', 8, $servicoPrivado);
+foreach (['1', '2', '3'] as $id) {
+    verificarIgual($ausente, Forge\Http\concluirTarefaHttp($id, 8, $servicoPrivado));
+}
+verificarIgual(false, $privado->buscar(1)->concluida());
+verificarIgual(true, $privado->buscar(2)->concluida());
+verificarIgual(false, $privado->buscar(3)->concluida());
+verificarIgual(403, Forge\Http\concluirTarefaHttp('1', null, $servicoPrivado)['status']);

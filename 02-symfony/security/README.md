@@ -35,3 +35,11 @@ obter a identidade da autenticação no servidor; o helper não autentica ningu�
 nem protege automaticamente endpoints que não o utilizam.
 
 Referência: [OWASP: Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html).
+
+No [controller de conclusao](../controllers/concluir-tarefa.php), uma identidade
+valida recebe o mesmo `404` e corpo para tarefa alheia, sem proprietario ou ausente.
+Isso evita revelar a existencia pela diferenca entre `403` e `404`, inclusive
+quando a tarefa alheia ja esta concluida. Identidade invalida continua recusada
+antes da consulta, com `403`. A politica do servico permanece tipada; essa escolha
+pertence ao adaptador HTTP. A [RFC 9110, secao 15.5.4](https://www.rfc-editor.org/rfc/rfc9110.html#name-403-forbidden)
+permite usar `404` para nao divulgar a existencia de um recurso proibido.
