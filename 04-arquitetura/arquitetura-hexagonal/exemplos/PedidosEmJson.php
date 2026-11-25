@@ -67,6 +67,11 @@ final class PedidosEmJson implements ArmazenamentoPedidos
         if (is_link($this->arquivo) || is_link($this->arquivo . '.lock')) {
             throw new \RuntimeException('Arquivo e lock nao podem ser links simbolicos.');
         }
+        foreach ([$this->arquivo, $this->arquivo . '.lock'] as $caminho) {
+            if (file_exists($caminho) && !is_file($caminho)) {
+                throw new \RuntimeException('Dados e lock devem ser arquivos regulares.');
+            }
+        }
     }
 
     private function comLock(callable $operacao, int $modo = LOCK_EX)
