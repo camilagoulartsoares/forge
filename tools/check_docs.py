@@ -153,7 +153,7 @@ def check_file(path: Path, root: Path, case_cache: dict | None = None) -> list[s
             try:
                 if any(ord(char) < 32 or ord(char) == 127 for char in target):
                     raise ValueError("Control character in URL")
-                parsed = urlsplit(target)
+                parsed = urlsplit(target.replace(" ", "%20"))
             except ValueError as error:
                 errors.append(f"{path}:{number}: invalid link: {ascii(target)}: {error}")
                 continue

@@ -56,6 +56,15 @@ class CheckDocsTests(unittest.TestCase):
         (self.root / "my notes.md").touch()
         self.assertEqual([], self.check("[notes](my%20notes.md#topic)"))
 
+    def test_leading_spaces_inside_angle_destinations_are_part_of_the_path(self):
+        (self.root / ' note.md').touch()
+        self.assertEqual([], self.check('[leading](< note.md>)'))
+        (self.root / 'other.md').touch()
+        errors = self.check('[different](< other.md>)')
+        self.assertEqual(1, len(errors))
+        self.assertIn('missing link', errors[0])
+        self.assertEqual([], self.check('[encoded](%20note.md)'))
+
     def test_angle_link_with_spaces(self):
         (self.root / "my notes.md").touch()
         self.assertEqual([], self.check("[notes](<my notes.md>)"))
