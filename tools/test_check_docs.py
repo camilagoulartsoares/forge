@@ -187,6 +187,12 @@ class CheckDocsTests(unittest.TestCase):
         self.assertEqual(1, len(errors))
         self.assertIn('inside.md', errors[0])
 
+    def test_image_description_may_contain_a_link_without_hiding_its_own_target(self):
+        errors = self.check('![alt [inner](inside.md)](outside.png)')
+        self.assertEqual(2, len(errors))
+        self.assertIn('inside.md', errors[0])
+        self.assertIn('outside.png', errors[1])
+
     def test_image_link_is_checked(self):
         self.assertIn("missing link", self.check("![diagram](missing.png)")[0])
 

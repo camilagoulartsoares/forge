@@ -31,12 +31,16 @@ def link_destinations(line):
             openings.append(image)
         elif char == ']' and openings:
             image = openings.pop()
+            if image is None:
+                position += 1
+                continue
             destination = DESTINATION.match(line, position + 1)
             if destination:
                 yield destination[1]
                 position = destination.end()
                 if not image:
-                    openings.clear()  # Links may contain images, but not other links.
+                    # An image description may contain a link; ordinary links cannot.
+                    openings[:] = [True if item is True else None for item in openings]
                 continue
         position += 1
 
