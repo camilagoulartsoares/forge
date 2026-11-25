@@ -22,3 +22,14 @@ verificarIgual(['titulo' => 'Regra de negocio.'], $erro->campos());
 verificarIgual(422, Forge\Http\respostaErro($erro)['status']);
 json_encode(Forge\Http\respostaErro($erro), JSON_THROW_ON_ERROR);
 echo "OK: erros de campos sao mapas textuais serializaveis\n";
+
+
+$mensagemReferenciada = 'Texto validado';
+$camposReferenciados = ['titulo' => &$mensagemReferenciada];
+$erroComReferencia = new Forge\Http\EntradaInvalida($camposReferenciados);
+$mensagemReferenciada = "\xff";
+verificarIgual(['titulo' => 'Texto validado'], $erroComReferencia->campos());
+$copia = $erroComReferencia->campos();
+$copia['titulo'] = 'Mutacao da copia';
+verificarIgual(['titulo' => 'Texto validado'], $erroComReferencia->campos());
+json_encode(Forge\Http\respostaErro($erroComReferencia), JSON_THROW_ON_ERROR);

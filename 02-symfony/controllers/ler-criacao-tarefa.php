@@ -14,14 +14,16 @@ final class EntradaInvalida extends \InvalidArgumentException
     public function __construct(array $campos)
     {
         if ($campos === []) throw new \InvalidArgumentException('Informe erros de campos.');
+        $validados = [];
         foreach ($campos as $campo => $mensagem) {
             if (!is_string($campo) || trim($campo) === '' || preg_match('//u', $campo) !== 1
                 || !is_string($mensagem) || trim($mensagem) === '' || preg_match('//u', $mensagem) !== 1) {
                 throw new \InvalidArgumentException('Erros de campos devem ser textos UTF-8.');
             }
+            $validados[$campo] = $mensagem;
         }
         parent::__construct('Entrada invalida.');
-        $this->campos = $campos;
+        $this->campos = $validados;
     }
 
     public function campos(): array
