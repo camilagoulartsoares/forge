@@ -6,6 +6,8 @@ export function importarTarefas(tarefas, json) {
   if (typeof json !== 'string') throw new TypeError('Importacao exige texto JSON.');
   validarTarefas(tarefas);
   const novas = validarTarefas(decodificarJson(json));
-  validarTarefas([...tarefas, ...novas]);
-  return [...tarefas, ...novas.map(tarefa => ({ ...tarefa }))];
+  // Preserva os indices ja validados, sem delegar o snapshot ao iterador da origem.
+  const atuais = Array.from({ length: tarefas.length }, (_, indice) => tarefas[indice]);
+  const resultado = atuais.concat(novas.map(tarefa => ({ ...tarefa })));
+  return validarTarefas(resultado);
 }

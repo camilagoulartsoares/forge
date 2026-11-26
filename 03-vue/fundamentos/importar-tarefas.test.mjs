@@ -25,3 +25,22 @@ test('importacao recusa nomes JSON repetidos inclusive com escapes equivalentes'
     assert.throws(() => importarTarefas([], json), SyntaxError);
   }
 });
+
+test('valida a propria colecao retornada usando os indices da origem', () => {
+  const lista = [tarefa];
+  let percursos = 0;
+  Object.defineProperty(lista, Symbol.iterator, { value: function* () {
+    percursos += 1;
+    yield percursos === 1 ? tarefa : null;
+  } });
+  Object.freeze(lista);
+  assert.deepEqual(importarTarefas(lista, '[]'), [tarefa]);
+  assert.equal(percursos, 0);
+  assert.equal(lista[0], tarefa);
+
+  const invalidaAoIterar = [tarefa];
+  invalidaAoIterar[Symbol.iterator] = function* () { yield null; };
+  assert.deepEqual(importarTarefas(invalidaAoIterar, '[]'), [tarefa]);
+  assert.throws(() => importarTarefas(invalidaAoIterar, JSON.stringify([tarefa])), /duplicados/);
+  assert.equal(invalidaAoIterar[0], tarefa);
+});
