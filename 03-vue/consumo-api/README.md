@@ -39,3 +39,8 @@ Nesse caso, o trabalho interno da fonte pode continuar; `fetch` respeita o abort
 Mesmo sem `timeoutMs`, abortar `signal` encerra a espera da requisicao ou do
 corpo JSON. O motivo original e preservado e os ouvintes sao removidos ao terminar.
 Fontes injetadas que ignoram o sinal podem continuar seu trabalho interno.
+
+O prazo tambem e conferido com relogio monotono depois da operacao. Se trabalho
+sincrono bloquear o event loop alem do limite, o resultado tardio e recusado mesmo
+quando o callback do timer ainda nao executou. Isso nao interrompe o processamento
+sincrono enquanto ele roda; a falha e entregue assim que o controle retorna.

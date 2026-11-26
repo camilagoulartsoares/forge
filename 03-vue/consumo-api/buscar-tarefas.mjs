@@ -18,6 +18,7 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
     if (!Number.isInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 2147483647) {
       throw new RangeError('Tempo limite deve ser um inteiro positivo em milissegundos.');
     }
+    const prazo = performance.now() + timeoutMs;
     const controlador = new AbortController();
     let interromper;
     const interrupcao = new Promise((_resolver, rejeitar) => {
@@ -28,11 +29,22 @@ export async function buscarTarefas(url, requisitar = globalThis.fetch, { signal
     });
     const cancelar = () => interromper(signal.reason);
     signal?.addEventListener('abort', cancelar, { once: true });
-    const timer = setTimeout(() => {
-      interromper(new DOMException('Tempo limite da consulta excedido.', 'TimeoutError'));
-    }, timeoutMs);
+    const expirar = () => {
+      const motivo = new DOMException('Tempo limite da consulta excedido.', 'TimeoutError');
+      interromper(motivo);
+      return motivo;
+    };
+    const verificarPrazo = () => {
+      if (!controlador.signal.aborted && performance.now() >= prazo) throw expirar();
+    };
+    const timer = setTimeout(expirar, timeoutMs);
     try {
-      return await Promise.race([interrupcao, buscarTarefas(url, requisitar, { signal: controlador.signal })]);
+      const resultado = await Promise.race([interrupcao, buscarTarefas(url, requisitar, { signal: controlador.signal })]);
+      verificarPrazo();
+      return resultado;
+    } catch (erro) {
+      verificarPrazo();
+      throw erro;
     } finally {
       clearTimeout(timer);
       signal?.removeEventListener('abort', cancelar);

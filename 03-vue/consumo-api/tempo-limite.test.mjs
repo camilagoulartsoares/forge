@@ -70,3 +70,31 @@ test('cancelamento externo interrompe corpo pendente com motivo original', async
   controller.abort(motivo);
   await assert.rejects(consulta, erro => erro === motivo);
 });
+
+test('prazo vencido recusa trabalho encerrado antes de o timer poder executar', async () => {
+  const relogio = globalThis.performance;
+  const original = Object.getOwnPropertyDescriptor(relogio, 'now');
+  let agora = 0;
+  Object.defineProperty(relogio, 'now', { configurable: true, value: () => agora });
+  try {
+    for (const etapa of ['requisicao', 'corpo', 'falha']) {
+      agora = 0;
+      let sinal;
+      const fonte = (_url, { signal }) => {
+        sinal = signal;
+        if (etapa === 'requisicao') agora = 20;
+        return { ok: true, json: () => {
+          agora = 20;
+          if (etapa === 'falha') throw new Error('Falha tardia');
+          return [];
+        } };
+      };
+      await assert.rejects(buscarTarefas('/', fonte, { timeoutMs: 10 }), { name: 'TimeoutError' });
+      assert.equal(sinal.aborted, true);
+      assert.equal(sinal.reason.name, 'TimeoutError');
+    }
+  } finally {
+    if (original) Object.defineProperty(relogio, 'now', original);
+    else delete relogio.now;
+  }
+});
