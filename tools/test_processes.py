@@ -28,11 +28,21 @@ def alive(pid):
         os.kill(pid, 0)
         state = Path(f"/proc/{pid}/stat")
         return not (state.exists() and state.read_text().split()[2] == "Z")
-    except ProcessLookupError:
+    except (ProcessLookupError, FileNotFoundError):
         return False
 
 
 class ProcessTimeoutTests(unittest.TestCase):
+    def test_process_disappearing_before_stat_read_is_not_alive(self):
+        state = MagicMock()
+        state.exists.return_value = True
+        state.read_text.side_effect = FileNotFoundError("Process was reaped")
+        with patch("test_processes.Path", return_value=state), \
+                patch("test_processes.os.name", "posix"), \
+                patch("test_processes.os.kill"):
+            self.assertFalse(alive(123))
+        state.read_text.assert_called_once()
+
     def test_timeout_stops_grandchild_instead_of_only_the_leader(self):
         with tempfile.TemporaryDirectory() as directory:
             pidfile = Path(directory) / "child.pid"
