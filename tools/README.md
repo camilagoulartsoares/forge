@@ -28,6 +28,19 @@ importados pelos testes. O cache de bytecode permanece ignorado pelo Git.
 O grupo Python valida as fixtures JSON em UTF-8, recusando chaves duplicadas
 e números não padronizados como NaN, que podem causar diferenças entre runtimes.
 
+## Integração contínua
+
+O workflow [Repository checks](../.github/workflows/checks.yml) executa a suíte
+completa em pushes e pull requests para `main`. A matriz cobre Ubuntu 24.04 com
+Node.js 18.13.0 (mínimo suportado) e Windows Server 2022 com Node.js 24; ambos
+usam Python 3.11 e PHP 8.3 de 64 bits. Isso não valida todas as combinações de
+versões aceitas pelo executor. Cada comando tem prazo de 60 segundos e cada
+job tem limite de 10 minutos. Os testes continuam sem banco ou dependências
+do projeto; a preparação dos runtimes pelo GitHub Actions usa a rede.
+
+As actions estão fixadas por SHA e o token tem somente leitura do conteúdo.
+O workflow verifica o código, sem publicar aplicações ou alterar arquivos.
+
 ## Somente documentação
 
 Requer Python 3.10 ou superior e Git. Na raiz do repositório:
